@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="//www.google.com/jsapi"></script><script>window.parent.maeExportApis_();</script>
+<script src="//www.google.com/jsapi"></script><script>window.parent.maeExportApis_();</script>
+
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Food Territories · Historic Center of Quito</title>
+
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+
+<style>
+ 
+:root {
+  --panel-bg      : #1A1714;
+  --panel-section : #211E1B;
+  --panel-hover   : #2A2622;
+  --panel-border  : #36312C;
+  --text-primary  : #EAE0D4;
+  --text-secondary: #8A7E72;
+  --text-dim      : #5A5248;
+  --gold          : #C9A24A;
+  --gold-light    : #E6CB7A;
+  --ig            : #E06858;
+  --tt            : #2FC5CE;
+  --both          : #9B67C8;
+  --panel-w       : 302px;
+  --radius        : 5px;
+  --transition    : 0.22s ease;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; font-family: 'Inter', system-ui, sans-serif; }
+
+ 
+#app { display: flex; height: 100vh; width: 100vw; background: #111; }
+
+ 
+#panel {
+  width: var(--panel-w);
+  min-width: var(--panel-w);
+  background: var(--panel-bg);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--panel-border);
+  overflow: hidden;
+  z-index: 10;
+}
+
+ 
+.panel-header {
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid var(--panel-border);
+  background: var(--panel-bg);
+  flex-shrink: 0;
+}
+.panel-eyebrow {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.panel-eyebrow::before { content: '◆'; font-size: 8px; }
+.panel-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.28;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+}
+.panel-title span { display: block; }
+.panel-subtitle {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+  letter-spacing: 0.04em;
+}
+.map-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--panel-section);
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  padding: 3px 9px;
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 9px;
+}
+.map-badge strong { color: var(--gold); font-weight: 600; }
+
+ 
+.panel-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--panel-border) transparent;
+}
+.panel-body::-webkit-scrollbar { width: 4px; }
+.panel-body::-webkit-scrollbar-thumb { background: var(--panel-border); border-radius: 2px; }
+
+ 
+.panel-footer {
+  padding: 12px 14px;
+  border-top: 1px solid var(--panel-border);
+  flex-shrink: 0;
+}
+#btn-download {
+  width: 100%;
+  background: linear-gradient(135deg, #2A241E, #322C24);
+  border: 1px solid var(--gold);
+  color: var(--gold-light);
+  border-radius: var(--radius);
+  padding: 9px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+#btn-download:hover {
+  background: linear-gradient(135deg, #3A3228, #423C30);
+  color: var(--gold);
+  box-shadow: 0 0 12px rgba(201,162,74,0.18);
+}
+
+ 
+.acc-section { border-bottom: 1px solid var(--panel-border); }
+
+.acc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--transition);
+  gap: 8px;
+}
+.acc-header:hover { background: var(--panel-hover); }
+
+.acc-icon {
+  font-size: 10px;
+  color: var(--text-dim);
+  transition: transform var(--transition);
+  flex-shrink: 0;
+}
+.acc-section.open .acc-icon { transform: rotate(90deg); color: var(--gold); }
+
+.acc-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  flex: 1;
+}
+.acc-section.open .acc-label { color: var(--gold); }
+
+.acc-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.acc-section.open .acc-body { max-height: 700px; }
+.acc-inner { padding: 6px 16px 14px; }
+
+ 
+.layer-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 4px;
+}
+.layer-btn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--panel-border);
+  background: var(--panel-section);
+  color: var(--text-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: left;
+}
+.layer-btn:hover { background: var(--panel-hover); color: var(--text-primary); }
+.layer-btn.active { border-color: var(--gold); color: var(--text-primary); background: #282318; }
+.layer-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,0.15);
+}
+.layer-dot.ig    { background: var(--ig); }
+.layer-dot.tt    { background: var(--tt); }
+.layer-dot.stars { background: var(--gold); }
+.layer-sub {
+  font-size: 9.5px;
+  color: var(--text-dim);
+  margin-top: 1px;
+  display: block;
+}
+
+ 
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+.toggle-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.toggle-switch {
+  position: relative;
+  width: 34px; height: 18px;
+  flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--panel-border);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.toggle-thumb {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 14px; height: 14px;
+  background: var(--text-dim);
+  border-radius: 50%;
+  transition: transform var(--transition), background var(--transition);
+  pointer-events: none;
+}
+.toggle-switch input:checked ~ .toggle-track { background: var(--gold); }
+.toggle-switch input:checked ~ .toggle-thumb {
+  transform: translateX(16px);
+  background: #fff;
+}
+
+ 
+.cb-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 4px 0;
+  cursor: pointer;
+}
+.cb-row.disabled { opacity: 0.38; pointer-events: none; }
+.cb-custom {
+  width: 14px; height: 14px;
+  border: 1.5px solid var(--panel-border);
+  border-radius: 3px;
+  background: var(--panel-section);
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all var(--transition);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.cb-row:hover .cb-custom { border-color: var(--gold); }
+.cb-custom.checked {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+.cb-custom.checked::after {
+  content: '';
+  width: 7px; height: 4px;
+  border-left: 2px solid #1A1714;
+  border-bottom: 2px solid #1A1714;
+  transform: rotate(-45deg) translateY(-1px);
+  display: block;
+}
+.cb-text { font-size: 12px; color: var(--text-secondary); line-height: 1.4; flex: 1; }
+.cb-row:hover .cb-text { color: var(--text-primary); }
+
+ 
+.type-swatch {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+ 
+.counter-badge {
+  display: none;
+  background: rgba(201,162,74,0.1);
+  border: 1px solid rgba(201,162,74,0.25);
+  border-radius: 20px;
+  padding: 3px 9px;
+  font-size: 10.5px;
+  color: var(--gold);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+.counter-badge.visible { display: block; }
+.counter-badge.intersection {
+  background: rgba(155,103,200,0.1);
+  border-color: rgba(155,103,200,0.3);
+  color: #B88CE0;
+}
+.counter-inline {
+  display: none;
+  font-size: 10px;
+  color: var(--gold);
+  margin-left: 4px;
+  font-weight: 500;
+}
+.counter-inline.visible { display: inline; }
+
+ 
+.panel-note {
+  padding: 14px 16px;
+  border-top: 1px solid var(--panel-border);
+}
+.note-title {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.note-text {
+  font-size: 10px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+ 
+#map-wrap { flex: 1; position: relative; }
+#map { width: 100%; height: 100%; }
+
+ 
+.leaflet-popup-content-wrapper {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.22) !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+.leaflet-popup-content {
+  margin: 0 !important;
+  width: 264px !important;
+}
+.leaflet-popup-tip-container { margin-top: -1px; }
+
+.pop-wrap { font-family: 'Inter', sans-serif; }
+.pop-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #2A2018;
+  padding: 12px 14px 4px;
+  line-height: 1.35;
+}
+.pop-addr {
+  font-size: 10.5px;
+  color: #8A7E72;
+  padding: 0 14px 10px;
+  line-height: 1.45;
+}
+.pop-hr { border: none; border-top: 1px solid #EEE6DC; margin: 0; }
+.pop-section { padding: 9px 14px; }
+.pop-metric {
+  font-size: 11.5px;
+  color: #3A3028;
+  line-height: 1.4;
+  margin-bottom: 3px;
+}
+.pop-metric b { font-weight: 600; }
+.pop-metric.ig b { color: #C04A3C; }
+.pop-metric.tt b { color: #1898A2; }
+.pop-handle { font-size: 11px; margin-bottom: 2px; }
+.pop-handle a { color: #1877C2; text-decoration: none; }
+.pop-handle a:hover { text-decoration: underline; }
+.pop-absent { font-size: 11px; color: #B0A090; font-style: italic; margin: 4px 0; }
+.pop-stars {
+  padding: 8px 14px 12px;
+  font-size: 12px;
+  color: #3A3028;
+  font-weight: 500;
+}
+.pop-reviews { font-weight: 400; color: #8A7E72; }
+.pop-tipo {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 14px 0;
+  color: #9A8E82;
+}
+
+ 
+.pop-nogm {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #F9F4E8;
+  border-top: 1px solid #EEE6DC;
+  border-bottom: 1px solid #EEE6DC;
+  padding: 8px 14px;
+  margin: 4px 0;
+}
+.pop-nogm-star {
+  font-size: 18px;
+  font-weight: 900;
+  color: #1A1714;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.pop-nogm-text {
+  font-size: 10.5px;
+  color: #7A6828;
+  line-height: 1.5;
+}
+.pop-nogm-text b { color: #3A2808; font-weight: 600; }
+
+ 
+.note-accordion .acc-inner {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.note-accordion .acc-inner p { margin-bottom: 8px; }
+.note-accordion .acc-inner p:last-child { margin-bottom: 0; }
+.note-accordion .acc-inner strong { color: var(--text-primary); font-weight: 600; }
+.note-accordion .acc-inner em { color: var(--gold); font-style: normal; font-weight: 500; }
+.note-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px; height: 16px;
+  background: var(--gold);
+  color: #1A1714;
+  border-radius: 50%;
+  font-size: 9px;
+  font-weight: 700;
+  margin-right: 5px;
+  flex-shrink: 0;
+}
+
+ 
+.map-legend {
+  background: rgba(26,23,20,0.9);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(201,162,74,0.25);
+  border-radius: 8px;
+  padding: 12px 14px;
+  min-width: 170px;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.3);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+}
+
+ 
+.heat-legend {
+  position: absolute;
+  bottom: 145px;
+  right: 12px;
+  z-index: 500;
+  display: none;
+  background: rgba(26,23,20,0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(173,232,244,0.35);
+  border-radius: 8px;
+  padding: 12px 14px;
+  min-width: 185px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.35);
+  font-family: 'Inter', sans-serif;
+  color: var(--text-primary);
+}
+.heat-legend.active { display: block; }
+.heat-legend-title {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ADE8F4;
+  margin-bottom: 8px;
+}
+.heat-gradient-heat {
+  height: 9px;
+  border-radius: 5px;
+  background: linear-gradient(to right,
+    #ADE8F4 0%, #FFF176 25%, #FF9800 55%, #E53935 80%, #880E4F 100%
+  );
+  margin-bottom: 5px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+}
+.heat-legend-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.heat-legend-note {
+  font-size: 9.5px;
+  color: var(--text-dim);
+  line-height: 1.55;
+  border-top: 1px solid var(--panel-border);
+  padding-top: 7px;
+}
+.legend-title {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.legend-gradient-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(to right, #FFF59D, #FF8F00, #D32F2F, #6A0000);
+  margin-bottom: 4px;
+}
+.legend-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+.legend-size-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 8px;
+  border-top: 1px solid var(--panel-border);
+  padding-top: 9px;
+}
+.legend-circle {
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  flex-shrink: 0;
+}
+.legend-size-label { font-size: 9.5px; color: var(--text-secondary); }
+.legend-size-label strong { color: var(--text-primary); font-weight: 500; }
+.legend-ig-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.legend-ig-swatch {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--ig);
+}
+
+ 
+.map-stats-bar {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: rgba(26,23,20,0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  z-index: 500;
+  font-family: 'Inter', sans-serif;
+  min-width: 230px;
+  max-width: 360px;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.28);
+}
+.sb-line1 {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.sb-count {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+  margin-right: 1px;
+}
+.sb-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.sb-total { color: var(--text-dim); }
+.sb-line2 {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.sb-chip {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.sb-chip .stat-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sb-chip-name { color: var(--text-primary); font-weight: 500; }
+.sb-sep { color: var(--text-dim); margin: 0 1px; }
+.sb-pct-fr {
+  color: var(--gold);
+  font-size: 9.5px;
+  background: rgba(201,162,74,0.1);
+  border-radius: 3px;
+  padding: 0 4px;
+}
+.sb-pct-gl {
+  color: var(--text-dim);
+  font-size: 9.5px;
+}
+.sb-divider {
+  border: none;
+  border-top: 1px solid var(--panel-border);
+  margin: 5px 0;
+}
+</style>
+</head>
+
+<body>
+<div id="app">
+
+  
+  <aside id="panel">
+
+    
+    <div class="panel-header">
+      <div class="panel-eyebrow">Territorial Analysis</div>
+      <div class="panel-title">
+        <span>Digital</span>
+        <span>Food</span>
+        <span>Territories</span>
+      </div>
+      <div class="panel-subtitle">Historic Center of Quito · 2026</div>
+      <div class="map-badge">
+         <strong id="sb-active-panel">420</strong> on map of <strong>420</strong> records · <strong id="sb-pct-panel" style="color: var(--gold); margin-left: 3px;"> 100.00%</strong> ·
+      </div>
+    </div>
+
+    
+    <div class="panel-body">
+
+      
+      <div class="acc-section open" id="sec-layer">
+        <div class="acc-header" onclick="toggleSection('sec-layer')">
+          <span class="acc-icon">▶</span>
+          <span class="acc-label">Bubble Layer</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-inner">
+            <div class="layer-selector">
+              <button class="layer-btn active" data-layer="instagram" onclick="setLayer('instagram', this)">
+                <span class="layer-dot ig"></span>
+                <span>
+                  Instagram
+                  <span class="layer-sub">Size = IG followers</span>
+                </span>
+              </button>
+              <button class="layer-btn" data-layer="tiktok" onclick="setLayer('tiktok', this)">
+                <span class="layer-dot tt"></span>
+                <span>
+                  TikTok
+                  <span class="layer-sub">Size = followers · Color = likes</span>
+                </span>
+              </button>
+              <button class="layer-btn" data-layer="stars" onclick="setLayer('stars', this)">
+                <span class="layer-dot stars"></span>
+                <span>
+                  Google Stars
+                  <span class="layer-sub">Size = reviews · Color = rating</span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="acc-section open" id="sec-view">
+        <div class="acc-header" onclick="toggleSection('sec-view')">
+          <span class="acc-icon">▶</span>
+          <span class="acc-label"> Visualization Mode</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-inner">
+            <div class="toggle-row">
+              <span class="toggle-label">Burbujas tamaño uniforme</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="tog-uniform" onchange="setUniform(this.checked)">
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="acc-section open" id="sec-presence">
+        <div class="acc-header" onclick="toggleSection('sec-presence')">
+          <span class="acc-icon">▶</span>
+          <span class="acc-label">Digital Presence</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-inner">
+
+            <div class="cb-row" onclick="togglePresence('ig')">
+              <div class="cb-custom" id="cb-ig-box"></div>
+              <span class="cb-text">
+                <span style="color:var(--ig);font-weight:500;">■</span>
+                Has Instagram
+              </span>
+            </div>
+            <div class="counter-badge" id="cnt-ig"></div>
+
+            <div style="height:6px"></div>
+
+            <div class="cb-row" onclick="togglePresence('tt')">
+              <div class="cb-custom" id="cb-tt-box"></div>
+              <span class="cb-text">
+                <span style="color:var(--tt);font-weight:500;">■</span>
+                Has TikTok
+              </span>
+            </div>
+            <div class="counter-badge" id="cnt-tt"></div>
+            <div class="counter-badge intersection" id="cnt-both"></div>
+
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="acc-section" id="sec-heat">
+        <div class="acc-header" onclick="toggleSection('sec-heat')">
+          <span class="acc-icon">▶</span>
+          <span class="acc-label">Heat Map</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-inner">
+            <div class="toggle-row">
+              <span class="toggle-label" style="font-size:11.5px;color:var(--text-secondary);line-height:1.5">
+                Review density<br>
+                <span style="font-size:10px;color:var(--text-dim)">Concentración geográfica</span>
+              </span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="tog-heat" onchange="setHeatmap(this.checked)">
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="acc-section" id="sec-type">
+        <div class="acc-header" onclick="toggleSection('sec-type')">
+          <span class="acc-icon">▶</span>
+          <span class="acc-label">Restaurant Type</span>
+          <span style="font-size:9.5px;color:var(--text-dim);white-space:nowrap">máx. 3</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-inner" id="type-list"><div class="cb-row type-cb-row" data-tipo="Other">
+      <div class="cb-custom"></div>
+      <span class="type-swatch" style="background:#9E9E9E;margin-top:3px;"></span>
+      <span class="cb-text" style="font-size:11.5px;">
+        Other
+        <span class="counter-inline" id="tc-Other" style="display:none"></span>
+      </span></div><div class="cb-row type-cb-row" data-tipo="Fast Food">
+      <div class="cb-custom"></div>
+      <span class="type-swatch" style="background:#FF5722;margin-top:3px;"></span>
+      <span class="cb-text" style="font-size:11.5px;">
+        Fast Food
+        <span class="counter-inline" id="tc-Fast Food" style="display:none"></span>
+      </span></div><div class="cb-row type-cb-row" data-tipo="Bar">
+      <div class="cb-custom"></div>
+      <span class="type-swatch" style="background:#AB47BC;margin-top:3px;"></span>
+      <span class="cb-text" style="font-size:11.5px;">
+        Bar
+        <span class="counter-inline" id="tc-Bar" style="display:none"></span>
+      </span></div><div class="cb-row type-cb-row" data-tipo="Ecuadorian Food">
+      <div class="cb-custom"></div>
+      <span class="type-swatch" style="background:#9E9E9E;margin-top:3px;"></span>
+      <span class="cb-text" style="font-size:11.5px;">
+        Ecuadorian Food
+        <span class="counter-inline" id="tc-Ecuadorian Food" style="display:none"></span>
+      </span></div><div class="cb-row type-cb-row" data-tipo="Café">
+      <div class="cb-custom"></div>
+      <span class="type-swatch" style="background:#9E9E9E;margin-top:3px;"></span>
+      <span class="cb-text" style="font-size:11.5px;">
+        Café
+        <span class="counter-inline" id="tc-Café" style="display:none"></span>
+      </span></div><div class="cb-row type-cb-row" data-tipo="Traditional">
+      <div class="cb-custom"></div>
+      <span class="type-swatch" style="background:#9E9E9E;margin-top:3px;"></span>
+      <span class="cb-text" style="font-size:11.5px;">
+        Traditional
+        <span class="counter-inline" id="tc-Traditional" style="display:none"></span>
+      </span></div><div class="cb-row type-cb-row" data-tipo="New Traditional">
+      <div class="cb-custom"></div>
+      <span class="type-swatch" style="background:#9E9E9E;margin-top:3px;"></span>
+      <span class="cb-text" style="font-size:11.5px;">
+        New Traditional
+        <span class="counter-inline" id="tc-New Traditional" style="display:none"></span>
+      </span></div><div class="cb-row type-cb-row" data-tipo="Catering">
+      <div class="cb-custom"></div>
+      <span class="type-swatch" style="background:#7CB342;margin-top:3px;"></span>
+      <span class="cb-text" style="font-size:11.5px;">
+        Catering
+        <span class="counter-inline" id="tc-Catering" style="display:none"></span>
+      </span></div><div class="cb-row type-cb-row" data-tipo="International">
+      <div class="cb-custom"></div>
+      <span class="type-swatch" style="background:#9E9E9E;margin-top:3px;"></span>
+      <span class="cb-text" style="font-size:11.5px;">
+        International
+        <span class="counter-inline" id="tc-International" style="display:none"></span>
+      </span></div><div class="cb-row type-cb-row" data-tipo="Cultural House">
+      <div class="cb-custom"></div>
+      <span class="type-swatch" style="background:#9E9E9E;margin-top:3px;"></span>
+      <span class="cb-text" style="font-size:11.5px;">
+        Cultural House
+        <span class="counter-inline" id="tc-Cultural House" style="display:none"></span>
+      </span></div><div class="cb-row type-cb-row" data-tipo="Hostel">
+      <div class="cb-custom"></div>
+      <span class="type-swatch" style="background:#9E9E9E;margin-top:3px;"></span>
+      <span class="cb-text" style="font-size:11.5px;">
+        Hostel
+        <span class="counter-inline" id="tc-Hostel" style="display:none"></span>
+      </span></div><div class="cb-row type-cb-row" data-tipo="Healthy">
+      <div class="cb-custom"></div>
+      <span class="type-swatch" style="background:#9E9E9E;margin-top:3px;"></span>
+      <span class="cb-text" style="font-size:11.5px;">
+        Healthy
+        <span class="counter-inline" id="tc-Healthy" style="display:none"></span>
+      </span></div></div>
+        </div>
+      </div>
+
+      
+      <div class="acc-section" id="sec-franchise">
+        <div class="acc-header" onclick="toggleSection('sec-franchise')">
+          <span class="acc-icon">▶</span>
+          <span class="acc-label">Franchises</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-inner">
+            <div class="cb-row" onclick="toggleFranchise()">
+              <div class="cb-custom" id="cb-fr-box"></div>
+              <span class="cb-text">Show franchises only</span>
+            </div>
+            <div class="counter-badge" id="cnt-fr"></div>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="acc-section note-accordion" id="sec-sources">
+        <div class="acc-header" onclick="toggleSection('sec-sources')">
+          <span class="acc-icon">▶</span>
+          <span class="acc-label">Data Sources</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-inner">
+            <p>Location and establishment data sourced from the open dataset:
+            <a href="https://www.datosabiertos.gob.ec/dataset/catastro-turistico-total/resource/d50f12b0-ee90-4539-a256-f30ab59ea88e" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline;text-decoration-style:dotted">
+            First two weeks of February — National Tourism Registry 2025 — BANECUADOR</a>.</p>
+            <p>Instagram and TikTok data collected through manual search
+            during the first 15 days of <strong>June 2026</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="acc-section note-accordion" id="sec-nogm">
+        <div class="acc-header" onclick="toggleSection('sec-nogm')">
+          <span class="acc-icon">▶</span>
+          <span class="acc-label">Unindexed Establishments <em style="font-style:normal;color:var(--gold)">✱</em></span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-inner">
+            <p>Markers labeled <strong>✱</strong> correspond to establishments
+            registered in the municipal registry but
+            <em>not indexed in Google Maps</em>. This may reflect two
+            distinct realities:</p>
+
+            <p><span class="note-number">1</span><strong>Commercial mortality.</strong>
+            The establishment existed at the time the base registry was compiled
+            but has since closed permanently or relocated without being updated.
+            Historic centers have especially high commercial turnover rates, and
+            Google typically removes or deactivates listings for closed or moved
+            businesses. The map thus reflects the temporal gap between the physical
+            reality of the territory and its digital-administrative representation.</p>
+
+            <p><span class="note-number">2</span><strong>Digital invisibility.</strong>
+            The business operates with a full physical presence —premises, signage,
+            customers— but does not appear in Google's database because the owner
+            never claimed a Google Business Profile and no user added it
+            collaboratively. This phenomenon reveals a <em>real digital divide</em>
+            in heritage zones: traditional commerce does not automatically translate
+            into digital territory.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    
+    <div class="panel-footer">
+      <button id="btn-download" onclick="downloadMap()">
+        ⬇ Download map.html
+      </button>
+    </div>
+
+  </aside>
+
+  
+  <div id="map-wrap">
+    <div id="map" class="leaflet-container leaflet-touch leaflet-retina leaflet-safari leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0" style="position: relative;"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 21; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" src="https://c.basemaps.cartocdn.com/light_all/16/18475/32807@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(476px, 89px, 0px); opacity: 1;"><img alt="" src="https://d.basemaps.cartocdn.com/light_all/16/18475/32808@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(476px, 345px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/light_all/16/18474/32807@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(220px, 89px, 0px); opacity: 1;"><img alt="" src="https://d.basemaps.cartocdn.com/light_all/16/18476/32807@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(732px, 89px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/light_all/16/18474/32808@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(220px, 345px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/light_all/16/18476/32808@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(732px, 345px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/light_all/16/18475/32806@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(476px, -167px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/light_all/16/18475/32809@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(476px, 601px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/light_all/16/18474/32806@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(220px, -167px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/light_all/16/18476/32806@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(732px, -167px, 0px); opacity: 1;"><img alt="" src="https://d.basemaps.cartocdn.com/light_all/16/18474/32809@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(220px, 601px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/light_all/16/18476/32809@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(732px, 601px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/light_all/16/18473/32807@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-36px, 89px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/light_all/16/18477/32807@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(988px, 89px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/light_all/16/18473/32808@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-36px, 345px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/light_all/16/18477/32808@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(988px, 345px, 0px); opacity: 1;"><img alt="" src="https://d.basemaps.cartocdn.com/light_all/16/18473/32806@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-36px, -167px, 0px); opacity: 1;"><img alt="" src="https://d.basemaps.cartocdn.com/light_all/16/18477/32806@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(988px, -167px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/light_all/16/18473/32809@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-36px, 601px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/light_all/16/18477/32809@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(988px, 601px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"><canvas class="leaflet-zoom-animated" width="4368" height="2896" style="transform: translate3d(-546px, -362px, 0px); width: 2184px; height: 1448px;"></canvas></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-marker-pane"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a></div></div><div class="leaflet-bottom leaflet-right"><div class="map-legend leaflet-control">
+        <div class="legend-title">Instagram · Seguidores</div>
+        <div class="legend-ig-row">
+          <div class="legend-ig-swatch"></div>
+          <span style="font-size:10px;color:#8A7E72">Presence layer</span>
+        </div>
+        <div class="legend-size-row">
+          <div class="legend-circle" style="width:6px;height:6px"></div>
+          <div class="legend-circle" style="width:14px;height:14px"></div>
+          <div class="legend-circle" style="width:22px;height:22px"></div>
+          <div class="legend-size-label">
+            0 → <strong>348.0k</strong>
+          </div>
+        </div></div><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors © <a href="https://carto.com">CARTO</a></div></div></div></div>
+    
+    <div class="map-stats-bar" id="stats-bar">
+      <div class="sb-line1">
+        <span class="sb-count" id="sb-active">420</span>
+        <span class="sb-label">on map of <span class="sb-total">420</span> records</span>
+      </div>
+      <div class="sb-line2" id="sb-detail"><span class="sb-chip">
+      <span class="stat-dot" style="background:var(--ig)"></span>
+      <span class="sb-chip-name">99 Instagram</span>
+      
+      <span class="sb-sep">·</span>
+      <span class="sb-pct-gl" style="color: #e7ddd2; font-size: 0.95em;">
+  <span style="opacity: 0.55; margin-right: 4px;">%<sub>Global</sub></span><strong style="color: #e7ddd2; font-weight: 700;">23.57%</strong>
+</span>
+    </span><span class="sb-chip">
+      <span class="stat-dot" style="background:var(--tt)"></span>
+      <span class="sb-chip-name">63 TikTok</span>
+      
+      <span class="sb-sep">·</span>
+      <span class="sb-pct-gl" style="color: #e7ddd2; font-size: 0.95em;">
+  <span style="opacity: 0.55; margin-right: 4px;">%<sub>Global</sub></span><strong style="color: #e7ddd2; font-weight: 700;">15.00%</strong>
+</span>
+    </span><span class="sb-chip">
+      <span class="stat-dot" style="background:var(--both)"></span>
+      <span class="sb-chip-name">63 both platforms</span>
+      
+      <span class="sb-sep">·</span>
+      <span class="sb-pct-gl" style="color: #e7ddd2; font-size: 0.95em;">
+  <span style="opacity: 0.55; margin-right: 4px;">%<sub>Global</sub></span><strong style="color: #e7ddd2; font-weight: 700;">15.00%</strong>
+</span>
+    </span></div>
+
+    
+    <div class="heat-legend" id="heat-legend">
+      <div class="heat-legend-title">Review Density</div>
+      <div class="heat-gradient-heat"></div>
+      <div class="heat-legend-scale">
+        <span>Low</span><span>Medium</span><span>High</span>
+      </div>
+      <div class="heat-legend-note">
+        Geographic concentration of<br>digital attention (Google Maps reviews)
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<script>
+ 
+const DATA = [{"n":"ALISVA KIMBERLY","d":"JUAN DE DIOS MORALES OE1-65 AV. PEDRO VICENTE MALDONADO, Quito, Ecuador","lat":-0.226330217510453,"lng":-78.5134425972235,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"DON POLLO JL\"\"","d":"OLMEDO E IMABURA, Quito, Ecuador","lat":-0.216119142011137,"lng":-78.5140001580072,"noGM":0,"stars":4.3,"rev":36,"hasIG":1,"igUrl":"https://www.instagram.com/donpollouio/","igH":"donpollouio","figIG":250,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":1},{"n":"LA CAVA NOCHE","d":"Chile 269 Guayaquil, Quito, Ecuador","lat":-0.226301307557224,"lng":-78.5126768209605,"noGM":0,"stars":5,"rev":1,"hasIG":1,"igUrl":"https://www.instagram.com/lacavabarecuador/","igH":"lacavabarecuador","figIG":555,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"LA ESQUINA ZARUMEÑA","d":"JUNIN E2-27 LUIS ALFONSO ORTIZ BILBAO, Quito, Ecuador","lat":-0.223477311452923,"lng":-78.5092842376581,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"LA LEYENDA CAFÉ CONCIERTO","d":"Chile 1270 Benalcázar, Quito, Ecuador","lat":-0.219100785548588,"lng":-78.5127394871008,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Café","fr":0},{"n":"LA TRADICIÓN","d":"MONTUFAR N1-88 N2 DE LOS MILAGROS, Quito, Ecuador","lat":-0.2208816,"lng":-78.5102828999999,"noGM":0,"stars":2.1,"rev":203,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RESTAURANTE VIVIANA DEL CENTRO","d":"MEJIA OE 1-55 FLORES, Quito, Ecuador","lat":-0.2207456,"lng":-78.51083369999999,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"SANTA ELENA \" RESTAURANTE\"","d":"MORALES S1-73 GUAYAQUIL, Quito, Ecuador","lat":-0.222704170785146,"lng":-78.51616404466,"noGM":0,"stars":3.1,"rev":7,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"¡Hasta la Vuelta!, Señor","d":"MEJIA OE6-43 BENALCAZAR, Quito, Ecuador","lat":-0.2179924,"lng":-78.5097485,"noGM":0,"stars":4.4,"rev":1740,"hasIG":1,"igUrl":"https://www.instagram.com/hastalavueltasenor/?__d=undefined","igH":"hastalavueltasenor","figIG":16300,"hasTT":1,"ttUrl":"https://www.tiktok.com/@hastalavueltasenor","ttH":"hastalavueltasenor","figTT":11100,"likTT":34400,"tipo":"New Traditional","fr":0},{"n":"ABATURC SPORT","d":"MANABÍ OE1-42 FLORES, Quito, Ecuador","lat":-0.2243445999999999,"lng":-78.5137767,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"ABU MUNIR","d":"N11 JOSE ANTEPARA E4-85 E5 LOS RIOS, Quito, Ecuador","lat":-0.2253545,"lng":-78.5094293,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"AL PASO","d":"VICENTE ROCAFUERTE e1-58 montúfar, Quito, Ecuador","lat":-0.2213737,"lng":-78.5056581,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"ALBAN ARELLANO ALEX JUAN","d":"AV. PICHINCHA E3-290 sucre, Quito, Ecuador","lat":-0.230993105187017,"lng":-78.5134537667371,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"ALCIVAR CEDEÑO CELIA CELINDA","d":"PICHINCHA N1-632 SUCRE, Quito, Ecuador","lat":-0.221408868070603,"lng":-78.5221836723145,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"ALGA PESCA","d":"GARCIA MORENO N7-68 MANABI, Quito, Ecuador","lat":-0.2183376,"lng":-78.5090367,"noGM":0,"stars":4.8,"rev":141,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"ANDES BREW PUB","d":"CUENCA S1-12 AV 24 DE MAYI, Quito, Ecuador","lat":-0.218562,"lng":-78.5094166,"noGM":0,"stars":4.8,"rev":1306,"hasIG":1,"igUrl":"https://www.instagram.com/andesbrewing/","igH":"andesbrewing","figIG":29000,"hasTT":1,"ttUrl":"https://www.tiktok.com/@andesbrewing.uio","ttH":"andesbrewing.uio","figTT":33,"likTT":13,"tipo":"Bar","fr":1},{"n":"ANITA DEL CENTRO","d":"GUAYAQUIL S1-64 MORALES, Quito, Ecuador","lat":-0.2275492,"lng":-78.5048652999999,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"AÑORANZA","d":"JUAN DE DIOS MORALES OE1-113 GUAYAQUIL, Quito, Ecuador","lat":-0.225048752500177,"lng":-78.5135724733121,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"APOLO'S","d":"Venezuela, entre y mejia y olmedo, Quito","lat":-0.218889811474007,"lng":-78.5104762424987,"noGM":0,"stars":4.8,"rev":98,"hasIG":1,"igUrl":"https://www.instagram.com/apolosfood/","igH":"apolosfood","figIG":407,"hasTT":1,"ttUrl":"https://www.tiktok.com/@apolosfood","ttH":"apolosfood","figTT":27800,"likTT":650700,"tipo":"Fast Food","fr":0},{"n":"ARROZ CON LECHE","d":"chile OE4-22 venezuela, Quito, Ecuador","lat":-0.221094942254577,"lng":-78.512214204609,"noGM":0,"stars":3,"rev":5,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"ASADERO DE POLLOS LA GRANJA DE CRISTINA","d":"Chile OE5-54 García Moreno, Quito, Ecuador","lat":-0.2260001,"lng":-78.5068199,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"ASADERO KING CHICKEN","d":"GRAN COLOMBIA N11-156 BRISEÑO, Quito, Ecuador","lat":-0.2225748,"lng":-78.5203569,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"ASADERO LA ESQUINA DE ALES","d":"GARCIA MORENO N7-78 MANABI, Quito, Ecuador","lat":-0.217782099769885,"lng":-78.5104425757738,"noGM":1,"stars":null,"rev":0,"hasIG":1,"igUrl":"https://www.instagram.com/laesquinadeales/","igH":"laesquinadeales","figIG":551,"hasTT":1,"ttUrl":"https://www.tiktok.com/@laesquinadeales.centro","ttH":"laesquinadeales.centro","figTT":429,"likTT":2147,"tipo":"Fast Food","fr":1},{"n":"ASADERO M & M","d":"CHIMBORAZO S42-14 IMBABURA, Quito, Ecuador","lat":-0.223951399764616,"lng":-78.5211747332877,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"ASADERO RESTAURANTE LOS MANABAS","d":"VENEZUELA N5-41 MEJIA, Quito, Ecuador","lat":-0.2256826,"lng":-78.506597,"noGM":0,"stars":4.3,"rev":63,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"ASADERO TÍO WILSON","d":"OLMEDO Oe5-59 BENALCAZAR, Quito, Ecuador","lat":-0.2243456,"lng":-78.51526460000001,"noGM":0,"stars":4.6,"rev":10,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"ATÁVICO CAFÉ","d":"DON BOSCO E344 PEDRO CALIXTO, Quito, Ecuador","lat":-0.2188224,"lng":-78.5049447999999,"noGM":0,"stars":4.7,"rev":266,"hasIG":1,"igUrl":"https://www.instagram.com/atavicocafe/","igH":"atavicocafe","figIG":3473,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Café","fr":0},{"n":"AZÚCAR EL PORTAL DE LA SALSA","d":"PICHINCHA E1-111 DON BOSCO, Quito, Ecuador","lat":-0.221287259192916,"lng":-78.5079194519729,"noGM":0,"stars":4.2,"rev":99,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"BAGUETTE","d":"IMBABURA S1-12 ROCAFUERTE, Quito, Ecuador","lat":-0.2207456,"lng":-78.51083369999999,"noGM":0,"stars":4.2,"rev":533,"hasIG":1,"igUrl":"https://www.instagram.com/baguetteec/","igH":"baguetteec","figIG":6031,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"BANDIDO BREWING","d":"N3 SUCRE OE2-34 GUAYAQUIL , Quito, Ecuador","lat":-0.2212136,"lng":-78.5059883,"noGM":0,"stars":4.7,"rev":2089,"hasIG":1,"igUrl":"https://www.instagram.com/bandidobrewing/","igH":"bandidobrewing","figIG":21300,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"BELENCITA","d":"BOLÍVAR OE6-85 CUENCA, Quito, Ecuador","lat":-0.2212368,"lng":-78.5152054,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"BENALCÁZAR","d":"aV. GRAN COLOMBIA N11-156 general pedro Briceño, Quito, Ecuador","lat":-0.220713413499149,"lng":-78.5108658909592,"noGM":0,"stars":4.5,"rev":591,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"BENDITAS CARNES","d":"VICENTE ROCAFUERTE S1-04 AV. MALDONADO, Quito, Ecuador","lat":-0.222596587549219,"lng":-78.5147864159185,"noGM":1,"stars":4.4,"rev":10,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"BISTRO","d":"MONTUFAR N1-40 ROCAFUERTE, Quito, Ecuador","lat":-0.2254327,"lng":-78.5111952,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"BOCANADA","d":"IMBABURA N1-64 SIMON BOLIVAR, Quito, Ecuador","lat":-0.2239206,"lng":-78.5090237,"noGM":0,"stars":4.7,"rev":335,"hasIG":1,"igUrl":"https://www.instagram.com/bocanadapizza/","igH":"bocanadapizza","figIG":2582,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"BUHOS RESTAURANTE","d":"CHILE OE6-201 e IMBABURA, Quito, Ecuador","lat":-0.225202846989277,"lng":-78.513539057048,"noGM":0,"stars":4.2,"rev":140,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"BUKYS","d":"GUAYAQUIL N11-10 GALÁPAGOS, Quito, Ecuador","lat":-0.2185667,"lng":-78.5111886,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"BURGER EL GUAYTAMBO","d":"CHILE CASA 210 PASAJE MALDONADO, Quito, Ecuador","lat":-0.2213737,"lng":-78.5056581,"noGM":0,"stars":4.2,"rev":388,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"CACHAPAS EL COMPITA","d":"mejia y marquesa de, Quito , Ecuador","lat":-0.221323299550575,"lng":-78.5088319002275,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"CACHUPUD TZACAN JOSE MATIAS","d":"GUAYAQUIL N9-46 ESMERALDAS , Quito, Ecuador","lat":-0.2228797,"lng":-78.5184132,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"CACTUS LA RONDA","d":"VICENTE ROCAFUERTE OE6-212 E IMBABURA, Quito, Ecuador","lat":-0.220620386624367,"lng":-78.5175716447615,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"CAFÉ ANHELO","d":"Morales OE3-36 Guayaquil, Quito, Ecuador","lat":-0.2188216,"lng":-78.5135489,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Café","fr":0},{"n":"CAFÉ CARACOL","d":"Sebastián de benalcazar entre Eugenio Espejo, y y Sucre, 190130 Quito","lat":-0.2199485,"lng":-78.5138264,"noGM":0,"stars":4.5,"rev":77,"hasIG":1,"igUrl":"https://www.instagram.com/cafe_caracol_/","igH":"cafe_caracol_","figIG":8,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"CAFÉ DEL FRAILE","d":"Chile, OE 4 y Venezuela 22 y, 170401 Quito","lat":-0.219567671011001,"lng":-78.511817604609,"noGM":0,"stars":4.4,"rev":902,"hasIG":1,"igUrl":"https://www.instagram.com/cafedelfraile/","igH":"cafedelfraile","figIG":2348,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"CAFE SAN BLAS","d":"LEOPOLDO SALVADOR N1-24 ROCAFUERTE, Quito, Ecuador","lat":-0.2187065,"lng":-78.5049494,"noGM":0,"stars":4.8,"rev":478,"hasIG":1,"igUrl":"https://www.instagram.com/cafe_san_blas_quito/","igH":"cafe_san_blas_quito","figIG":1006,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Café","fr":0},{"n":"CAFETERÍA MODELO CENTRO HISTÓRICO","d":"GUAYAQUIL N1-55 BOLIVAR, Quito, Ecuador","lat":-0.2215077,"lng":-78.5136675999999,"noGM":0,"stars":4.2,"rev":1918,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"CAISACHANA MEDINA NELLY CECILIA","d":"AVENIDA PICHINCHA N6-34 OLMEDO, Quito, Ecuador","lat":-0.2256826,"lng":-78.506597,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"CALICANTO","d":"AV PICHINCHA N3-114 CONCEPCION, Quito, Ecuador","lat":-0.2243445999999999,"lng":-78.5137767,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"CALLEJON QUITEÑO","d":"S1C JUAN DE DIOS Morales  OE3-68  OE3 Guayaquil, Quito, Ecuador","lat":-0.225367587122607,"lng":-78.5135210097049,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"CARAVANA","d":"AV.MALDONADO S5-14 BENIGNO VELA, Quito, Ecuador","lat":-0.2216162,"lng":-78.513984,"noGM":0,"stars":4,"rev":1255,"hasIG":1,"igUrl":"https://www.instagram.com/caravanafastfood/","igH":"caravanafastfood","figIG":7093,"hasTT":1,"ttUrl":"https://www.tiktok.com/@caravanafastfood24","ttH":"caravanafastfood24","figTT":3207,"likTT":13500,"tipo":"Fast Food","fr":1},{"n":"CARAVANA","d":"ABDON CALDERON OE9-224 TUPAC YUPANQUI, Quito, Ecuador","lat":-0.2190905,"lng":-78.5130829,"noGM":0,"stars":3.9,"rev":761,"hasIG":1,"igUrl":"https://www.instagram.com/caravanafastfood/","igH":"caravanafastfood","figIG":7093,"hasTT":1,"ttUrl":"https://www.tiktok.com/@caravanafastfood24","ttH":"caravanafastfood24","figTT":3207,"likTT":13500,"tipo":"Fast Food","fr":1},{"n":"CARAVANA","d":"GARCIA MORENO S3 24 LOJA, Quito, Ecuador","lat":-0.2218299,"lng":-78.5090985,"noGM":0,"stars":4.2,"rev":201,"hasIG":1,"igUrl":"https://www.instagram.com/caravanafastfood/","igH":"caravanafastfood","figIG":7093,"hasTT":1,"ttUrl":"https://www.tiktok.com/@caravanafastfood24","ttH":"caravanafastfood24","figTT":3207,"likTT":13500,"tipo":"Fast Food","fr":1},{"n":"CARMITA","d":"Plaza Del Teatro, Jose J.Olmedo Oe2-18, 170136 Quito","lat":-0.219588623027748,"lng":-78.5092174849661,"noGM":0,"stars":5,"rev":1,"hasIG":1,"igUrl":"https://www.instagram.com/cafeteria_carmita/","igH":"cafeteria_carmita","figIG":237,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"CASA BLANCA DE MONTUFAR","d":"AV. PICHINCHA N4-107 VICENTE LEON, Quito, Ecuador","lat":-0.2212405,"lng":-78.50895229999999,"noGM":0,"stars":4.9,"rev":45,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"CASA GANGOTENA RESTAURANTE","d":"BolÍvar Oe6-41 Cuenca, Quito, Ecuador","lat":-0.2211493,"lng":-78.5154623,"noGM":0,"stars":4.7,"rev":661,"hasIG":1,"igUrl":"https://www.instagram.com/restaurantecasagangotena/","igH":"restaurantecasagangotena","figIG":27400,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"New Traditional","fr":0},{"n":"CASA MANUELA","d":"GARCíA MORENO N7-37 MANABÍ, Quito, Ecuador","lat":-0.2201151,"lng":-78.5127699,"noGM":0,"stars":4.4,"rev":115,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"CASA TUA RISTORANTE","d":"GARCIA MORENO N6-67 OLMEDO, Quito, Ecuador","lat":-0.218590174164906,"lng":-78.5112135986609,"noGM":1,"stars":null,"rev":0,"hasIG":1,"igUrl":"https://www.instagram.com/casatuaristorante/?hl=es","igH":"casatuaristorante","figIG":78,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"CECIBEL","d":"Imbabura N1-16 Rocafuerte , Quito, Ecuador","lat":-0.2219862,"lng":-78.5065968999999,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"CEVICHERIA LA ERMITA","d":"N3 SUCRE E1-118 MONTUFAR, Quito, Ecuador","lat":-0.2213834,"lng":-78.5214684,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"CEVICHOCHOS DE LA BOLIVAR","d":"AVENIDA PICHINCHA N43097 CHILE, Quito, Ecuador","lat":-0.2224,"lng":-78.51380999999999,"noGM":0,"stars":4.5,"rev":727,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"CHAN CHAN","d":"LOJA OE2-352 GUAYAQUIL, Quito, Ecuador","lat":-0.219983,"lng":-78.5052819,"noGM":0,"stars":5,"rev":41,"hasIG":1,"igUrl":"https://www.instagram.com/chanchanuio/","igH":"chanchanuio","figIG":2081,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"CHIFA FOUR SEA","d":"GARCÍA MORENO N7-15 OLMEDO, Quito, Ecuador","lat":-0.218455940948613,"lng":-78.5109337855755,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"CHIFA JING BIN","d":"MONTUFAR N357 JUNIN, Quito, Ecuador","lat":-0.2178802,"lng":-78.5070442,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"CHIFA LEPUT","d":"VICENTE LEON 680 ESMERALDAS, Quito, Ecuador","lat":-0.2228512,"lng":-78.5189472,"noGM":0,"stars":4.7,"rev":87,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"CHIFA MIN FU","d":"JUAN PÍO MONTUFAR N2-34 PEREIRA, Quito, Ecuador","lat":-0.2193096,"lng":-78.5087458,"noGM":0,"stars":4.2,"rev":21,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"CHIFA RONG QIAO","d":"Cuenca N6-38 Olmedo, Quito, Ecuador","lat":-0.2175959,"lng":-78.5071669,"noGM":0,"stars":4.4,"rev":64,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"CHIFA TIAN YOU","d":"QFHR+2G8, Av Pichincha, 170136 Quito, Ecuador","lat":-0.2205009,"lng":-78.5107886,"noGM":0,"stars":4,"rev":4,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"CHIFA YING KE","d":"BOLÍVAR OE6-147 E IMBABURA, Quito, Ecuador","lat":-0.2207746,"lng":-78.5173075,"noGM":0,"stars":4.6,"rev":9,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"CHIFA YUXUAN","d":"PEDRO FERMIN CEVALLOS N9-58 ORIENTE, Quito, Ecuador","lat":-0.225216,"lng":-78.5071881,"noGM":0,"stars":3.9,"rev":10,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"CHOCOLATE TRADICIONAL","d":"Montúfar oE1-02 Esmeraldas, Quito, Ecuador","lat":-0.2191236,"lng":-78.5144617999999,"noGM":0,"stars":4.5,"rev":23,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"CHORIGOL","d":"Av. 24 de Mayo OE7-44 e Imbabura, Quito, Ecuador","lat":-0.218056,"lng":-78.5110251999999,"noGM":0,"stars":4.1,"rev":150,"hasIG":1,"igUrl":"https://www.instagram.com/chorigoloficial/","igH":"chorigoloficial","figIG":10300,"hasTT":1,"ttUrl":"https://www.tiktok.com/@chorigol_ec","ttH":"chorigol_ec","figTT":9441,"likTT":38200,"tipo":"International","fr":1},{"n":"CISNE DE LA PLAZA DEL TEATRO","d":"OLMEDO E1-136 PEDRO FERMÍN CEVALLOS, Quito, Ecuador","lat":-0.2195263,"lng":-78.5082031,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"CLAROSCURO","d":"MONTUFAR N7-13 OLMEDO, Quito, Ecuador","lat":-0.223328,"lng":-78.514359,"noGM":0,"stars":4.7,"rev":170,"hasIG":1,"igUrl":"https://www.instagram.com/claroscuro.uio/","igH":"claroscuro.uio","figIG":24900,"hasTT":1,"ttUrl":"https://www.tiktok.com/@claroscuro.uio","ttH":"claroscuro.uio","figTT":3130,"likTT":44300,"tipo":"New Traditional","fr":1},{"n":"COCHOLATE COMIDA ECUATORIANA","d":"García Moreno N2-60 Sucre, Quito, Ecuador","lat":-0.2199702,"lng":-78.51484479999999,"noGM":0,"stars":4.1,"rev":345,"hasIG":1,"igUrl":"https://www.instagram.com/cocholateecu/","igH":"cocholateecu","figIG":32800,"hasTT":1,"ttUrl":"https://www.tiktok.com/@cocholateecu","ttH":"cocholateecu","figTT":17600,"likTT":257800,"tipo":"New Traditional","fr":1},{"n":"COCOA PACHA FOOD COFFEE CHOCOLATE","d":"MORALES OE11-13 GUAYAQUIL, Quito, Ecuador","lat":-0.223794157271839,"lng":-78.5135079334442,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Café","fr":0},{"n":"COLONIAL","d":"AV PICHINCHA N4-39 SUCRE, Quito, Ecuador","lat":-0.2178802,"lng":-78.5070442,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"COMEDOR EL TAMALITO","d":"Juan Pío Montúfar 192, 170130 Quito","lat":-0.224448728517669,"lng":-78.5115093756162,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"COMEDOR MIRYAN","d":"MANABÍ OE1-37 Flores, Quito, Ecuador","lat":-0.219216343556166,"lng":-78.5085835621234,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"COMIDA TIPICA LOS TRES CHIVOS DE DAVID","d":"MARQUESA DE SOLANDA N545 MEJIA, Quito, Ecuador","lat":-0.2184406,"lng":-78.510825,"noGM":0,"stars":4.6,"rev":61,"hasIG":1,"igUrl":"https://www.instagram.com/lostreschivosdedavid/","igH":"lostreschivosdedavid","figIG":531,"hasTT":1,"ttUrl":"https://www.tiktok.com/@lostreschivosdedavid","ttH":"lostreschivosdedavid","figTT":1588,"likTT":10300,"tipo":"Traditional","fr":0},{"n":"COMIDA TÍPICA RESTAURANTE DAVID","d":"N4A ESPEJO OE 3-45 VENEZUELA, Quito, Ecuador","lat":-0.2172352,"lng":-78.5124424,"noGM":0,"stars":4.6,"rev":61,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"COMIDAS DE LA ROCAFUERTE","d":"BOLÍVAR OE4-67 GARCÍA MORENO, Quito, Ecuador","lat":-0.2171185,"lng":-78.5143446,"noGM":0,"stars":4.5,"rev":135,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"CONVERGENCIA ALIMENTO DE TODOS LOS TIEMPOS","d":"VICENTE ROCAFUERTE E4-115 N3 SUCRE, Quito, Ecuador","lat":-0.2188224,"lng":-78.5049447999999,"noGM":0,"stars":5,"rev":363,"hasIG":1,"igUrl":"https://www.instagram.com/convergencia.food/","igH":"convergencia.food","figIG":896,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"New Traditional","fr":0},{"n":"CRYZPY","d":"N3 SUCRE E3221 AV PICHINCHA, Quito, Ecuador","lat":-0.2210091,"lng":-78.5099563,"noGM":0,"stars":4.1,"rev":9,"hasIG":1,"igUrl":"https://www.instagram.com/cryzpy.ec/reels/","igH":"cryzpy.ec","figIG":73,"hasTT":1,"ttUrl":"https://www.tiktok.com/@cryzpyec","ttH":"cryzpyec","figTT":1625,"likTT":11700,"tipo":"Fast Food","fr":0},{"n":"CUCHARA DE PALO DE LA RONDA","d":"MORALES 984 VENEZUELA, Quito, Ecuador","lat":-0.225111828515518,"lng":-78.5141064,"noGM":0,"stars":4.2,"rev":5,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"D''L MAR CEVICHES MARISCOS & ALGO MAS...","d":"Manabi y García Moreno &, 170401 Quito","lat":-0.221592987323619,"lng":-78.5092780621234,"noGM":1,"stars":4.8,"rev":16,"hasIG":1,"igUrl":"https://www.instagram.com/dlmar.rest/","igH":"dlmar.rest","figIG":92,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"DAVID POLLO DE SAN BLAS","d":"Av. Gran Colombia N11-300, 170136 Quito","lat":-0.21705604701319,"lng":-78.5048727378284,"noGM":0,"stars":4.5,"rev":6,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"DELICIA DE JUANCHO","d":"García Moreno y Manabi, 170401 Quito","lat":-0.217853414804069,"lng":-78.5106521467805,"noGM":0,"stars":5,"rev":1,"hasIG":1,"igUrl":"https://www.instagram.com/las_delicias_de_juancho/","igH":"las_delicias_de_juancho","figIG":822,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"DELICIAS COLOMBIA ISOLINA","d":"CANTUÑA S4-30 ABDON CALDERON, Quito, Ecuador","lat":-0.2181744,"lng":-78.5088909,"noGM":0,"stars":4.3,"rev":1003,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"DELICIAS DE LA CHILE","d":"N2 BOLIVAR OE8108 OE9 CHIMBORAZO, Quito, Ecuador","lat":-0.2220496,"lng":-78.5075475,"noGM":0,"stars":5,"rev":6,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"DELICIAS DE LA GUAIRA","d":"García Moreno  N7-50 N8 manabÍ, Quito, Ecuador","lat":-0.217716244282286,"lng":-78.51061357394,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"DELICIAS MANABITAS","d":"E3 PEDRO FERMIN CEVALLOS N5-55 N5 CHILE, Quito, Ecuador","lat":-0.2183076,"lng":-78.515861,"noGM":0,"stars":4.7,"rev":16,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"DELICIAS MERCEDITAS","d":"DON BOSCO E4 19 VICENTE LEON, Quito, Ecuador","lat":-0.221028065414409,"lng":-78.5046741636889,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"DELIRIUM","d":"E1A JOAQUIN PAREDES E1-152 VICENTE ROCAFUERTE, Quito, Ecuador","lat":-0.2189516,"lng":-78.5043355999999,"noGM":0,"stars":4.8,"rev":66,"hasIG":1,"igUrl":"https://www.instagram.com/deliriumpizzaarte/","igH":"deliriumpizzaarte","figIG":1722,"hasTT":1,"ttUrl":"https://www.tiktok.com/@deliriumpizzaarte","ttH":"deliriumpizzaarte","figTT":203,"likTT":2428,"tipo":"International","fr":0},{"n":"DIEGUITO","d":"Imbabura N3-09, 170401 Quito","lat":-0.219207329828373,"lng":-78.5164929197949,"noGM":0,"stars":2,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"DIOSOLOPAY","d":"SUCRE 391 GARCÍA MORENO, Quito, Ecuador","lat":-0.2204752,"lng":-78.5131768999999,"noGM":0,"stars":4.2,"rev":498,"hasIG":1,"igUrl":"https://www.instagram.com/restaurante_diosolopay/","igH":"restaurante_diosolopay","figIG":87,"hasTT":1,"ttUrl":"https://www.tiktok.com/@_restaurante_diosolopay_","ttH":"_restaurante_diosolopay_","figTT":275,"likTT":3898,"tipo":"New Traditional","fr":0},{"n":"DON PANCHO","d":"Imbabura y Chile, Quito, Ecuador","lat":-0.217324284736629,"lng":-78.5152389774663,"noGM":0,"stars":2.3,"rev":72,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"DON PEDRO","d":"Asunción Oe5-174, 170103 Quito","lat":-0.206294705251502,"lng":-78.5067222208056,"noGM":0,"stars":4.6,"rev":5,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"DON POLLO","d":"QFMP+GCR, imbabura y, José Joaquín Olmedo, 170401 Quito","lat":-0.216129871012047,"lng":-78.513978704609,"noGM":0,"stars":4.3,"rev":36,"hasIG":1,"igUrl":"https://www.instagram.com/donpolloec/","igH":"donpolloec","figIG":730,"hasTT":1,"ttUrl":"https://www.tiktok.com/@donpolloec","ttH":"donpolloec","figTT":5493,"likTT":1516,"tipo":"Fast Food","fr":1},{"n":"DULCE TRADICION","d":"ANTEPARA E4-60 RíOS, Quito, Ecuador","lat":-0.2242688,"lng":-78.5137556999999,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"EL ATRIO 593","d":"GUAYAQUIL n7-14 OLMEDO, Quito, Ecuador","lat":-0.2185525,"lng":-78.5111269,"noGM":0,"stars":4.6,"rev":14,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL BALCÓN MIRADOR XAVIER","d":"ROCAFUERTE OE6-124 oe6a CUENCA, Quito, Ecuador","lat":-0.225603199761966,"lng":-78.5132392334442,"noGM":0,"stars":4,"rev":5,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"New Traditional","fr":0},{"n":"EL BALCÓN SUMAK RIKUY","d":"EsmeraldaS Oe3-48 Vargas, Quito, Ecuador","lat":-0.221329686034741,"lng":-78.511231404452,"noGM":1,"stars":4.4,"rev":168,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"New Traditional","fr":0},{"n":"EL BUEN CAFÉ DE JOEL","d":"de 3, La Ronda 68, 170130 Quito","lat":-0.223994199763581,"lng":-78.5141064,"noGM":0,"stars":3.7,"rev":43,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"EL BUEN POLLO CARMITA","d":"E6 VALPARAISO N4-67 N4C ANTOFAGASTA, Quito, Ecuador","lat":-0.2205044,"lng":-78.5069922,"noGM":0,"stars":4.4,"rev":47,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL BUEN SAZÓN","d":"BENALCÁZAR n3-07 SUCRE, Quito, Ecuador","lat":-0.220705885868598,"lng":-78.5143940323785,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL CAFE MUSICAL LA RONDA","d":"OE2 FLORES N5-04 Y N5 CHILE, Quito, Ecuador","lat":-0.2242057,"lng":-78.5140378,"noGM":0,"stars":2.3,"rev":6,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL CANDDYL DE LA RONDA","d":"IMBABURA N2-53 ALIANZA, Quito, Ecuador","lat":-0.2258871,"lng":-78.513209,"noGM":0,"stars":4,"rev":740,"hasIG":1,"igUrl":"https://www.instagram.com/canddyl_de_la_ronda/","igH":"canddyl_de_la_ronda","figIG":383,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"EL CHAVO","d":"PEDRO FERMIN CEVALLOS N10-56 ANTEPARA, Quito, Ecuador","lat":-0.221571620720387,"lng":-78.5074230293982,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"EL CHEF","d":"GARCÍA MORENO N752 MANABÍ, Quito, Ecuador","lat":-0.221244435493296,"lng":-78.5136889666868,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL CHULLA QUITEÑO","d":"SUCRE OE6-16 BENALCáZAR, Quito, Ecuador","lat":-0.220497054493771,"lng":-78.5141614732162,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"EL CHULLA Y LOS CHAGRAS","d":"MONTÚFAR N2-26 sucre, Quito, Ecuador","lat":-0.224099,"lng":-78.5145201,"noGM":0,"stars":4.3,"rev":105,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL DESCANSO DE LA MONTÚFAR","d":"OLMEDO OE2-18 Flores, Quito, Ecuador","lat":-0.21975627101191,"lng":-78.5090525467805,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL FLACO DE LOJA","d":"Venezuela N7-67, N7-67, 170401 Quito","lat":-0.218281979762092,"lng":-78.5100500529485,"noGM":0,"stars":5,"rev":2,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"EL GOCHO BURGUER","d":"GARCIA MORENO N284 SUCRE, Quito, Ecuador","lat":-0.2188216,"lng":-78.5135489,"noGM":0,"stars":4,"rev":2,"hasIG":1,"igUrl":"https://www.instagram.com/el.gochoburger/","igH":"el.gochoburger","figIG":82,"hasTT":1,"ttUrl":"https://www.tiktok.com/@elgocho.burger","ttH":"elgocho.burger","figTT":1685,"likTT":6501,"tipo":"Fast Food","fr":0},{"n":"EL GRAN POLLO EL SEVILLANITO\"\"","d":"SUCRE E3-277 AV. PICHINCHA, Quito, Ecuador","lat":-0.227046999761485,"lng":-78.5079368351378,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL HORNO DE LEÑA DE LA RONDA","d":"INCLANA N4-281 AV PICHINCHA, Quito, Ecuador","lat":-0.2251296,"lng":-78.5135885999999,"noGM":0,"stars":4.5,"rev":261,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL HUERTO","d":"Inclana E2-80 AV. Pichincha, Quito, Ecuador","lat":-0.222332495911178,"lng":-78.513942956573,"noGM":1,"stars":4,"rev":6,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Healthy","fr":0},{"n":"EL HUEVOTOTOTE","d":"av. GUAYAQUIL N5-31 CHILE , Quito, Ecuador","lat":-0.2247811,"lng":-78.5154068,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"EL JAVI","d":"MORALES OE1-11 MALDONADO, Quito, Ecuador","lat":-0.225592389107862,"lng":-78.5133497665631,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Café","fr":0},{"n":"EL KON-CH-RITO","d":"av. Pichincha N4-391 Chile, Quito, Ecuador","lat":-0.2208487,"lng":-78.5171515999999,"noGM":0,"stars":4.9,"rev":50,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL LEGÍTIMO MAMA MICHE DE LA MARIN","d":"FLORES N7-54 MANABÍ, Quito, Ecuador","lat":-0.2233244,"lng":-78.5083583999999,"noGM":0,"stars":4.7,"rev":46,"hasIG":1,"igUrl":"https://www.instagram.com/mamamiche.quito/","igH":"mamamiche.quito","figIG":392,"hasTT":1,"ttUrl":"https://www.tiktok.com/@mamamichedesde1940","ttH":"mamamichedesde1940","figTT":3872,"likTT":14300,"tipo":"Traditional","fr":1},{"n":"EL MESON DE LA RECOLETA","d":"EJE LONG. JUAN PIO MONTUFAR N5-6C MEJIA, Quito, Ecuador","lat":-0.2309051,"lng":-78.5137749,"noGM":0,"stars":4.3,"rev":92,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL MOLINO DE  LA  OLMEDO","d":"Olmedo Oe4-12 Venezuela, Quito, Ecuador","lat":-0.221225993299588,"lng":-78.5095847180036,"noGM":0,"stars":4.2,"rev":5,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"EL MONARCA POLLOS AL VINO","d":"MORALES OE3-24 GUAYAQUIL, Quito, Ecuador","lat":-0.224323142256993,"lng":-78.5138410774663,"noGM":1,"stars":4.6,"rev":5,"hasIG":1,"igUrl":"https://www.instagram.com/elmonarcapollosalvino/","igH":"elmonarcapollosalvino","figIG":242,"hasTT":1,"ttUrl":"https://www.tiktok.com/@monarca.polloalvino","ttH":"monarca.polloalvino","figTT":323,"likTT":1907,"tipo":"Fast Food","fr":0},{"n":"EL MONASTERIO FRUTAS Y ALGO MAS","d":"OE1 MONTUFAR N5-46 MEJIA PB LA MARIN, Quito, Ecuador","lat":-0.218313442253413,"lng":-78.5112927622794,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"EL MONO ABRIL","d":"Sucre OE1-50 Pasaje OE1A, Quito, Ecuador","lat":-0.221446455909605,"lng":-78.5134256903308,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"EL PADRE ALMEIDA GRILL RESTAURANTE & EVENTOS","d":"C. de la Rda. 730, 170130 Quito","lat":-0.225253828515278,"lng":-78.5134985622794,"noGM":0,"stars":4.5,"rev":16,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"EL PARAÍSO QUITEÑO","d":"Mejía Oe6-50 Cuenca, Quito, Ecuador","lat":-0.217513882702495,"lng":-78.5135241177736,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"EL PATIO BISTRO","d":"QFMM+6Q9, Chile y Chimborazo &, 170401 Quito","lat":-0.217036299771588,"lng":-78.5154601332877,"noGM":0,"stars":4.5,"rev":232,"hasIG":1,"igUrl":"https://www.instagram.com/elpatiobistrouio/","igH":"elpatiobistrouio","figIG":1156,"hasTT":1,"ttUrl":"https://www.tiktok.com/@elpatiobistrouio","ttH":"elpatiobistrouio","figTT":552,"likTT":5604,"tipo":"New Traditional","fr":0},{"n":"EL PATIO SEVILLANO","d":"OE5 GARCIA MORENO N1-10 ROCAFUERTE, Quito, Ecuador","lat":-0.2177572,"lng":-78.5105849,"noGM":0,"stars":4.3,"rev":1266,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL POLLO PACHANGUERO","d":"JUAN DE DIOS MORALES Oe1-65 MALDONADO, Quito, Ecuador","lat":-0.2195296,"lng":-78.5089323999999,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"EL RINCÓN DE LA GUATITA","d":"OE4 VENEZUELA N1-21 ROCAFUERTE, Quito, Ecuador","lat":-0.224007528518423,"lng":-78.5112096621234,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"EL RINCON DE LA LOMA GRANDE","d":"FLORES N7-31 OLMEDO, Quito, Ecuador","lat":-0.2269925,"lng":-78.5114245,"noGM":0,"stars":4.7,"rev":54,"hasIG":1,"igUrl":"https://www.instagram.com/rinconlalomagrande/","igH":"rinconlalomagrande","figIG":612,"hasTT":1,"ttUrl":"https://www.tiktok.com/@rinconlalomagrande","ttH":"rinconlalomagrande","figTT":1063,"likTT":10100,"tipo":"Catering","fr":0},{"n":"EL RINCON DE LAS DELICIAS","d":"Juan de Dios Morales Oe1-123 Guayaquil, Quito, Ecuador","lat":-0.2212405,"lng":-78.50895229999999,"noGM":0,"stars":4.7,"rev":397,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"EL RINCON MANABITA LEYDI","d":"SUCRE 350 GARCIA MORENO, Quito, Ecuador","lat":-0.2225128,"lng":-78.5172486,"noGM":0,"stars":5,"rev":9,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"EL RINCON VENEZOLANO","d":"JOSE MEJIA LEQUERICA OE4-51 VENEZUELA, Quito, Ecuador","lat":-0.226369,"lng":-78.5115053,"noGM":0,"stars":4.4,"rev":113,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"EL RINCONCITO DE MARGARITA","d":"OE3 GUAYAQUIL N9-38 y N9 ESMERALDAS, Quito, Ecuador","lat":-0.2233818,"lng":-78.5080473,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL SABOR DE LILI","d":"CARABOBO OE8-91 CHIMBORAZO, Quito, Ecuador","lat":-0.222947638792701,"lng":-78.520402936988,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL SABOR DE LOS CARMELOS","d":"MONTUFAR N5-80 MEJIA, Quito, Ecuador","lat":-0.223668271010788,"lng":-78.5080539909591,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"EL SAZON DE MECHE","d":"OE9 CHIMBORAZO S4-71 S4B ABDON CALDERON, Quito, Ecuador","lat":-0.2264665,"lng":-78.5068071,"noGM":0,"stars":4.3,"rev":110,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"EL SUCO","d":"Manabi Oe1-18, 170401 Quito","lat":-0.219645649078675,"lng":-78.5079575634583,"noGM":0,"stars":5,"rev":4,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"EL TERRUÑO","d":"Montúfar N5-61 Mejía, Quito, Ecuador","lat":-0.2179481,"lng":-78.511566,"noGM":0,"stars":5,"rev":11,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"EL VIEJO FAROL DE LA RONDA","d":"Juan de Dios Morales y Av. Pedro Vicente Maldonado Oe1-65 y, 170402 Quito","lat":-0.226604799699641,"lng":-78.5130764483577,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"ELE MARTHY","d":"CHILE E1-48 AV PICHINCHA, Quito, Ecuador","lat":-0.2173719,"lng":-78.5052486,"noGM":0,"stars":4.4,"rev":25,"hasIG":1,"igUrl":"https://www.instagram.com/elemarthy/","igH":"elemarthy","figIG":419,"hasTT":1,"ttUrl":"https://www.tiktok.com/@elemarthy","ttH":"elemarthy","figTT":28,"likTT":53,"tipo":"New Traditional","fr":0},{"n":"ENTRE VICHES Y CEVICHES","d":"N11 JOSE ANTEPARA E362 E4 VICENTE LEON, Quito, Ecuador","lat":-0.2179691,"lng":-78.5119429,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"EXQUISITA LA MEJOR COMIDA TÍPICA","d":"CHILE OE1-35 MONTÚFAR, Quito, Ecuador","lat":-0.217629674843536,"lng":-78.5051442441004,"noGM":0,"stars":4.5,"rev":489,"hasIG":1,"igUrl":"https://www.instagram.com/la_exquisita_oficial/","igH":"la_exquisita_oficial","figIG":893,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"EXQUISITAS FRITADAS Y CEVICHOCHOS CHAVELITA","d":"Guayaquil N5-59 Mejía, Quito, Ecuador","lat":-0.2179953,"lng":-78.5071954,"noGM":0,"stars":4.6,"rev":85,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"FABIOLITA","d":"OLMEDO  OE1-86 FLORES, Quito, Ecuador","lat":-0.2206553,"lng":-78.5120074,"noGM":0,"stars":4.3,"rev":261,"hasIG":1,"igUrl":"https://www.instagram.com/fabiolita1965/","igH":"fabiolita1965","figIG":1064,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"FAMILIA DEL MAR","d":"La Marín y Calle Juan Pio Montúfar N5-61, 170206 Quito","lat":-0.220898528523827,"lng":-78.5085806044519,"noGM":0,"stars":4.6,"rev":9,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"FIRE MUSIC","d":"MORALES OE3-68 GUAYAQUIL, Quito, Ecuador","lat":-0.226096664683812,"lng":-78.5136984596586,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"FOOD DRINK LA GUARAGUA","d":"SC MONTUFAR N5-34 N5 CHILE, Quito, Ecuador","lat":-0.2162962,"lng":-78.5080744999999,"noGM":0,"stars":5,"rev":3,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"FRUTERIA MONSERRATE","d":"N11B CALDAS E1-19 AV. 10 DE AGOSTO, Quito, Ecuador","lat":-0.221548,"lng":-78.5105657,"noGM":0,"stars":4.2,"rev":447,"hasIG":1,"igUrl":"https://www.instagram.com/fruteriamonserrate.uio/","igH":"fruteriamonserrate.uio","figIG":11700,"hasTT":1,"ttUrl":"https://www.tiktok.com/@fruteriamonserrate.uio","ttH":"fruteriamonserrate.uio","figTT":5732,"likTT":15500,"tipo":"Café","fr":1},{"n":"GOLOSINAS DEL CARMEN BAJO","d":"JUNIN E1-44 MONTUFAR, Quito, Ecuador","lat":-0.2192394,"lng":-78.50974699999999,"noGM":0,"stars":4.8,"rev":18,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"GUATITAS DE LA MARIN","d":"BARAHONA S4-42 AMBATO, Quito, Ecuador","lat":-0.2199702,"lng":-78.5183562,"noGM":0,"stars":4,"rev":80,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"GUS","d":"AV PICHINCHA N3-153 CONCEPCION, Quito, Ecuador","lat":-0.2190973,"lng":-78.5130381,"noGM":0,"stars":3.8,"rev":669,"hasIG":1,"igUrl":"https://www.instagram.com/pollogusec/","igH":"pollogusec","figIG":23100,"hasTT":1,"ttUrl":"https://www.tiktok.com/@pollogusec","ttH":"pollogusec","figTT":22700,"likTT":29000,"tipo":"Fast Food","fr":1},{"n":"HAPPY FOOD","d":"CHILE OE4-56 VENEZUELA, Quito, Ecuador","lat":-0.2178802,"lng":-78.5070442,"noGM":0,"stars":4.2,"rev":138,"hasIG":1,"igUrl":"https://www.instagram.com/happyfoodalobestia/","igH":"happyfoodalobestia","figIG":943,"hasTT":1,"ttUrl":"https://www.tiktok.com/@happyfoodalobestia","ttH":"happyfoodalobestia","figTT":3148,"likTT":9675,"tipo":"Ecuadorian Food","fr":0},{"n":"HAPPY ROCK","d":"S1C MORALES OE1-113 E3 GUAYAQUIL, Quito, Ecuador","lat":-0.224376786025006,"lng":-78.5138196197948,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"HELADERÍA CARIBE","d":"VICENTE ROCAFUERTE E2 32 BALTAZAR PONTÓN, Quito, Ecuador","lat":-0.222601,"lng":-78.513673,"noGM":0,"stars":4.4,"rev":1368,"hasIG":1,"igUrl":"https://www.instagram.com/heladeriacaribequito/","igH":"heladeriacaribequito","figIG":1111,"hasTT":1,"ttUrl":"https://www.tiktok.com/@heladeria.caribe.ecuador","ttH":"heladeria.caribe.ecuador","figTT":63,"likTT":70,"tipo":"Traditional","fr":0},{"n":"HELADERÍA SAN AGUSTÍN","d":"INCLANA E3273 SILVA, Quito, Ecuador","lat":-0.2208913,"lng":-78.5088023,"noGM":0,"stars":4.7,"rev":2038,"hasIG":1,"igUrl":"https://www.instagram.com/heladeriasanagustin/","igH":"heladeriasanagustin","figIG":5852,"hasTT":1,"ttUrl":"https://www.tiktok.com/@heladeriasanagustin","ttH":"heladeriasanagustin","figTT":2214,"likTT":10300,"tipo":"Traditional","fr":0},{"n":"HUECA DE DOÑA ROSITA CHANGO","d":"ROCAFUERTE E1-58 S/N, Quito, Ecuador","lat":-0.2248502,"lng":-78.5116781,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"INES","d":"Junín y Juan Pío Montúfar E1-44 y, 170401 Quito","lat":-0.22312192156115,"lng":-78.5100846056271,"noGM":0,"stars":4.5,"rev":37,"hasIG":1,"igUrl":"https://www.instagram.com/ines.restaurante/","igH":"ines.restaurante","figIG":6214,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"New Traditional","fr":0},{"n":"J M N","d":"JOSÉ DE ANTEPARA e4-50 los ríos, Quito, Ecuador","lat":-0.218923927933739,"lng":-78.5046259585971,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"JANETH","d":"IMBABURA S1-41 ROCAFUERTE, Quito, Ecuador","lat":-0.220853967527126,"lng":-78.5174506018764,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"JD LA NUEVA SAZON COSTEÑA","d":"CHILE OE1-101 FLORES, Quito, Ecuador","lat":-0.2310615,"lng":-78.5135422,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"JOHA","d":"JUNÍN E3-43 MATTHIAS ABRAM, Quito, Ecuador","lat":-0.22390269976467,"lng":-78.5089194756162,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"JUAN FOGONERO","d":"S1C MORALES OE1-113 OE3 GUAYAQUIL, Quito, Ecuador","lat":-0.2179924,"lng":-78.5097485,"noGM":0,"stars":4.6,"rev":250,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"JUGUERIA DON JULIO","d":"MORALES OE3111 VENEZUELA, Quito, Ecuador","lat":-0.22381606551585,"lng":-78.5146462766294,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"JUGUERÍA FIGUEROA HEREDIA","d":"VENEZUELA S1-28 ROCAFUERTE, Quito, Ecuador","lat":-0.2207746,"lng":-78.5173075,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"JUMANDY ORGANIC GARDEN","d":"MORALES OE1-09 MALDONADO, Quito, Ecuador","lat":-0.2180569,"lng":-78.5053732,"noGM":0,"stars":4.7,"rev":853,"hasIG":1,"igUrl":"https://www.instagram.com/jumandy_ec/","igH":"jumandy_ec","figIG":18600,"hasTT":1,"ttUrl":"https://www.tiktok.com/@jumandy.ec","ttH":"jumandy.ec","figTT":18900,"likTT":1200000,"tipo":"Healthy","fr":0},{"n":"K-FETIN","d":"AVENIDA 24 DE MAYO OE7-44 IMBABURA, Quito, Ecuador","lat":-0.222433799766162,"lng":-78.518801904452,"noGM":0,"stars":4.4,"rev":5,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Café","fr":0},{"n":"KAYPI","d":"MORALES OE1-84 AV. MALDONADO, Quito, Ecuador","lat":-0.2167833,"lng":-78.5087661,"noGM":0,"stars":4.6,"rev":40,"hasIG":1,"igUrl":"https://www.instagram.com/kaypi_past_rest/","igH":"kaypi_past_rest","figIG":217,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"KD RESTAURANTE","d":"GUAYAQUIL N837 MANABI, Quito, Ecuador","lat":-0.2166578,"lng":-78.50456,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"KFC","d":"N6 DON BOSCO E4-29 VICENTE LEON, Quito, Ecuador","lat":-0.2183534,"lng":-78.5080963,"noGM":0,"stars":4,"rev":1016,"hasIG":1,"igUrl":"https://www.instagram.com/kfcecuador/","igH":"kfcecuador","figIG":348000,"hasTT":1,"ttUrl":"https://www.tiktok.com/@kfcecuador","ttH":"kfcecuador","figTT":3600000,"likTT":64200000,"tipo":"Fast Food","fr":1},{"n":"KFC","d":"OLMEDO OE5-15 GARCíA MORENO , Quito, Ecuador","lat":-0.2204288,"lng":-78.5142518999999,"noGM":0,"stars":4.3,"rev":218,"hasIG":1,"igUrl":"https://www.instagram.com/kfcecuador/","igH":"kfcecuador","figIG":348000,"hasTT":1,"ttUrl":"https://www.tiktok.com/@kfcecuador","ttH":"kfcecuador","figTT":3600000,"likTT":64200000,"tipo":"Fast Food","fr":1},{"n":"KOCINA MIA RESTAURANT & CAFETERIA","d":"OE5 garcía moreno N3-60 N3 SUCRE, Quito, Ecuador","lat":-0.2179953,"lng":-78.5071954,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LA ANTORCHA COLONIAL","d":"C. de la Rda. 730, 170130 Quito","lat":-0.225275286022109,"lng":-78.5134771044519,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"LA BODEGA DE CANTUÑA","d":"OE6A CUENCA S/N SUCRE, Quito, Ecuador","lat":-0.2203543,"lng":-78.5148883999999,"noGM":0,"stars":4.1,"rev":296,"hasIG":1,"igUrl":"https://www.instagram.com/labodegadecantuna/","igH":"labodegadecantuna","figIG":1251,"hasTT":1,"ttUrl":"https://www.tiktok.com/@labodegadecantuna","ttH":"labodegadecantuna","figTT":289,"likTT":5581,"tipo":"Traditional","fr":0},{"n":"LA CAPILLA","d":"BENALCAZAR N4-65 CHILE, Quito, Ecuador","lat":-0.2208663,"lng":-78.5144942,"noGM":0,"stars":4.2,"rev":826,"hasIG":1,"igUrl":"https://www.instagram.com/lacapilla.restaurant/","igH":"lacapilla.restaurant","figIG":7356,"hasTT":1,"ttUrl":"https://www.tiktok.com/@capillarestaurante","ttH":"capillarestaurante","figTT":2482,"likTT":14500,"tipo":"New Traditional","fr":0},{"n":"LA CAPONATA","d":"VENEZUELA N2-37 SUCRE, Quito, Ecuador","lat":-0.2177572,"lng":-78.5105849,"noGM":0,"stars":4.6,"rev":716,"hasIG":1,"igUrl":"https://www.instagram.com/lacaponataquito/","igH":"lacaponataquito","figIG":10200,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"LA CASA DE LA COMIDA CHINA 3","d":"BenalcÁzar  s1-99 Av. 24 de Mayo , Quito, Ecuador","lat":-0.2243031,"lng":-78.5127512,"noGM":0,"stars":4.2,"rev":1364,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"LA CASA DEL CODORNIZ","d":"OE5 GARCíA MORENO N7-68 N8 MANABí, Quito, Ecuador","lat":-0.220233640585788,"lng":-78.5223111002343,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LA CASA DEL POZO DE LA ÑAÑA MAÑA","d":"JOSE DE ANTEPARA E1-08 PEDRO FERMIN CEVALLOS, Quito, Ecuador","lat":-0.2226593,"lng":-78.5135527,"noGM":0,"stars":3.4,"rev":94,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LA CHACOTTA PIZZA Y VINO","d":"OE6B BENALCáZAR N6-54 N7 OLMEDO, Quito, Ecuador","lat":-0.2175875,"lng":-78.51055989999999,"noGM":0,"stars":4,"rev":277,"hasIG":1,"igUrl":"https://www.instagram.com/lachacotta/","igH":"lachacotta","figIG":4622,"hasTT":1,"ttUrl":"https://www.tiktok.com/@lachacotta","ttH":"lachacotta","figTT":984,"likTT":1451,"tipo":"International","fr":0},{"n":"LA COCINA DE MAGUS","d":"OE6 BENALCAZAR N6-37 N7 OLMEDO, Quito, Ecuador","lat":-0.217513257287268,"lng":-78.5116106162571,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LA COCINA QUITEÑA","d":"MONTUFAR N1-26 VICENTE ROCAFUERTE, Quito, Ecuador","lat":-0.2179886,"lng":-78.5073285,"noGM":0,"stars":4.5,"rev":11,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LA COLMENA","d":"OE5 GARCIA MORENO N7-78 N8 MANABI, Quito, Ecuador","lat":-0.2197676,"lng":-78.5136307,"noGM":0,"stars":3.2,"rev":14,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LA CRUZ VERDE FAST FOOD","d":"JUAN P MONTUFAR N7-46 MANABI, Quito, Ecuador","lat":-0.220813299766815,"lng":-78.5174339334443,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"LA CUCHARA DE CHOCOLATE","d":"N2 BOLIVAR OE6-15 OE6 BENALCAZAR, Quito, Ecuador","lat":-0.2226664,"lng":-78.5106113,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LA CUCHARA VERDE","d":"OE8 IMBABURA OE6-225 AMBATO, Quito, Ecuador","lat":-0.2225096,"lng":-78.5122681,"noGM":0,"stars":4.5,"rev":151,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LA CUESTA","d":"DON BOSCO E3-161 LEON, Quito, Ecuador","lat":-0.2185974,"lng":-78.5104506,"noGM":0,"stars":4.6,"rev":36,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LA GUARAGUA","d":"Secretaria de Seguridad y Gobernabilidad del MDMQ, Eugenio Espejo 784, 170401 Quito","lat":-0.221204742488202,"lng":-78.5109392005756,"noGM":0,"stars":4.1,"rev":67,"hasIG":0,"igUrl":"https://www.instagram.com/laguaraguaec/","igH":"laguaraguaec","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LA GUATITA DE LA PAREDES","d":"OE4 VENEZUELA 631 MEJIA, Quito, Ecuador","lat":-0.2258141,"lng":-78.5119672,"noGM":0,"stars":4,"rev":4,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LA GUAYAKA","d":"Juan José Flores &, 170401 Quito","lat":-0.220534328524466,"lng":-78.5091564332877,"noGM":0,"stars":4.7,"rev":59,"hasIG":1,"igUrl":"https://www.instagram.com/laguayaka_/","igH":"laguayaka_","figIG":60,"hasTT":1,"ttUrl":"https://www.tiktok.com/@laguayaka_","ttH":"laguayaka_","figTT":245,"likTT":2779,"tipo":"Ecuadorian Food","fr":0},{"n":"LA HOMILIA","d":"Chile Oe6-201, 170401 Quito","lat":-0.218110899770503,"lng":-78.5143403621235,"noGM":0,"stars":4.3,"rev":335,"hasIG":1,"igUrl":"https://www.instagram.com/lahomiliarestaurant/","igH":"lahomiliarestaurant","figIG":1117,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"LA HUECA MANABA","d":"CALDAS E1-38 PEDRO FERMIN CEVALLOS CEVALLOS, Quito, Ecuador","lat":-0.2233812,"lng":-78.5141884,"noGM":0,"stars":4.8,"rev":49,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"LA HUECA MANABA DE LA RONDA","d":"Juan de Dios Morales 927 y, 170405 Quito","lat":-0.224267957270677,"lng":-78.5139488334442,"noGM":0,"stars":3.9,"rev":7,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"LA KASKADA RESTAURANTE","d":"N11B CALDAS E1-31 AV. 10 DE AGOSTO, Quito, Ecuador","lat":-0.2212566,"lng":-78.5103259,"noGM":0,"stars":4.4,"rev":65,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LA MERCED ALEJITA","d":"MARQUESA DE SOLANDA N5-45 DON BOSCO, Quito, Ecuador","lat":-0.222215993710677,"lng":-78.5056387432913,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LA OFICINA BREW PUB","d":"José de Antepara E4-55, 170403 Quito","lat":-0.2187743,"lng":-78.5041823,"noGM":0,"stars":4.6,"rev":566,"hasIG":1,"igUrl":"https://www.instagram.com/laoficinaquito/","igH":"laoficinaquito","figIG":19700,"hasTT":1,"ttUrl":"https://www.tiktok.com/@la.oficina.disco8","ttH":"la.oficina.disco8","figTT":102,"likTT":230,"tipo":"Bar","fr":0},{"n":"LA PICAETA FAST FOOD","d":"Cerca de, Juan Pío Montúfar 425, 170401 Quito","lat":-0.223110555992948,"lng":-78.5107527044519,"noGM":1,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"LA PIEDRA GALERIA","d":"S3 LOJA OE4-63 OE5 GARCíA MORENO, Quito, Ecuador","lat":-0.2180569,"lng":-78.5053732,"noGM":0,"stars":4.8,"rev":35,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"LA POSADA DE LA RONDA","d":"ROCAFUERTE E2-75 LICEO, Quito, Ecuador","lat":-0.2193745,"lng":-78.5109218,"noGM":0,"stars":4.7,"rev":362,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LA POSADA DEL CHEF","d":"JOAQUIN PAREDES S1-93 MORALES, Quito, Ecuador","lat":-0.2241412,"lng":-78.515824,"noGM":0,"stars":5,"rev":3,"hasIG":1,"igUrl":"https://www.instagram.com/laposada_del.chef/","igH":"laposada_del.chef","figIG":108,"hasTT":1,"ttUrl":"https://www.tiktok.com/@la.posada.del.chef","ttH":"la.posada.del.chef","figTT":374,"likTT":1186,"tipo":"New Traditional","fr":0},{"n":"LA PURISIMA","d":"ROCAFUERTE OE4-21 VENEZUELA, Quito, Ecuador","lat":-0.2234759,"lng":-78.5092805,"noGM":0,"stars":4.5,"rev":738,"hasIG":1,"igUrl":"https://www.instagram.com/lpurisima/","igH":"lpurisima","figIG":7181,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"New Traditional","fr":0},{"n":"LA QUEVEDEÑA","d":"JUNIN N414 MONTUFAR, Quito, Ecuador","lat":-0.2203171,"lng":-78.5088862,"noGM":0,"stars":3.7,"rev":3,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LA SASON DE MARY","d":"OLMEDO OE6-77 CUENCA, Quito, Ecuador","lat":-0.2210257,"lng":-78.5175642,"noGM":0,"stars":5,"rev":4,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LA SAZÓN COLONIAL D.E.A","d":"CALDAS OE1-156 VARGAS, Quito, Ecuador","lat":-0.2232256,"lng":-78.51413500000001,"noGM":0,"stars":4.8,"rev":4,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"New Traditional","fr":0},{"n":"LA TRADICIÓN","d":"Venezuela, n3-117, 170401 Quito","lat":-0.22077998218905,"lng":-78.5120194000719,"noGM":0,"stars":2.1,"rev":208,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":1},{"n":"LA TRADICIÓN","d":"OE6 BENALCÁZAR N2-76 N3 SUCRE, Quito, Ecuador","lat":-0.2206224,"lng":-78.5130789999999,"noGM":0,"stars":1.9,"rev":53,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":1},{"n":"LA TRADICIÓN CONTINUA DESDE 1965","d":"OE3 GUAYAQUIL N5-05 N5 CHILE, Quito, Ecuador","lat":-0.2208816,"lng":-78.5102828999999,"noGM":0,"stars":4,"rev":484,"hasIG":1,"igUrl":"https://www.instagram.com/latradicion_1965/","igH":"latradicion_1965","figIG":10100,"hasTT":1,"ttUrl":"https://www.tiktok.com/@latradicioncontinua1965","ttH":"latradicioncontinua1965","figTT":572,"likTT":1402,"tipo":"Traditional","fr":0},{"n":"LA VID","d":"MORALES OE3-20 GUAYAQUIL, Quito, Ecuador","lat":-0.2178126,"lng":-78.5096871,"noGM":0,"stars":4.5,"rev":711,"hasIG":1,"igUrl":"https://www.instagram.com/lavidrestaurantequito/","igH":"lavidrestaurantequito","figIG":24300,"hasTT":1,"ttUrl":"https://www.tiktok.com/@lavid.restaurantequito","ttH":"lavid.restaurantequito","figTT":7202,"likTT":32000,"tipo":"New Traditional","fr":0},{"n":"LAS AMORES RESTAURANTE","d":"GARCíA MORENO S1-47 Rocafuerte, Quito, Ecuador","lat":-0.220722481641076,"lng":-78.5086960013219,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LAS AUTÉNTICAS FRITADAS DE SALCEDO","d":"Calle Imbabura Centro, N3-71, 170401 Quito","lat":-0.21972637101095,"lng":-78.5167215911146,"noGM":1,"stars":4.4,"rev":12,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LAS AUTÉNTICAS GUATITAS DE LA MARÍN","d":"Pichincha N4-381 Almeida, Quito, Ecuador","lat":-0.2212313,"lng":-78.5088219,"noGM":0,"stars":4,"rev":80,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LAS CORVINAS DEL OSO","d":"QFGP+X94, Roca fuerte, y y García Moreno, Quito","lat":-0.222417,"lng":-78.5146908999999,"noGM":0,"stars":5,"rev":2,"hasIG":1,"igUrl":"https://www.instagram.com/lascorvinasdeloso/","igH":"lascorvinasdeloso","figIG":6,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"LAS CUEVAS DE LUIS CANDELAS","d":"GUAYAQUIL S1-73 MORALES, Quito, Ecuador","lat":-0.2207456,"lng":-78.5108336999999,"noGM":0,"stars":3.8,"rev":102,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LAS DELICIAS COLONIALES DEL CENTRO HISTORICO","d":"chile OE4-22 venezuela, Quito, Ecuador","lat":-0.2179454,"lng":-78.5073417999999,"noGM":0,"stars":5,"rev":3,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LAS DELICIAS DE DON VICHE","d":", Quito, Ecuador","lat":-0.2189069,"lng":-78.5116685,"noGM":0,"stars":4,"rev":16,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"LAS DELICIAS DE ELY","d":"MORALES OE3-54 VENEZUELA, Quito, Ecuador","lat":-0.2232368,"lng":-78.508402,"noGM":0,"stars":4.3,"rev":1003,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LAS DELICIAS DE EMI","d":"Oriente N10-03 Montufar, Quito, Ecuador","lat":-0.219648298370716,"lng":-78.50544521243,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LAS DELICIAS DE LA CHILE","d":"CUENCA N6-81 JOSé JOAQUíN DE OLMEDO, Quito, Ecuador","lat":-0.2205009,"lng":-78.5107886,"noGM":0,"stars":5,"rev":6,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LAS DELICIAS DE LA PLAZA GRANDE","d":"BAHIA DE CARAQUEZ S5-115 CHIMBORAZO, Quito, Ecuador","lat":-0.2190209,"lng":-78.5108553,"noGM":0,"stars":3.5,"rev":19,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LAS DELICIAS DE LA TWENY FOOR","d":"GARCIA MORENO N7-62 MANABI, Quito, Ecuador","lat":-0.217545357288156,"lng":-78.5107416197949,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"LAS DELICIAS DE MARIANA","d":"VENEZUELA N5-41 CHILE, Quito, Ecuador","lat":-0.2183864,"lng":-78.5071138,"noGM":0,"stars":4.8,"rev":37,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LAS DELICIAS DEL DOGOR","d":"CUENCA N6-33 JOSÉ MEJÍA, Quito, Ecuador","lat":-0.21802123114429,"lng":-78.5131706063021,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LAS EXQUISITAS EMPANADAS DE MOROCHO DEL ESTADIO OLIMPICO","d":"VENEZUELA OE3-81 LOJA, Quito, Ecuador","lat":-0.224708317982978,"lng":-78.5155973177592,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LAS FRITADAS DE LA OLMEDO","d":"JUAN DE DIOS MORALES OE1-109 GUAYAQUIL, Quito, Ecuador","lat":-0.2183668,"lng":-78.5108599,"noGM":0,"stars":5,"rev":2,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LAS FRITADAS DE SAN BLAS","d":"VICENTE ROCAFUERTE OE1-23 PEDRO VICENTE MALDONADO, Quito, Ecuador","lat":-0.2205044,"lng":-78.5069922,"noGM":0,"stars":4.4,"rev":606,"hasIG":1,"igUrl":"https://www.instagram.com/fritadasdesanblas/","igH":"fritadasdesanblas","figIG":944,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LAS MENESTRAS DE LA DON BOSCO","d":"VICENTE ROCAFUERTE OE3-97 VENEZUELA, Quito, Ecuador","lat":-0.2228849,"lng":-78.506937,"noGM":0,"stars":4.3,"rev":782,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"LAS PAPITAS DE LA LOMA","d":"MANABI OE1-24 MONTUFAR, Quito, Ecuador","lat":-0.219522228526217,"lng":-78.5080053332876,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LAS TORTILLAS CAFETERIA","d":"N2 BOLIVAR OE615 OE6 BENALCAZAR, Quito, Ecuador","lat":-0.2153398,"lng":-78.5064618,"noGM":0,"stars":4.4,"rev":88,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LAS TRADICIONALES FRITADAS","d":"N11 GALÁPAGOS OE3-43 OE3 GUAYAQUIL, Quito, Ecuador","lat":-0.2183668,"lng":-78.5108599,"noGM":0,"stars":4.9,"rev":14,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LAS TRIPAS DE LA DON BOSCO","d":"BOLIVAR OE3-74 VENEZUELA, Quito, Ecuador","lat":-0.2236372,"lng":-78.506604,"noGM":0,"stars":4,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LA TERTULIA VENEZOLANA","d":"Manabi y Venezuela Oe4-26 y, 170401 Quito","lat":-0.217908183339903,"lng":-78.510072690449,"noGM":0,"stars":4.2,"rev":13,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"LEÑA QUITEÑA","d":"VENEZUELA N6-66 OLMEDO, Quito, Ecuador","lat":-0.2242899,"lng":-78.5138539,"noGM":0,"stars":4.1,"rev":1246,"hasIG":1,"igUrl":"https://www.instagram.com/lena_quitena/","igH":"lena_quitena","figIG":794,"hasTT":1,"ttUrl":"https://www.tiktok.com/@lena_quitena","ttH":"lena_quitena","figTT":936,"likTT":3870,"tipo":"New Traditional","fr":0},{"n":"LITERAE","d":"LUIS VARGAS TORRES N10-10 ORIENTE, Quito, Ecuador","lat":-0.2174918,"lng":-78.5117179,"noGM":0,"stars":3.6,"rev":7,"hasIG":1,"igUrl":"https://www.instagram.com/literae.uio/","igH":"literae.uio","figIG":1076,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Café","fr":0},{"n":"LOCOS POR UN MOTE","d":"Almeida 208 Espejo, Quito, Ecuador","lat":-0.218056,"lng":-78.5110251999999,"noGM":0,"stars":5,"rev":3,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"New Traditional","fr":0},{"n":"LOGRO AYALA","d":"MORALES E1-39 PAREDES, Quito, Ecuador","lat":-0.2301966,"lng":-78.50660289999999,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LOS ASADOS DE LA CUMANDA","d":"N3 SUCRE E1-106 MONTUFAR, Quito, Ecuador","lat":-0.223802285690367,"lng":-78.5108039259363,"noGM":1,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LOS CALDOS DE DOÑA TERE","d":"S4B CAPITAN ABDON CALDERON GARAYCOA OE9-276 CUMANDA, Quito, Ecuador","lat":-0.2171467,"lng":-78.5081361,"noGM":0,"stars":4.5,"rev":415,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LOS CALDOS DE EDELMIRA MORALES","d":"JUAN DE DIOS MORALES E1-09 AV. MALDONADO, Quito, Ecuador","lat":-0.225882089634888,"lng":-78.5139774095784,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LOS CALDOS DE LA TOLA","d":"CHIMBORAZO N4-66 CHILE, Quito, Ecuador","lat":-0.222019,"lng":-78.5067741,"noGM":0,"stars":4.5,"rev":415,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LOS CANGREJOS DE LA MONA","d":"Marqueza de Solanda N5-51 Mejía, Quito, Ecuador","lat":-0.2197575,"lng":-78.5078434,"noGM":0,"stars":4.8,"rev":6,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"LOS CEBICHES DE LA RUMIÑAHUI","d":"Flores N7-42 Manabí, Quito, Ecuador","lat":-0.2192394,"lng":-78.50974699999999,"noGM":0,"stars":4.2,"rev":409,"hasIG":1,"igUrl":"https://www.instagram.com/loscebichesdelaruminahui/","igH":"loscebichesdelaruminahui","figIG":31300,"hasTT":1,"ttUrl":"https://www.tiktok.com/@loscebichesdelaruminahui","ttH":"loscebichesdelaruminahui","figTT":3060,"likTT":24300,"tipo":"Ecuadorian Food","fr":1},{"n":"LOS CEVICHES DE LA BUSTAMANTE","d":"BENALCÁZAR N3-87  ESPEJO, Quito, Ecuador","lat":-0.221402627232757,"lng":-78.511009321645,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"LOS FOGONES DE JAZMÍN","d":"C. de la Rda., 170130 Quito","lat":-0.224928199762643,"lng":-78.5137354046091,"noGM":0,"stars":4.2,"rev":203,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LOS GERANIOS TAPAS Y VINOS","d":"OE2 FLORES N5-04 N5 CHILE, Quito, Ecuador","lat":-0.2247459,"lng":-78.5155068999999,"noGM":0,"stars":4.4,"rev":618,"hasIG":1,"igUrl":"https://www.instagram.com/casalosgeraniosuio/","igH":"casalosgeraniosuio","figIG":266,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LOS MANABAS RICA SAZÓN","d":"VENEZUELA  N9-73 ORIENTE , Quito, Ecuador","lat":-0.216847671738097,"lng":-78.5087875874329,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"LOS MANABAS RICA SAZÓN 2","d":"N6 MEJIA OE1-40 OE1 A. BUSTAMANTE, Quito, Ecuador","lat":-0.22061727101165,"lng":-78.5090323216451,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"LOS MOTES DE LA CUENCA HJ","d":"Maldonado S1-148 Morales , Quito, Ecuador","lat":-0.223699512223389,"lng":-78.5154096985001,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"LOS MOTES DE LA SUCRE","d":"VICENTE ROCAFUERTE OE1-49 GUAYAQUIL, Quito, Ecuador","lat":-0.2236198,"lng":-78.51077599999999,"noGM":0,"stars":3.7,"rev":3,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"LOS PESCADOS DE LA PLAZA DEL TEATRO","d":"manabÍ oe1-18 montÚfar, Quito, Ecuador","lat":-0.2194479,"lng":-78.5087101,"noGM":0,"stars":4.9,"rev":44,"hasIG":1,"igUrl":"https://www.instagram.com/lospescadosdelaplazadlteatro/","igH":"lospescadosdelaplazadlteatro","figIG":1528,"hasTT":1,"ttUrl":"https://www.tiktok.com/@lospescadosdelteatro","ttH":"lospescadosdelteatro","figTT":2703,"likTT":12700,"tipo":"Traditional","fr":0},{"n":"LOS POLLOS DE LA LOMA","d":"N5 CHILE OE1-12 MONTUFAR, Quito, Ecuador","lat":-0.2247501,"lng":-78.5123378,"noGM":0,"stars":4.2,"rev":141,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"LOS POLLOS DE LA POLI","d":"N5 chile OE1-02 montÚfar 0, Quito, Ecuador","lat":-0.2194497,"lng":-78.5077266,"noGM":0,"stars":3.4,"rev":9,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"LOS POLLOS DEL JUANCHO","d":"AV. PICHINCHA N4-343 ALMEIDA, Quito, Ecuador","lat":-0.225799,"lng":-78.5121987,"noGM":0,"stars":4.7,"rev":77,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"LOS TRES CHANCHITOS","d":"VICENTE ROCAFUERTE E3-16 FERNANDEZ MADRID, Quito, Ecuador","lat":-0.221474970777061,"lng":-78.5092566002251,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"LUCAS BONE CAROLINA ELIZABETH","d":"OE3 GUAYAQUIL N8-82 N9 ESMERALDAS, Quito, Ecuador","lat":-0.218292527222497,"lng":-78.508207189109,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"MADISON SONIA","d":"GUAYAQUIL N11-32 GALÁPAGOS, Quito, Ecuador","lat":-0.218260028528381,"lng":-78.511191104452,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"MAMA KUNA","d":"VENEZUELA n7-67  MANABÍ, Quito, Ecuador","lat":-0.2180807,"lng":-78.5099288,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"MAMI LUZ COLONIAL","d":"E2 EXPOSICION E1-38 S5 BENIGNN VELA, Quito, Ecuador","lat":-0.2275492,"lng":-78.50486529999999,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"MANIZALES","d":"GUAYAQUIL N7-61 MANABÍ, Quito, Ecuador","lat":-0.218869629830643,"lng":-78.5091026351378,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"MARISQUERIA EL TRITON","d":"GENERAL AYMERICH S/N NA, Quito, Ecuador","lat":-0.229740828508389,"lng":-78.5186058621234,"noGM":1,"stars":4.6,"rev":10,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"MARISQUERIA LOS PROPIOS DE LA VECI","d":"BAHíA DE CARÁQUEZ Oe594 AMBATO, Quito, Ecuador","lat":-0.228013591150377,"lng":-78.521995332803,"noGM":0,"stars":4.6,"rev":73,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"MARKKOS CEVICHERÍA","d":"JOSE ANTEPARA E4-09 VICENTE LEON, Quito, Ecuador","lat":-0.222828739035121,"lng":-78.5161554143251,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"MENESTRAS DEL NEGRO","d":"ABDON CALDERON OE9 CHIMBORAZO, Quito, Ecuador","lat":-0.2179924,"lng":-78.5097485,"noGM":0,"stars":4.1,"rev":1165,"hasIG":1,"igUrl":"https://www.instagram.com/menestrasdelnegroec/","igH":"menestrasdelnegroec","figIG":41100,"hasTT":1,"ttUrl":"https://www.tiktok.com/@menestrasdelnegroec","ttH":"menestrasdelnegroec","figTT":11000,"likTT":112800,"tipo":"Fast Food","fr":1},{"n":"MENUDOS Y PLATOS TIPÍCOS EL CHINITO","d":"Imbabura y Blvr. 24 de Mayo S2-38, S2-38, 170130 Quito","lat":-0.22186264225589,"lng":-78.5186201909592,"noGM":0,"stars":4.5,"rev":8,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"MIGDONIO´S","d":"Olmedo OE6-67 Benalcázar, Quito, Ecuador","lat":-0.2213435,"lng":-78.5111479,"noGM":0,"stars":4.4,"rev":5,"hasIG":1,"igUrl":"https://www.instagram.com/migdonios.restaurant/","igH":"migdonios.restaurant","figIG":647,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"MINI CHIFA","d":"VICENTE LEóN N5-32 CHILE, Quito, Ecuador","lat":-0.2256826,"lng":-78.506597,"noGM":0,"stars":3,"rev":7,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"MISHKI DELICIOSO","d":"CHILE OE422 VENEZUELA, Quito, Ecuador","lat":-0.220056328525285,"lng":-78.5115396621235,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"MISKY FOOD EXPERIENCES","d":"FLORES N7-12 OLMEDO, Quito, Ecuador","lat":-0.223627,"lng":-78.5151693,"noGM":0,"stars":4.8,"rev":85,"hasIG":1,"igUrl":"https://www.instagram.com/miskycocinadealtura/","igH":"miskycocinadealtura","figIG":2914,"hasTT":1,"ttUrl":"https://www.tiktok.com/@misky.uio","ttH":"misky.uio","figTT":1643,"likTT":8746,"tipo":"New Traditional","fr":0},{"n":"MISKY POLLO","d":"DON BOSCO E3-92 PEDRO CALIXTO, Quito, Ecuador","lat":-0.2257725,"lng":-78.5120824999999,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"MISS TENAZAS","d":"Espejo OE2-67 Guayaquil, Quito, Ecuador","lat":-0.22100631086788,"lng":-78.5115740131294,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"MONSERRATTE","d":"ROCAFUERTE OE9-92 QUIROGA, Quito, Ecuador","lat":-0.220142158578793,"lng":-78.5115933063022,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"MORISFASTFOOD","d":"CHILE E4-13 VICENTE LEON, Quito, Ecuador","lat":-0.224305457271563,"lng":-78.5102979909592,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"MR. GRILL´S","d":"Ambato y Bahia de Caraquez, Quito, Ecuador","lat":-0.223906870996348,"lng":-78.5171818332264,"noGM":0,"stars":4.9,"rev":14,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"MUSEO DEL PERNIL BY DULSSINI","d":"CHILE OE2-37 FLORES, Quito, Ecuador","lat":-0.2185077,"lng":-78.5107688,"noGM":0,"stars":3.9,"rev":52,"hasIG":1,"igUrl":"https://www.instagram.com/museodelpernil_oficial/","igH":"museodelpernil_oficial","figIG":1776,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":1},{"n":"NARVAEZ NARVAEZ PABLO ALEXANDER","d":"OLMEDO 908 MONTUFAR, Quito, Ecuador","lat":-0.220426472307107,"lng":-78.5083944774664,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"NOCHES DE BOHEMIA","d":"BAHÍA DE CARÁQUEZ S3-68 AMBATO, Quito, Ecuador","lat":-0.225799635331155,"lng":-78.5131270429049,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"NOCHES DE RONDA","d":"CHIMBORAZO N1-10 ROCAFUERTE, Quito, Ecuador","lat":-0.2243324,"lng":-78.5135979,"noGM":0,"stars":4.5,"rev":4541,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"NUESTRO LEGADO RESTAURANTE","d":"DON BOSCO E3-78 CALIXTO, Quito, Ecuador","lat":-0.222150381792036,"lng":-78.5139773190629,"noGM":0,"stars":4.5,"rev":151,"hasIG":1,"igUrl":"https://www.instagram.com/nuestrolegado.ec/","igH":"nuestrolegado.ec","figIG":1648,"hasTT":1,"ttUrl":"https://www.tiktok.com/@casanuestrolegado","ttH":"casanuestrolegado","figTT":12000,"likTT":24800,"tipo":"New Traditional","fr":0},{"n":"OMAR DE LA SUCRE","d":"AV PICHINCHA N4-391 N5 CHILE, Quito, Ecuador","lat":-0.2256826,"lng":-78.506597,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"PALENQUE CASA","d":"FLORES N7-52 MANABÍ, Quito, Ecuador","lat":-0.2227009,"lng":-78.5058743,"noGM":0,"stars":4.7,"rev":356,"hasIG":1,"igUrl":"https://www.instagram.com/palenquecasauio/","igH":"palenquecasauio","figIG":25300,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Cultural House","fr":0},{"n":"PAPAS CON CUERO DELICIAS ENMITA","d":"OE4 VENEZUELA N3-117 N4A ESPEJO, Quito, Ecuador","lat":-0.21794505728622,"lng":-78.5107393757738,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"PAPI POLLO DE LA ROSITA","d":"Francisco Quijano 131, 170130 Quito","lat":-0.227468280836832,"lng":-78.5131542851346,"noGM":0,"stars":5,"rev":2,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"PAPI POLLO DEYNER","d":"EJE TRANS. VICENTE ROCAFUERTE E1-58 AV.PEDRO VICENTE MALDONADO, Quito, Ecuador","lat":-0.2223361,"lng":-78.520242,"noGM":0,"stars":4.4,"rev":17,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"PAPITAS AL PASO","d":"BOLIVAR OE8-90 CHIMBORAZO, Quito, Ecuador","lat":-0.2225748,"lng":-78.5203569,"noGM":0,"stars":4.7,"rev":12,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"PAPITAS DEL CHULLA","d":"N5 CHILE 930 OE2 FLORES, Quito, Ecuador","lat":-0.217863857286413,"lng":-78.510820704609,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"PAPITAS Y GUATITAS A LO BRUTO","d":"BENALCÁZAR N2-24 SIMÓN BOLÍVAR, Quito, Ecuador","lat":-0.2277832,"lng":-78.5073231,"noGM":0,"stars":4,"rev":4,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"PARRILLADAS PLAZA GRANDE","d":"Mejía, 170102 Quito","lat":-0.218270303061064,"lng":-78.5126172176739,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"PAULA GARDEN","d":"BOLIVAR OE318 CALLE GUAYAQUIL, Quito, Ecuador","lat":-0.2221273,"lng":-78.5130626999999,"noGM":0,"stars":3,"rev":91,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"PAULITA DEL CENTRO","d":"DON BOSCO E4 53 LOS RIOS, Quito, Ecuador","lat":-0.2189193,"lng":-78.507317,"noGM":0,"stars":4.4,"rev":49,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"PAZ CRUZ MARCUS ALEXANDER","d":"García Moreno N3-151 PASAJE Espejo, Quito, Ecuador","lat":-0.217792,"lng":-78.5076684,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"PERNALETTE PINTO ELIETTE ELICEX","d":"n7 olmedo oe1-22 montúfar, Quito, Ecuador","lat":-0.220272712202952,"lng":-78.5081534449303,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"PICANTERIA D'' YOLIS","d":"VICENTE ROCAFUERTE E2-149 E2C A. VASCONEZ PB L1 FAMILIA SILVA, Quito, Ecuador","lat":-0.2256826,"lng":-78.506597,"noGM":0,"stars":4.4,"rev":85,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"PICANTERIA LOLITA","d":"ESPEJO OE3-45 VENEZUELA, Quito, Ecuador","lat":-0.220876124710899,"lng":-78.511764593401,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"PICANTES DEL MAR DOÑA MAIRITA","d":"GUAYAQUIL N11-04 GALAPAGOS, Quito, Ecuador","lat":-0.223328426912442,"lng":-78.5178098713511,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"PIEDEMONTE","d":"N6 DON BOSCO E3-123 E3B PEDRO CALIXTO, Quito, Ecuador","lat":-0.2189132,"lng":-78.5046152,"noGM":0,"stars":4.2,"rev":27,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"PIM S PANECILLO","d":"N8 MANABI OE2-04 OE3 GUAYAQUIL, Quito, Ecuador","lat":-0.2297301,"lng":-78.5185844,"noGM":0,"stars":4.6,"rev":2382,"hasIG":1,"igUrl":"https://www.instagram.com/restaurantepims/","igH":"restaurantepims","figIG":12300,"hasTT":1,"ttUrl":"https://www.tiktok.com/@restaurantepims","ttH":"restaurantepims","figTT":1730,"likTT":5269,"tipo":"International","fr":0},{"n":"PIZZA SA","d":"GARCÍA MORENO N3-96 ESPEJO, Quito, Ecuador","lat":-0.2212929,"lng":-78.5110855,"noGM":0,"stars":4.4,"rev":297,"hasIG":1,"igUrl":"https://www.instagram.com/pizzasa/","igH":"pizzasa","figIG":4585,"hasTT":1,"ttUrl":"https://www.tiktok.com/@pizzasa.quito","ttH":"pizzasa.quito","figTT":842,"likTT":5258,"tipo":"Fast Food","fr":1},{"n":"PIZZERIA NEW YORK","d":"Montúfar N4-161 Chile, Quito, Ecuador","lat":-0.2240956,"lng":-78.5130636,"noGM":0,"stars":4.7,"rev":23,"hasIG":1,"igUrl":"https://www.instagram.com/pizzeria.new.york/reels/","igH":"pizzeria.new.york","figIG":11,"hasTT":1,"ttUrl":"https://www.tiktok.com/@pizzeria.newyork","ttH":"pizzeria.newyork","figTT":32,"likTT":952,"tipo":"Fast Food","fr":0},{"n":"PIZZERIA PIZZA","d":"AMBATO S3-112 BAHIA DE CARAQUEZ, Quito, Ecuador","lat":-0.2186019,"lng":-78.5053221,"noGM":0,"stars":4.9,"rev":359,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"PLATITOS AL PASO LA BAHÍA","d":"MANABI OE1-31 MONTUFAR, Quito, Ecuador","lat":-0.223594028518162,"lng":-78.5170228469387,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"PLATOS TIPICOS DEL VALLE","d":"AV PICHINCHA N1-668 SUCRE, Quito, Ecuador","lat":-0.2232256,"lng":-78.514135,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"PLAZA EURO CAFÉ","d":"MORALES OE3-16 GUAYAQUIL, Quito, Ecuador","lat":-0.2196777,"lng":-78.5080218,"noGM":0,"stars":4.5,"rev":212,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Café","fr":0},{"n":"POLLO FORASTERO","d":"QFHR+GR3, Don Bosco, 170136 Quito","lat":-0.221230874548319,"lng":-78.5079441045974,"noGM":0,"stars":4,"rev":266,"hasIG":1,"igUrl":"https://www.instagram.com/elpolloforastero.ec/","igH":"elpolloforastero.ec","figIG":1366,"hasTT":1,"ttUrl":"https://www.tiktok.com/@elpolloforastero","ttH":"elpolloforastero","figTT":10700,"likTT":89600,"tipo":"Fast Food","fr":1},{"n":"POLLO QUITEÑO","d":"GARCÍA MORENO N1-42 ROCAFUERTE, Quito, Ecuador","lat":-0.2209874,"lng":-78.5109915,"noGM":0,"stars":2.5,"rev":2,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"POLLOS LA NOTA","d":"eugenio Espejo  Oe2-40 oe2 FLORES, Quito, Ecuador","lat":-0.222240299765371,"lng":-78.5133647334442,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"POLLOS PARA TI","d":"ROCAFUERTE OE8-76 0E8 IMBABURA, Quito, Ecuador","lat":-0.220690828524194,"lng":-78.5174665639736,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"PONDO DE BARRO TRES","d":"Olmedo OE4-46 Venezuela, Quito, Ecuador","lat":-0.22450095727011,"lng":-78.513703804609,"noGM":0,"stars":3,"rev":67,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"PUENTE DE PIEDRA DE LA RONDA","d":"SUCRE OE6-48 CUENCA, Quito, Ecuador","lat":-0.2238068,"lng":-78.5150771,"noGM":0,"stars":4.6,"rev":9,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"PUERTO CEVICHE","d":"BOLIVAR OE4-54 VENEZUELA, Quito, Ecuador","lat":-0.2171878,"lng":-78.5125675,"noGM":0,"stars":4.8,"rev":4,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"QENQO PUB","d":"MONTUFAR N4-146 ESPEJO, Quito, Ecuador","lat":-0.2230405,"lng":-78.5139908,"noGM":0,"stars":4.8,"rev":73,"hasIG":1,"igUrl":"https://www.instagram.com/qenqo_uio/","igH":"qenqo_uio","figIG":3507,"hasTT":1,"ttUrl":"https://www.tiktok.com/@qenqobrew","ttH":"qenqobrew","figTT":2917,"likTT":6227,"tipo":"Bar","fr":0},{"n":"QUE SABOR DANIEL","d":"Chile &, 170401 Quito","lat":-0.221496428521817,"lng":-78.5092458757738,"noGM":0,"stars":4.5,"rev":30,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"QUERUBÍN","d":"Chile 56, 170401 Quito","lat":-0.219465771011995,"lng":-78.511702704452,"noGM":0,"stars":4.8,"rev":454,"hasIG":1,"igUrl":"https://www.instagram.com/querubin_restobar/","igH":"querubin_restobar","figIG":730,"hasTT":1,"ttUrl":"https://www.tiktok.com/@querubin.restobar","ttH":"querubin.restobar","figTT":311,"likTT":4450,"tipo":"New Traditional","fr":0},{"n":"REAL AUDIENCIA HOTEL","d":"ROCAFUERTE  E1-50 MONTUFAR, Quito, Ecuador","lat":-0.2207807,"lng":-78.5110147,"noGM":0,"stars":4.5,"rev":138,"hasIG":1,"igUrl":"https://www.instagram.com/marquesarooftop/","igH":"marquesarooftop","figIG":710,"hasTT":1,"ttUrl":"https://www.tiktok.com/@marquesa.rooftop","ttH":"marquesa.rooftop","figTT":51,"likTT":75,"tipo":"New Traditional","fr":0},{"n":"RESTAURAN BALCON RONDEÑO","d":"loja oe5-47 garcía moreno, Quito, Ecuador","lat":-0.2241986,"lng":-78.51406229999999,"noGM":0,"stars":3.7,"rev":43,"hasIG":1,"igUrl":"https://www.instagram.com/balcon_rondeno/","igH":"balcon_rondeno","figIG":130,"hasTT":1,"ttUrl":"https://www.tiktok.com/@balconrondeno","ttH":"balconrondeno","figTT":255,"likTT":1722,"tipo":"Traditional","fr":0},{"n":"RESTAURANT GETSEMANI","d":"OE7 VENEZUELA N7-31 N7 OLMEDO, Quito, Ecuador","lat":-0.2256826,"lng":-78.506597,"noGM":0,"stars":5,"rev":18,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANT LA NEGRA MALA","d":"MEJÍA OE7-72 E IMBABURA, Quito, Ecuador","lat":-0.2167833,"lng":-78.5087661,"noGM":0,"stars":4.7,"rev":242,"hasIG":1,"igUrl":"https://www.instagram.com/lanegramala07/","igH":"lanegramala07","figIG":204,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"New Traditional","fr":0},{"n":"RESTAURANT SAN FRANCISCO","d":"Juan de Dios Morales Oe1-135 Guayaquil, Quito, Ecuador","lat":-0.2199758,"lng":-78.5138389,"noGM":0,"stars":4.3,"rev":164,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RESTAURANTE  VALENTINA","d":"OE8 IMBABURA S4-38 ABDON CALDERON G, Quito, Ecuador","lat":-0.2197575,"lng":-78.5078434,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE & EVENTOS CAÍDA Y LIMPIA","d":"Juan de Dios Morales OE1-53 AV. Maldonado, Quito, Ecuador","lat":-0.225231450090707,"lng":-78.5134984323565,"noGM":0,"stars":5,"rev":4,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"RESTAURANTE 26 DE NOVIEMBRE","d":"SUCRE E3-274 AV. PICHINCHA, Quito, Ecuador","lat":-0.2250962,"lng":-78.512095,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE BARCELONA","d":"Oriente OE3-19 Guayaquil, Quito, Ecuador","lat":-0.217977871012433,"lng":-78.507446521645,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"RESTAURANTE CHILIS WILLIS","d":"AV MALDONADO S5-48 BENIGNO VELA, Quito, Ecuador","lat":-0.220185880056037,"lng":-78.5167590527269,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE CHINO","d":"BenalcÁzar N3-71 SUCRE, Quito, Ecuador","lat":-0.220526660392021,"lng":-78.5142231166849,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"RESTAURANTE CHRISTIAN","d":"JOSE ANTEPARA  E4-82 LOS RIOS, Quito, Ecuador","lat":-0.221729257276954,"lng":-78.5094788757738,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"RESTAURANTE DANNY","d":"OLMEDO OE1-11 BUSTAMANTE, Quito, Ecuador","lat":-0.2248433,"lng":-78.5123733,"noGM":0,"stars":4,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE DAVID","d":"OE3 GUAYAQUIL S1-64 S1C MORALES, Quito, Ecuador","lat":-0.2171839,"lng":-78.512511,"noGM":0,"stars":4.6,"rev":61,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE DE UNA","d":"VENEZUELA 104 OLMEDO, Quito, Ecuador","lat":-0.218572384738928,"lng":-78.5101987314376,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE DELICIAS MANABITAS","d":"Mideros Oe8-48, 170401 Quito","lat":-0.218048002027581,"lng":-78.5161678010569,"noGM":0,"stars":4.7,"rev":16,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"RESTAURANTE DON SIMÓN","d":"Guayaquil S1-76 Morales, Quito, Ecuador","lat":-0.224851728516947,"lng":-78.512371904452,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE DOÑA SUSY","d":"Guayaquil n762 Manabí, Quito, Ecuador","lat":-0.2174126,"lng":-78.5127554,"noGM":0,"stars":4.3,"rev":239,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RESTAURANTE EL CRIOLLO","d":"N6 DON BOSCO E397 E3B PEDRO CALIXTO, Quito, Ecuador","lat":-0.2195296,"lng":-78.50893239999999,"noGM":0,"stars":4.4,"rev":194,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RESTAURANTE EL DESCANZO DE LA OLMEDO","d":"Imbabura N3-09 Alianza, Quito, Ecuador","lat":-0.219121499768543,"lng":-78.516610937137,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE EL PATACÓN COLOMBIANO","d":"JOSE JOAQUIN DE OLMEDO OE3-34 GUAYAQUIL, Quito, Ecuador","lat":-0.2200899,"lng":-78.5087312,"noGM":0,"stars":4.4,"rev":7,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"RESTAURANTE INESITA","d":"GARCIA MORENO N6-72 OLMEDO, Quito, Ecuador","lat":-0.226976017487402,"lng":-78.5075654520828,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RESTAURANTE INFINITY (BISTRO)","d":"Imbabura S2-34 24 DE MAYO, Quito, Ecuador","lat":-0.221902817365099,"lng":-78.5184166928093,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE JAIRITO DE LA MONTUFAR","d":"CUENCA N4-27 MIDEROS, Quito, Ecuador","lat":-0.221882128521149,"lng":-78.5094728334443,"noGM":0,"stars":5,"rev":3,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RESTAURANTE JERUSALEN DEL OLMEDO","d":"EUGENIO ESPEJO OE2-12 FLORES, Quito, Ecuador","lat":-0.220420899767208,"lng":-78.508158604609,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RESTAURANTE JORGE","d":"FRANCISCO DE CALDAS OE1-204 VARGAS, Quito, Ecuador","lat":-0.215623183604294,"lng":-78.506314828612,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RUNA TULPA ANDINA","d":"García Moreno 7-68, 170130 Quito","lat":-0.2245379,"lng":-78.5138261,"noGM":0,"stars":4.6,"rev":277,"hasIG":1,"igUrl":"https://www.instagram.com/runatulpaandina/?hl=es","igH":"runatulpaandina","figIG":3030,"hasTT":1,"ttUrl":"https://www.tiktok.com/@runatulpaandina","ttH":"runatulpaandina","figTT":988,"likTT":1390,"tipo":"New Traditional","fr":0},{"n":"RESTAURANTE LA DELICIA","d":"N5 CHILE OE4 -22 VENEZUELA, Quito, Ecuador","lat":-0.222021977780267,"lng":-78.5132682338793,"noGM":0,"stars":4,"rev":5,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RESTAURANTE LA HUECA COLONIAL","d":"C. Guayaquil 976, 170130 Quito","lat":-0.218222171811125,"lng":-78.5077208642738,"noGM":0,"stars":4.4,"rev":48,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RESTAURANTE LA HUECA DE DON GREGORIO","d":"Chile OE8-50 E IMBABURA, Quito, Ecuador","lat":-0.2196973,"lng":-78.5120192,"noGM":0,"stars":4.5,"rev":271,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RESTAURANTE LAURITA BUENA","d":"MANABI OE1-53 FLORES, Quito, Ecuador","lat":-0.2239027,"lng":-78.5089302,"noGM":0,"stars":4.2,"rev":160,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RESTAURANTE LENA QUITENA SAN MARCOS","d":"CHILE OE6-83 CUENCA, Quito, Ecuador","lat":-0.2227268,"lng":-78.5103503,"noGM":0,"stars":4.7,"rev":142,"hasIG":1,"igUrl":"https://www.instagram.com/lenaquitena_sanmarcos/","igH":"lenaquitena_sanmarcos","figIG":2027,"hasTT":1,"ttUrl":"https://www.tiktok.com/@lenasanmarcos","ttH":"lenasanmarcos","figTT":895,"likTT":22600,"tipo":"Other","fr":0},{"n":"RESTAURANTE MAMA TERE","d":"E2B LICEO S1-02 VICENTE ROCAFUERTE, Quito, Ecuador","lat":-0.2172925,"lng":-78.5161881,"noGM":0,"stars":4.5,"rev":19,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RESTAURANTE MANA DEL CIELO","d":"VASCONEZ S1-53 JAVIER PIEDRA, Quito, Ecuador","lat":-0.219566,"lng":-78.5174984,"noGM":0,"stars":5,"rev":4,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE MIS DOS TIERRITAS","d":"MONTÚFAR N8-15 N8 MANABÍ, Quito, Ecuador","lat":-0.2272049,"lng":-78.5110595,"noGM":0,"stars":5,"rev":7,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"RESTAURANTE OASIS JUGOS NATURALES","d":"BENaLCáZAR S1-89 Morales, Quito, Ecuador","lat":-0.2209624,"lng":-78.5110224,"noGM":0,"stars":4.4,"rev":108,"hasIG":1,"igUrl":"https://www.instagram.com/oasisrestaurante1/","igH":"oasisrestaurante1","figIG":586,"hasTT":1,"ttUrl":"https://www.tiktok.com/@eloasis_ec","ttH":"eloasis_ec","figTT":27100,"likTT":152700,"tipo":"Traditional","fr":0},{"n":"RESTAURANTE PIKA POLLO","d":"N5 CHILE OE 1-48 MONTUFAR, Quito, Ecuador","lat":-0.2243913,"lng":-78.5073127,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"RESTAURANTE QUITO COLONIAL","d":"OLMEDO OE5-01 GARCIA MORENO, Quito, Ecuador","lat":-0.2220693,"lng":-78.5139276,"noGM":0,"stars":3.4,"rev":5,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE RAZIEL","d":"GALÁPAGOS OE3-75 VARGAS , Quito, Ecuador","lat":-0.2195057,"lng":-78.5134479,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE RINCON DE LA MEJIA","d":"BOLíVAR OE6-15 CUENCA , Quito, Ecuador","lat":-0.2207698,"lng":-78.5098787,"noGM":0,"stars":5,"rev":2,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE SABOR LOJANO EL CISNE","d":"SUCRE E3-274 AV PICHINCHA, Quito, Ecuador","lat":-0.218335442005613,"lng":-78.5082501002262,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"RESTAURANTE SILVITA","d":"MONTÚFAR S/N  JOSÉ JOAQUÍN DE OLMEDO, Quito, Ecuador","lat":-0.2310615,"lng":-78.5135422,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE SOFY","d":"MEJIA OE2-28 FLORES, Quito, Ecuador","lat":-0.2200714109054,"lng":-78.5097475676739,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RESTAURANTE TOKIO","d":"BOLíVAR OE6-123 CUENCA, Quito, Ecuador","lat":-0.2175959,"lng":-78.5071669,"noGM":0,"stars":5,"rev":8,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"RESTAURANTE Y MARISQUERÍA SORYS","d":"IMBABURA S3-25 LOJA, Quito, Ecuador","lat":-0.222357973582768,"lng":-78.5187857486306,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"RICA JAMA","d":"OLMEDO OE1-11 ANTONIO BUSTAMANTE, Quito, Ecuador","lat":-0.2207807,"lng":-78.5110147,"noGM":0,"stars":4.5,"rev":11,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"RICAS FRITADAS DE ALEX","d":"ESPEJO OE2-43 GUAYAQUIL, Quito, Ecuador","lat":-0.2205009,"lng":-78.5107886,"noGM":0,"stars":5,"rev":2,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RICOS MOROCHOS DE DOÑA MERCEDES","d":"Imbabura N1-22 Rocafuerte, Quito, Ecuador","lat":-0.223516228518295,"lng":-78.5080341181033,"noGM":0,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RICURAS DE COLOMBIA","d":"Espejo Oe1-72 Flores, Quito, Ecuador","lat":-0.2228467,"lng":-78.5082504,"noGM":0,"stars":4.6,"rev":55,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"RINCON DEL GUSTO","d":"MONTUFAR N1-18 VICENTE ROCAFUERTE, Quito, Ecuador","lat":-0.224999640985652,"lng":-78.5122237504807,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RINCON ESTA GUITARRA VIEJA","d":"ANTONIO ALMEIDA 134 JUNIN, Quito, Ecuador","lat":-0.2243445999999999,"lng":-78.5137767,"noGM":0,"stars":4,"rev":2,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"RINCÓN LATINO DE LA PLAZA DEL TEATRO","d":"GUAYAQUIL N11-04 GALAPAGOS, Quito, Ecuador","lat":-0.219067,"lng":-78.5091161,"noGM":0,"stars":4.4,"rev":8,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"RINCON QUITEÑO PIZZERIA","d":"ESPEJO  OE3-45 GUAYAQUIL, Quito, Ecuador","lat":-0.2219862,"lng":-78.50659689999999,"noGM":0,"stars":5,"rev":8,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"ROKA LOMA","d":"VENEZUELA OE4-12 ROCAFUERTE, Quito, Ecuador","lat":-0.227575319465601,"lng":-78.5100768242503,"noGM":0,"stars":3.4,"rev":5,"hasIG":1,"igUrl":"https://www.instagram.com/rokaloma_/","igH":"rokaloma_","figIG":5894,"hasTT":1,"ttUrl":"https://www.tiktok.com/@roka.loma","ttH":"roka.loma","figTT":100,"likTT":234,"tipo":"International","fr":0},{"n":"RONDA PIZZA","d":"C. de la Rda. 762, 170130 Quito","lat":-0.224986499762586,"lng":-78.513607704609,"noGM":0,"stars":4.7,"rev":3,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"RPB RESTAURANTE BELLAVISTA CENTRO","d":"Chile  OE8-07 e Imbabura, Quito, Ecuador","lat":-0.2231365,"lng":-78.51117839999999,"noGM":0,"stars":4.6,"rev":72,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"RUNA, TULPA ANDINA","d":"JUAN PIO MONTUFAR LARREA N5-4C MEJIA, Quito, Ecuador","lat":-0.2175875,"lng":-78.51055989999999,"noGM":0,"stars":4.7,"rev":263,"hasIG":1,"igUrl":"https://www.instagram.com/runatulpaandina/","igH":"runatulpaandina","figIG":3010,"hasTT":1,"ttUrl":"https://www.tiktok.com/@runatulpaandina","ttH":"runatulpaandina","figTT":974,"likTT":1326,"tipo":"New Traditional","fr":0},{"n":"SABOR DE CASA ALEXITA´S","d":"PADRE ALMEIDA OE9 69 CALLE CHIMBORAZO, Quito, Ecuador","lat":-0.225258,"lng":-78.5150309,"noGM":0,"stars":4.7,"rev":44,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"SABOR EXPRESS","d":"GUAYAQUIL OE3 N5-73 MEJÍA, Quito, Ecuador","lat":-0.219961916093902,"lng":-78.5102684486306,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"SABOR Y SAZON","d":"N2 BOLIVAR OE8-74 OE8 IMBABURA, Quito, Ecuador","lat":-0.220199101064997,"lng":-78.5168456486306,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"SABOR Y SAZÓN","d":"N5 CHILE OE1-47 OE2 FLORES, Quito, Ecuador","lat":-0.221003286035763,"lng":-78.5100923044519,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"SABORES DE MI TIERRA L.S.A","d":"AV PICHINCHA N4-383 ALMEIDA, Quito, Ecuador","lat":-0.22283385599224,"lng":-78.5082698081522,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"SABORES Y DELICIAS","d":"Eugenio Espejo Oe3-45, 170401 Quito","lat":-0.221125099766488,"lng":-78.5118962757739,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"SAL Y DULCE","d":"GARCíA MORENO N1-42 ROCAFUERTE, Quito, Ecuador","lat":-0.2193452,"lng":-78.51135219999999,"noGM":0,"stars":4,"rev":4,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"SALADITOS EC","d":"GUAYAQUIL 1780 BRICEÑO, Quito, Ecuador","lat":-0.2243402,"lng":-78.5102814,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"SALCHIPAPAS  GUAMBITA","d":"N11 JOSE  ANTEPARA E3-20 E3 PEDRO FERMIN CEVALLOS, Quito, Ecuador","lat":-0.2222699,"lng":-78.5053875,"noGM":0,"stars":5,"rev":1,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"SALCHIPAPAS ALEXANDRITA","d":"QFGH+FGH, 170111 Quito","lat":-0.223801171010744,"lng":-78.5211288756162,"noGM":0,"stars":5,"rev":3,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"SALCHIPAPAS GUAMBITA","d":"EJE LONG. JUAN PIO MONTUFAR LARREA N5-61 CHILE, Quito, Ecuador","lat":-0.2231245,"lng":-78.5112906,"noGM":0,"stars":3.3,"rev":7,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"SALCHIPAPAS MARÍA OTTO","d":"Imbabura N1-32 Rocafuerte, Quito, Ecuador","lat":-0.2207746,"lng":-78.5173075,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"SALON LOLITA","d":"OLMEDO OE5-38 GARCIA MORENO, Quito, Ecuador","lat":-0.22856407100846,"lng":-78.506573604609,"noGM":1,"stars":0,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"SAMDO","d":"OE3 GUAYAQUIL N9-81 N10 ORIENTE, Quito, Ecuador","lat":-0.2211,"lng":-78.511,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"SAN IGNACIO RESTAURANTE","d":"JUNIN E2-68 ALMEIDA, Quito, Ecuador","lat":-0.2214972,"lng":-78.513858,"noGM":0,"stars":4.4,"rev":1252,"hasIG":1,"igUrl":"https://www.instagram.com/sanignaciorestaurante/","igH":"sanignaciorestaurante","figIG":8945,"hasTT":1,"ttUrl":"https://www.tiktok.com/@sanignaciorestaurante","ttH":"sanignaciorestaurante","figTT":5672,"likTT":126400,"tipo":"New Traditional","fr":0},{"n":"SANTA PIZZA CAFE Y PASTA","d":"SC MONTÚFAR N8-31 N8 MANABÍ, Quito, Ecuador","lat":-0.223286,"lng":-78.514101,"noGM":1,"stars":null,"rev":0,"hasIG":1,"igUrl":"https://www.instagram.com/santapizzaec/reels/","igH":"santapizzaec","figIG":1120,"hasTT":1,"ttUrl":"https://www.tiktok.com/@santapizzaecuador","ttH":"santapizzaecuador","figTT":565,"likTT":6735,"tipo":"International","fr":0},{"n":"SAZÓN MANABITA NORY\"\"","d":"VICENTE ROCAFUERTE E261 E2A B PONTON, Quito, Ecuador","lat":-0.225586418452628,"lng":-78.511842826395,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"SENDERO QUITEÑO","d":"VICENTE ROCAFUERTE OE3-03 GUAYAQUIL, Quito, Ecuador","lat":-0.223705608754252,"lng":-78.513561267681,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"SEÑORA PAPA","d":"VENEZUELA N2-61 BOLIVAR, Quito, Ecuador","lat":-0.2202778,"lng":-78.51693030000001,"noGM":0,"stars":4.3,"rev":4,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"SERENO MORENO","d":"BOLIVAR OE4-56 VENEZUELA, Quito, Ecuador","lat":-0.2202838,"lng":-78.5059558,"noGM":0,"stars":4.7,"rev":1250,"hasIG":1,"igUrl":"https://www.instagram.com/serenomorenoec/","igH":"serenomorenoec","figIG":14600,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"SHOCKING FOOD","d":"GUAYAQUIL 958 EUGENIO ESPEJO Y CHILE, Quito, Ecuador","lat":-0.221024297182889,"lng":-78.5112790604331,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"SHUSHI DRINKS","d":"JOSE ANTEPARRA E3-77 PEDRO FERMIN CEVALLOS, Quito, Ecuador","lat":-0.2187801,"lng":-78.5042356,"noGM":0,"stars":4.8,"rev":109,"hasIG":1,"igUrl":"https://www.instagram.com/sushi.drinks/","igH":"sushi.drinks","figIG":363,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"SIN CULPA","d":"JUAN DE DIOS MORALES OE3-84 VENEZUELA, Quito, Ecuador","lat":-0.2198306,"lng":-78.51125119999999,"noGM":0,"stars":5,"rev":5,"hasIG":1,"igUrl":"https://www.instagram.com/sinculparestaurantes/reels/","igH":"sinculparestaurantes","figIG":181,"hasTT":1,"ttUrl":"https://www.tiktok.com/@sinculparestaurantes","ttH":"sinculparestaurantes","figTT":226,"likTT":1106,"tipo":"Traditional","fr":0},{"n":"SINNERS MICROCERCEVECERIA","d":"GUAYAQUIL S1-67 MORALES, Quito, Ecuador","lat":-0.2207456,"lng":-78.51083369999999,"noGM":0,"stars":4.7,"rev":1453,"hasIG":1,"igUrl":"https://www.instagram.com/sinnersmicrocerveceria/","igH":"sinnersmicrocerveceria","figIG":27000,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":1},{"n":"SOCKS &BREWS","d":"ESMERALDAS E3-110 VICENTE LEON, Quito, Ecuador","lat":-0.22027307101177,"lng":-78.5059772621234,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"STARTWIN COFFEE","d":"Guayaquil N9-02 Esmeraldas, Quito, Ecuador","lat":-0.2211634,"lng":-78.5128082,"noGM":0,"stars":3.6,"rev":64,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Café","fr":0},{"n":"SUSHI AND DRINKS","d":"OE10 CUMANDA S4-35 AMBATO, Quito, Ecuador","lat":-0.2205044,"lng":-78.5069922,"noGM":0,"stars":4.8,"rev":109,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"SWEET MY DAY","d":"PEREIRA OE1-10 MONTUFAR, Quito, Ecuador","lat":-0.2207807,"lng":-78.5110147,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Café","fr":0},{"n":"SWEETIES MOMENTS BY TEATRO BOLIVAR","d":"OLMEDO  OE3-26 GUAYAQUIL, Quito, Ecuador","lat":-0.22148,"lng":-78.5109764,"noGM":0,"stars":4.6,"rev":995,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Café","fr":0},{"n":"THE ALTAMIRA EXPERIENCE","d":"GARCIA MORENO N6 72 OLMEDO, Quito, Ecuador","lat":-0.2153398,"lng":-78.5064618,"noGM":0,"stars":4.9,"rev":14,"hasIG":1,"igUrl":"https://www.instagram.com/altamira.experience/","igH":"altamira.experience","figIG":309,"hasTT":1,"ttUrl":"https://www.tiktok.com/@altamirarestaurante_","ttH":"altamirarestaurante_","figTT":30,"likTT":114,"tipo":"New Traditional","fr":0},{"n":"THE CUCINA & MEGA SUSHI","d":"CUENCA N6-04 MEJÍA, Quito, Ecuador","lat":-0.2183658,"lng":-78.50563509999999,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"International","fr":0},{"n":"THE GALES","d":"ESPEJO OE4-27 Venezuela, Quito, Ecuador","lat":-0.2207968,"lng":-78.5088734,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"THE SECRET GARDEN","d":"OLMEDO OE3-18 GUAYAQUIL, Quito, Ecuador","lat":-0.2189965,"lng":-78.5045457,"noGM":0,"stars":4.7,"rev":6024,"hasIG":1,"igUrl":"https://www.instagram.com/secretgardenquito/","igH":"secretgardenquito","figIG":45500,"hasTT":1,"ttUrl":"https://www.tiktok.com/@secretgardenecuador.com","ttH":"secretgardenecuador.com","figTT":33700,"likTT":339900,"tipo":"Hostel","fr":0},{"n":"TIERRAS DEL SUR","d":"GUAYAQUIL N4-42 ESPEJO, Quito, Ecuador","lat":-0.2183593,"lng":-78.5126155,"noGM":0,"stars":4,"rev":19,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"TRIBURGUER","d":"DON BOSCO E E3-171 VICENTE LEON, Quito, Ecuador","lat":-0.2207456,"lng":-78.51083369999999,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"TUKOBOLON","d":"AV PICHINCHA N4-145 INCLANA, Quito, Ecuador","lat":-0.224391299764169,"lng":-78.5073234332877,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"TUS PAPITAS","d":"JUAN DE DIOS MORALES OE1-05 AV. MALDONADO, Quito, Ecuador","lat":-0.226826219821993,"lng":-78.5127221358603,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"UNION DE LA ROCAFUERTE","d":"Benalcázar N3-81 Espejo, Quito, Ecuador","lat":-0.219636816769098,"lng":-78.5133280773322,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"UNONPA RESTAURANTE","d":"Sucre E3-238 Av. Pichincha, Quito, Ecuador","lat":-0.226907525375174,"lng":-78.5080119622974,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"URBN PROT","d":", Quito, Ecuador","lat":-0.218563388629175,"lng":-78.5088120574426,"noGM":0,"stars":4.7,"rev":10,"hasIG":1,"igUrl":"https://www.instagram.com/urbnprot/","igH":"urbnprot","figIG":638,"hasTT":1,"ttUrl":"https://www.tiktok.com/@urbnprot","ttH":"urbnprot","figTT":235,"likTT":2471,"tipo":"Healthy","fr":0},{"n":"VALENCAM","d":"JOSE DE ANTEPARA S/N LOS RIOS, Quito, Ecuador","lat":-0.219030136746643,"lng":-78.5042801642649,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"VALENTINA DE LA MANABÍ","d":"N3 SUCRE SN 281 AV PICHINCHA, Quito, Ecuador","lat":-0.21913051323242,"lng":-78.5085728291249,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Ecuadorian Food","fr":0},{"n":"VALLE GUALPA JESSICA ALEXANDRA","d":"BOLÍVAR OE5-30 BENALCÁZAR, Quito, Ecuador","lat":-0.2212668,"lng":-78.5136812,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"VENÍ ACÁ","d":"GARCIA MORENO N3-80 EUGENIO ESPEJO, Quito, Ecuador","lat":-0.220136556685211,"lng":-78.5128128451043,"noGM":1,"stars":null,"rev":0,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"VIAJERO HOSTELS","d":"Benalcázar N3-119 Espejo, Quito, Ecuador","lat":-0.223286,"lng":-78.514101,"noGM":0,"stars":4.6,"rev":1018,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Other","fr":0},{"n":"VISTA HERMOSA CAFE MIRADOR","d":"OLMEDO OE4-49  Y VENEZUELA, Quito, Ecuador","lat":-0.2191353,"lng":-78.51143019999999,"noGM":0,"stars":4.5,"rev":3211,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Traditional","fr":0},{"n":"WEST CHICKEN","d":"N11E PEDRO BRICENO OE1125 VARGAS, Quito, Ecuador","lat":-0.2196308,"lng":-78.50694969999999,"noGM":0,"stars":4.1,"rev":11,"hasIG":0,"igUrl":null,"igH":"","figIG":0,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Fast Food","fr":0},{"n":"WHISKY PUB","d":"GarcÍa Moreno N7-78 MANABÍ, Quito, Ecuador","lat":-0.2230713,"lng":-78.5162319,"noGM":1,"stars":null,"rev":0,"hasIG":1,"igUrl":"https://www.instagram.com/whiskyagogouio/","igH":"whiskyagogouio","figIG":1159,"hasTT":0,"ttUrl":null,"ttH":"","figTT":0,"likTT":0,"tipo":"Bar","fr":0},{"n":"YAGÜI BEEF","d":"VENEZUELA N1-81 BOLÍVAR, Quito, Ecuador","lat":-0.2185365,"lng":-78.5107297,"noGM":0,"stars":4.9,"rev":24,"hasIG":1,"igUrl":"https://www.instagram.com/yaguibeef.ec/","igH":"yaguibeef.ec","figIG":690,"hasTT":1,"ttUrl":"https://www.tiktok.com/@yaguibeef.ec","ttH":"yaguibeef.ec","figTT":578,"likTT":6402,"tipo":"Fast Food","fr":0}];
+ 
+</script>
+
+
+<script>
+'use strict';
+
+
+
+const TOTAL = 420;
+
+const TYPE_NAMES = [
+  'Other','Fast Food','Bar','Ecuadorian Food',
+  'Café','Traditional','New Traditional','Grill',
+  'Catering','International','Cultural House','Hostel','Healthy'
+];
+
+const TYPE_COLORS = {
+  'Otro'           : '#9E9E9E',
+  'Fast Food'         : '#FF5722',
+  'Bar'               : '#AB47BC',
+  'Comida Ecuatoriana': '#43A047',
+  'Cafetería'         : '#FFA000',
+  'Tradicional'       : '#1976D2',
+  'Nuevo Tradicional' : '#00ACC1',
+  'Parilla'           : '#D32F2F',
+  'Catering'          : '#7CB342',
+  'Internacional'     : '#5E35B1',
+  'Casa Cultural'     : '#EF6C00',
+  'Hostal'            : '#546E7A',
+  'Saludable'         : '#26A69A'
+};
+
+
+
+const igCount    = DATA.filter(r => r.hasIG).length;
+const ttCount    = DATA.filter(r => r.hasTT).length;
+const bothCount  = DATA.filter(r => r.hasIG && r.hasTT).length;
+const frCount    = DATA.filter(r => r.fr).length;
+const mapCount   = DATA.filter(r => r.lat !== null).length;
+
+document.getElementById('sb-pct-panel').textContent = `(${((mapCount / 420) * 100).toFixed(0)}%)`;
+
+const maxFollIG  = Math.max(...DATA.map(r => r.figIG), 1);
+const maxFollTT  = Math.max(...DATA.map(r => r.figTT), 1);
+const maxLikTT   = Math.max(...DATA.map(r => r.likTT), 1);
+const maxRev     = Math.max(...DATA.map(r => r.rev),   1);
+
+
+const typeCounts = {};
+TYPE_NAMES.forEach(t => { typeCounts[t] = 0; });
+DATA.forEach(r => {
+  const k = (TYPE_NAMES.includes(r.tipo)) ? r.tipo : 'Other';
+  typeCounts[k]++;
+});
+
+
+
+const ST = {
+  layer    : 'instagram',
+  uniform  : false,
+  hasIG    : false,
+  hasTT    : false,
+  heatmap  : false,
+  types    : new Set(),
+  franchise: false
+};
+
+
+
+const map = L.map('map', {
+  center        : [-0.2201, -78.5123],
+  zoom          : 16,
+  zoomControl   : false,
+  attributionControl: true
+});
+
+L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
+L.tileLayer(
+  'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  {
+    attribution : '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors' +
+                  ' © <a href="https://carto.com">CARTO</a>',
+    subdomains  : 'abcd',
+    maxZoom     : 21
+  }
+).addTo(map);
+
+const renderer    = L.canvas({ padding: 0.5 });
+let   circleLayer = L.layerGroup().addTo(map);
+let   heatLayer   = null;
+
+
+
+function logRadius(value, maxVal, minR, maxR) {
+  if (!value || value <= 0) return minR;
+  const t = Math.log(1 + value) / Math.log(1 + maxVal);
+  return minR + t * (maxR - minR);
+}
+
+function getRadius(r) {
+  if (ST.uniform) return 7;
+  switch (ST.layer) {
+    case 'instagram': return logRadius(r.figIG, maxFollIG, 4, 28);
+    case 'tiktok'   : return logRadius(r.figTT, maxFollTT, 4, 28);
+    case 'stars'    : return logRadius(r.rev,   maxRev,    4, 28);  
+  }
+  return 6;
+}
+
+
+
+const HEAT_STOPS = [
+  { t: 0,    r: 255, g: 245, b: 157 },
+  { t: 0.33, r: 255, g: 143, b:   0 },
+  { t: 0.67, r: 211, g:  47, b:  47 },
+  { t: 1,    r: 106, g:   0, b:   0 }
+];
+
+
+function heatColor(value, maxVal) {
+  const t = maxVal > 0
+    ? Math.min(1, Math.log(1 + value) / Math.log(1 + maxVal))
+    : 0;
+  let i = 0;
+  while (i < HEAT_STOPS.length - 2 && t > HEAT_STOPS[i + 1].t) i++;
+  const a = HEAT_STOPS[i], b = HEAT_STOPS[i + 1];
+  const lt = (t - a.t) / (b.t - a.t);
+  const lerp = (av, bv) => Math.round(av + lt * (bv - av));
+  return `rgb(${lerp(a.r,b.r)},${lerp(a.g,b.g)},${lerp(a.b,b.b)})`;
+}
+
+
+function heatColorLinear(value, maxVal) {
+  if (value === null || value < 0) return '#9E9E9E';   
+  const t = Math.min(1, Math.max(0, value / maxVal));
+  let i = 0;
+  while (i < HEAT_STOPS.length - 2 && t > HEAT_STOPS[i + 1].t) i++;
+  const a = HEAT_STOPS[i], b = HEAT_STOPS[i + 1];
+  const lt = (b.t === a.t) ? 0 : (t - a.t) / (b.t - a.t);
+  const lerp = (av, bv) => Math.round(av + lt * (bv - av));
+  return `rgb(${lerp(a.r,b.r)},${lerp(a.g,b.g)},${lerp(a.b,b.b)})`;
+}
+
+const DIM_STYLE = {
+  fillColor: '#888', color: '#555',
+  fillOpacity: 0.10, opacity: 0.3, weight: 0.5
+};
+
+function getBubbleStyle(r) {
+  
+  let active = true;
+
+  if (ST.franchise && !r.fr)   active = false;
+
+  if (active && (ST.hasIG || ST.hasTT)) {
+    if (ST.hasIG && ST.hasTT) {
+      if (!r.hasIG || !r.hasTT) active = false;
+    } else if (ST.hasIG && !r.hasIG) {
+      active = false;
+    } else if (ST.hasTT && !r.hasTT) {
+      active = false;
+    }
+  }
+
+  const tKey = TYPE_NAMES.includes(r.tipo) ? r.tipo : 'Other';
+  if (active && ST.types.size > 0 && !ST.types.has(tKey)) active = false;
+
+  if (!active) return DIM_STYLE;
+
+  
+  
+  if (ST.types.size > 0 && ST.types.has(tKey)) {
+    const c = TYPE_COLORS[tKey] || '#9E9E9E';
+    return { fillColor: c, color: shadeHex(c, -30), fillOpacity: 0.82, opacity: 0.9, weight: 1 };
+  }
+
+  
+  if (ST.hasIG && ST.hasTT) {
+    return { fillColor: '#9B67C8', color: '#6B3A98', fillOpacity: 0.82, opacity: 0.9, weight: 1 };
+  }
+  if (ST.hasIG) {
+    return { fillColor: '#E06858', color: '#A03820', fillOpacity: 0.82, opacity: 0.9, weight: 1 };
+  }
+  if (ST.hasTT) {
+    return { fillColor: '#2FC5CE', color: '#1090A0', fillOpacity: 0.82, opacity: 0.9, weight: 1 };
+  }
+
+  
+  if (ST.layer === 'tiktok') {
+    const c = heatColor(r.likTT, maxLikTT);           
+    return { fillColor: c, color: '#1A1714', fillOpacity: 0.88, opacity: 0.6, weight: 0.8 };
+  }
+  if (ST.layer === 'stars') {
+    const c = heatColorLinear(r.stars, 5);             
+    return { fillColor: c, color: '#1A1714', fillOpacity: 0.88, opacity: 0.6, weight: 0.8 };
+  }
+  
+  return { fillColor: '#E06858', color: '#A03820', fillOpacity: 0.80, opacity: 0.85, weight: 1 };
+}
+
+function shadeHex(col, amt) {
+  
+  return col; 
+}
+
+
+
+function fmtK(n) {
+  if (n >= 1e6)  return (n / 1e6).toFixed(1)  + 'M';
+  if (n >= 1e3)  return (n / 1e3).toFixed(1)  + 'k';
+  return String(n);
+}
+function fmtFull(n) {
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+function makePopup(r) {
+  const tKey  = TYPE_NAMES.includes(r.tipo) ? r.tipo : 'Other';
+  const tCol  = TYPE_COLORS[tKey] || '#9E9E9E';
+
+  
+  const nogmBlock = r.noGM
+    ? `<div class="pop-nogm">
+         <span class="pop-nogm-star">✱</span>
+         <div class="pop-nogm-text">
+           <b>Sin registro en Google Maps.</b> Este establecimiento figura en el
+           catastro municipal pero no está indexado digitalmente. Puede que haya
+           cerrado, mudado o que opere fuera del ecosistema digital.
+         </div>
+       </div>`
+    : '';
+
+  const igBlock = r.hasIG
+    ? `<div class="pop-section">
+         <div class="pop-metric ig">📸 IG Reach: <b>${fmtFull(r.figIG)}</b> followers</div>
+         ${r.igUrl ? `<div class="pop-handle"><a href="${r.igUrl}" target="_blank" rel="noopener">@${r.igH}</a></div>` : ''}
+       </div>`
+    : `<div class="pop-section"><div class="pop-absent">No Instagram presence</div></div>`;
+
+  const ttBlock = r.hasTT
+    ? `<div class="pop-section" style="padding-top:2px">
+         <div class="pop-metric tt">🎵 TikTok Reach: <b>${fmtFull(r.figTT)}</b> fol · <b>${fmtK(r.likTT)}</b> likes</div>
+         ${r.ttUrl ? `<div class="pop-handle"><a href="${r.ttUrl}" target="_blank" rel="noopener">@${r.ttH}</a></div>` : ''}
+       </div>`
+    : `<div class="pop-section" style="padding-top:2px"><div class="pop-absent">No TikTok presence</div></div>`;
+
+  const starsBlock = r.noGM
+    ? `<div class="pop-stars" style="color:#B0A090">Not listed in Google Maps</div>`
+    : r.stars === 0
+      ? `<div class="pop-stars" style="color:#B0A090">No rating recorded<br>
+           <span style="color:#C8B99A">⭐ 0 (0 reviews)</span></div>`
+      : r.stars !== null
+        ? `<div class="pop-stars">⭐ ${r.stars}
+             <span class="pop-reviews">(${fmtFull(r.rev)} reviews)</span></div>`
+        : `<div class="pop-stars" style="color:#B0A090">Not listed in Google Maps</div>`;
+
+  return `<div class="pop-wrap">
+    <div class="pop-tipo" style="color:${tCol}">${tKey}</div>
+    <div class="pop-name">${r.n}</div>
+    <div class="pop-addr">${r.d}</div>
+    ${nogmBlock}
+    <hr class="pop-hr">
+    ${igBlock}${ttBlock}
+    <hr class="pop-hr">
+    ${starsBlock}
+  </div>`;
+}
+
+
+
+function renderBubbles() {
+  circleLayer.clearLayers();
+
+  
+  const hasActiveFilter = ST.hasIG || ST.hasTT || ST.types.size > 0 || ST.franchise;
+
+  
+  const dimmed = [], active = [];
+  DATA.forEach(r => {
+    if (r.lat === null) return;
+    const s = getBubbleStyle(r);
+    (s.fillOpacity < 0.5 ? dimmed : active).push({ r, s });
+  });
+
+  [...dimmed, ...active].forEach(({ r, s }) => {
+    const isLit = s.fillOpacity >= 0.5;
+    const circle = L.circleMarker([r.lat, r.lng], {
+      renderer,
+      radius     : getRadius(r),
+      fillColor  : s.fillColor,
+      color      : s.color,
+      fillOpacity: s.fillOpacity,
+      opacity    : s.opacity,
+      weight     : s.weight
+    });
+    
+    
+    
+    if (isLit || !hasActiveFilter) {
+      circle.bindPopup(makePopup(r), { maxWidth: 280, className: 'map-popup' });
+    }
+    circleLayer.addLayer(circle);
+  });
+
+  updateLegend();
+  updateCounters();
+  updateStatsBar();
+}
+
+
+
+function renderHeatmap() {
+  if (heatLayer) { heatLayer.remove(); heatLayer = null; }
+  if (!ST.heatmap) return;
+
+  const pts = DATA
+    .filter(r => r.lat !== null && r.rev > 0)
+    .map(r => [
+      r.lat, r.lng,
+      Math.log(1 + r.rev) / Math.log(1 + maxRev)
+    ]);
+
+  heatLayer = L.heatLayer(pts, {
+    radius     : 55,
+    blur       : 40,
+    maxZoom    : 21,
+    minOpacity : 0.38,
+    max        : 1.0,
+    gradient   : {
+      0.0 : '#ADE8F4',   // celeste muy suave (frío)
+      0.25: '#FFF176',   
+      0.55: '#FF9800',   
+      0.80: '#E53935',   
+      1.0 : '#880E4F'    
+    }
+  }).addTo(map);
+}
+
+
+
+const LegendControl = L.Control.extend({
+  options : { position: 'bottomright' },
+
+  onAdd(m) {
+    this._div = L.DomUtil.create('div', 'map-legend');
+    L.DomEvent.disableClickPropagation(this._div);
+    this.update();
+    return this._div;
+  },
+
+  update() {
+    const lyr = ST.layer;
+
+    if (lyr === 'instagram') {
+      this._div.innerHTML = `
+        <div class="legend-title">Instagram · Seguidores</div>
+        <div class="legend-ig-row">
+          <div class="legend-ig-swatch"></div>
+          <span style="font-size:10px;color:#8A7E72">Presence layer</span>
+        </div>
+        <div class="legend-size-row">
+          <div class="legend-circle" style="width:6px;height:6px"></div>
+          <div class="legend-circle" style="width:14px;height:14px"></div>
+          <div class="legend-circle" style="width:22px;height:22px"></div>
+          <div class="legend-size-label">
+            0 → <strong>${fmtK(maxFollIG)}</strong>
+          </div>
+        </div>`;
+
+    } else if (lyr === 'tiktok') {
+      this._div.innerHTML = `
+        <div class="legend-title">TikTok · Color = Likes</div>
+        <div class="legend-gradient-bar"></div>
+        <div class="legend-scale">
+          <span>0</span><span>${fmtK(maxLikTT * 0.33)}</span>
+          <span>${fmtK(maxLikTT * 0.67)}</span><span>${fmtK(maxLikTT)}</span>
+        </div>
+        <div class="legend-size-row">
+          <div class="legend-circle" style="width:6px;height:6px"></div>
+          <div class="legend-circle" style="width:14px;height:14px"></div>
+          <div class="legend-circle" style="width:22px;height:22px"></div>
+          <div class="legend-size-label">Seg: 0 → <strong>${fmtK(maxFollTT)}</strong></div>
+        </div>`;
+
+    } else { // stars
+      this._div.innerHTML = `
+        <div class="legend-title">Stars · Color = Rating</div>
+        <div class="legend-gradient-bar"></div>
+        <div class="legend-scale">
+          <span>⭐ 0</span><span>⭐ 1.7</span>
+          <span>⭐ 3.3</span><span>⭐ 5</span>
+        </div>
+        <div class="legend-size-row">
+          <div class="legend-circle" style="width:6px;height:6px"></div>
+          <div class="legend-circle" style="width:14px;height:14px"></div>
+          <div class="legend-circle" style="width:22px;height:22px"></div>
+          <div class="legend-size-label">Reviews: 0 → <strong>${fmtK(maxRev)}</strong></div>
+        </div>`;
+    }
+  }
+});
+
+const legendCtrl = new LegendControl();
+legendCtrl.addTo(map);
+function updateLegend() { legendCtrl.update(); }
+
+/* ──────────────────────────────────────────────────
+   CONTADORES DEL PANEL
+────────────────────────────────────────────────── */
+function pct(n, total) {
+  total = total || TOTAL;
+  return ((n / total) * 100).toFixed(2) + '%';
+}
+
+function setVisible(el, vis) {
+  if (vis) el.classList.add('visible');
+  else     el.classList.remove('visible');
+}
+
+function updateCounters() {
+  
+  const cntIG = document.getElementById('cnt-ig');
+  setVisible(cntIG, ST.hasIG);
+  if (ST.hasIG) cntIG.textContent = `${igCount} restaurants of 420 · ${pct(igCount)}`;
+
+  
+  const cntTT = document.getElementById('cnt-tt');
+  setVisible(cntTT, ST.hasTT);
+  if (ST.hasTT) cntTT.textContent = `${ttCount} restaurants of 420 · ${pct(ttCount)}`;
+
+  
+  const cntBoth = document.getElementById('cnt-both');
+  const showBoth = ST.hasIG && ST.hasTT;
+  setVisible(cntBoth, showBoth);
+  if (showBoth) cntBoth.textContent = `Ambas plataformas: ${bothCount} restaurantes de 427 · ${pct(bothCount)}`;
+
+  
+  TYPE_NAMES.forEach(t => {
+    const el = document.getElementById('tc-' + t);
+    if (!el) return;
+    setVisible(el, ST.types.has(t));
+    if (ST.types.has(t)) el.textContent = `${typeCounts[t]} records · ${pct(typeCounts[t])}`;
+  });
+
+  
+  const cntFr = document.getElementById('cnt-fr');
+  setVisible(cntFr, ST.franchise);
+  if (ST.franchise) cntFr.textContent = `${frCount} franchises · ${pct(frCount)}`;
+
+  
+  const tooMany = ST.types.size >= 3;
+  document.querySelectorAll('.type-cb-row').forEach(row => {
+    const isActive = ST.types.has(row.dataset.tipo);
+    row.classList.toggle('disabled', !isActive && tooMany);
+  });
+}
+
+
+
+function updateStatsBar() {
+  
+  const litCounts   = {};   
+  const frLitCounts = {};   
+  let   totalLit    = 0;
+
+  DATA.forEach(r => {
+    if (r.lat === null) return;
+    const s = getBubbleStyle(r);
+    if (s.fillOpacity < 0.5) return;   
+
+    totalLit++;
+    const tKey = TYPE_NAMES.includes(r.tipo) ? r.tipo : 'Other';
+    litCounts[tKey]   = (litCounts[tKey]   || 0) + 1;
+    if (r.fr) frLitCounts[tKey] = (frLitCounts[tKey] || 0) + 1;
+  });
+
+  
+  document.getElementById('sb-active').textContent = totalLit;
+  
+  const panelBadge = document.getElementById('sb-active-panel');
+  if (panelBadge) panelBadge.textContent = totalLit;
+
+
+    const porcentajeDinamico = ((totalLit / 420) * 100).toFixed(2);
+    
+    
+    const pctBadge = document.getElementById('sb-pct-panel');
+    if (pctBadge) {
+      pctBadge.textContent = ` ${porcentajeDinamico}%`;
+    }
+
+  
+  const detail  = document.getElementById('sb-detail');
+  const hasType = ST.types.size > 0;
+  const hasPres = ST.hasIG || ST.hasTT;
+  const hasFr   = ST.franchise;
+
+  
+  
+  
+  function chip(color, name, count, frN, presTotal, presLabel) {
+    const glPct = pct(count);
+    const frPart = (hasFr && frCount > 0 && frN !== undefined)
+      ? `<span class="sb-sep">·</span>
+         <span class="sb-pct-fr" title="% of ${frCount} total franchises">frcs: ${pct(frN, frCount)}</span>`
+      : '';
+    
+    const presPart = (presTotal && presTotal > 0)
+      ? `<span class="sb-sep">·</span>
+         <span class="sb-pct-fr" style="background:rgba(47,197,206,0.12);color:#2FC5CE" title="% of restaurants with ${presLabel}">of ${presLabel}: ${pct(count, presTotal)}</span>`
+      : '';
+    return `<span class="sb-chip">
+      <span class="stat-dot" style="background:${color}"></span>
+      <span class="sb-chip-name">${count} ${name}</span>
+      ${frPart}${presPart}
+      <span class="sb-sep">·</span>
+      <span class="sb-pct-gl" style="color: #e7ddd2; font-size: 0.95em;">
+  <span style="opacity: 0.55; margin-right: 4px;">%<sub>Global</sub></span><strong style="color: #e7ddd2; font-weight: 700;">${glPct}</strong>
+</span>
+    </span>`;
+  }
+
+  if (!hasType && !hasPres && !hasFr) {
+    detail.innerHTML =
+      chip('var(--ig)',   'Instagram',         igCount,   undefined, undefined, undefined) +
+      chip('var(--tt)',   'TikTok',            ttCount,   undefined, undefined, undefined) +
+      chip('var(--both)', 'both platforms',    bothCount, undefined, undefined, undefined);
+    return;
+  }
+
+  let html = '';
+
+  if (hasType) {
+    
+    const activePresTotal = ST.hasIG && ST.hasTT ? bothCount
+                          : ST.hasIG              ? igCount
+                          : ST.hasTT              ? ttCount
+                          : null;
+    const activePres = ST.hasIG && ST.hasTT ? 'both'
+                     : ST.hasIG              ? 'IG'
+                     : ST.hasTT              ? 'TT'
+                     : null;
+
+    Array.from(ST.types).forEach(t => {
+      const count  = litCounts[t] || 0;
+      const color  = TYPE_COLORS[t] || '#9E9E9E';
+      const frN    = frLitCounts[t] || 0;
+      html += chip(color, t, count, frN, activePresTotal, activePres);
+    });
+
+  } else if (hasPres) {
+    let label, color, presTotal, presLabel;
+    if (ST.hasIG && ST.hasTT) {
+      label = 'both platforms'; color = 'var(--both)';
+      presTotal = bothCount; presLabel = 'ambas';
+    } else if (ST.hasIG) {
+      label = 'with Instagram';         color = 'var(--ig)';
+      presTotal = igCount;  presLabel = 'IG';
+    } else {
+      label = 'with TikTok';            color = 'var(--tt)';
+      presTotal = ttCount;  presLabel = 'TT';
+    }
+
+    const frN = hasFr ? totalLit : undefined;
+    html += chip(color, label, totalLit, frN, presTotal, presLabel);
+
+  } else if (hasFr) {
+    html += chip('var(--gold)', 'franchises',  totalLit, undefined, undefined, undefined);
+  }
+
+  detail.innerHTML = html;
+}
+
+
+
+function toggleSection(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+function setLayer(layer, btn) {
+  ST.layer = layer;
+  document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderBubbles();
+}
+
+function setUniform(val) {
+  ST.uniform = val;
+  renderBubbles();
+}
+
+function togglePresence(which) {
+  if (which === 'ig') {
+    ST.hasIG = !ST.hasIG;
+    const box = document.getElementById('cb-ig-box');
+    box.classList.toggle('checked', ST.hasIG);
+  } else {
+    ST.hasTT = !ST.hasTT;
+    const box = document.getElementById('cb-tt-box');
+    box.classList.toggle('checked', ST.hasTT);
+  }
+  renderBubbles();
+}
+
+function setHeatmap(val) {
+  ST.heatmap = val;
+  renderHeatmap();
+  
+  const hl = document.getElementById('heat-legend');
+  if (hl) hl.classList.toggle('active', val);
+}
+
+function toggleType(tipo, rowEl) {
+  const tKey = tipo;
+  if (ST.types.has(tKey)) {
+    ST.types.delete(tKey);
+    rowEl.querySelector('.cb-custom').classList.remove('checked');
+  } else {
+    if (ST.types.size >= 3) return;
+    ST.types.add(tKey);
+    rowEl.querySelector('.cb-custom').classList.add('checked');
+  }
+  renderBubbles();
+}
+
+function toggleFranchise() {
+  ST.franchise = !ST.franchise;
+  const box = document.getElementById('cb-fr-box');
+  box.classList.toggle('checked', ST.franchise);
+  renderBubbles();
+}
+
+
+
+function buildTypeList() {
+  const container = document.getElementById('type-list');
+  container.innerHTML = '';
+
+  TYPE_NAMES.forEach(t => {
+    const color = TYPE_COLORS[t] || '#9E9E9E';
+    const count = typeCounts[t] || 0;
+    if (count === 0) return; 
+
+    const row = document.createElement('div');
+    row.className = 'cb-row type-cb-row';
+    row.dataset.tipo = t;
+    row.onclick = () => toggleType(t, row);
+
+    row.innerHTML = `
+      <div class="cb-custom"></div>
+      <span class="type-swatch" style="background:${color};margin-top:3px;"></span>
+      <span class="cb-text" style="font-size:11.5px;">
+        ${t}
+        <span class="counter-inline" id="tc-${t}" style="display:none"></span>
+      </span>`;
+
+    container.appendChild(row);
+
+    
+    
+  });
+}
+
+
+
+function downloadMap() {
+  const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'digital-food-territories-quito.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+
+
+(function init() {
+  buildTypeList();
+  renderBubbles();
+})();
+</script>
+
+</div></body></html>
