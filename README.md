@@ -47,7 +47,7 @@ Ver sección [Licencia / License](#licencia--license) al final de este documento
 
 ### Contacto
 
-Johann — `jijadan@gmail.com`
+Johann Jadan-Altamirano — `jijadan@gmail.com`
 
 ---
 
@@ -90,7 +90,7 @@ See the [Licencia / License](#licencia--license) section below.
 
 ### Contact
 
-Johann — `jijadan@gmail.com`
+Johann Jadan-Altamirano — `jijadan@gmail.com`
 
 ---
 
