@@ -422,23 +422,6 @@ html, body { height: 100%; overflow: hidden; font-family: 'Inter', system-ui, sa
 .hamburger-btn:active { background: rgba(40,35,30,0.98); }
 
  
-.panel-close-btn {
-  display: none;
-  width: 30px; height: 30px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--panel-border);
-  border-radius: 6px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background var(--transition);
-}
-.panel-close-btn:active { background: rgba(255,255,255,0.12); }
-
- 
 .panel-overlay {
   display: none;
   position: fixed;
@@ -452,40 +435,30 @@ html, body { height: 100%; overflow: hidden; font-family: 'Inter', system-ui, sa
 
  
 @media (max-width: 960px) {
-  .hamburger-btn    { display: flex; }
-  .panel-close-btn  { display: flex; }
+  .hamburger-btn { display: flex; }
 
+   
   #panel {
     position: fixed;
-    top: 0; left: 0;
+    top: 0;
+    left: -110%;            
     height: 100%;
-    transform: translateX(-110%);
-    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1000;
     box-shadow: 4px 0 28px rgba(0,0,0,0.45);
     width: 300px;
     min-width: 300px;
   }
   body.panel-open #panel {
-    transform: translateX(0);
+    left: 0;                
   }
-
-   
-  .panel-header {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .panel-header-content { flex: 1; }
 
    
   .map-stats-bar {
-    top: 12px;
+    top: 68px;              
     right: 12px;
     left: auto;
-    max-width: calc(100vw - 80px);
+    max-width: calc(100vw - 90px);
   }
 }
 
@@ -495,23 +468,21 @@ html, body { height: 100%; overflow: hidden; font-family: 'Inter', system-ui, sa
 
    
   .map-stats-bar {
-    top: auto;
-    bottom: 80px;
+    top: 68px;
     right: 8px;
-    left: 8px;
-    max-width: none;
+    left: auto;
+    max-width: calc(100vw - 90px);
     min-width: unset;
   }
+   
+  #sb-detail { display: none !important; }
   .sb-count { font-size: 16px; }
   .sb-label { font-size: 10px; }
-  .sb-chip  { font-size: 9.5px; }
 
    
   .heat-legend {
-    bottom: auto;
-    top: 12px;
-    right: 8px;
-    min-width: 160px;
+    max-height: 130px;
+    overflow-y: auto;
   }
 
    
@@ -830,20 +801,16 @@ html, body { height: 100%; overflow: hidden; font-family: 'Inter', system-ui, sa
 
     
     <div class="panel-header">
-      <div class="panel-header-content">
-        <div class="panel-eyebrow">Análisis Territorial</div>
-        <div class="panel-title">
-          <span>Territorios</span>
-          <span>Alimentarios</span>
-          <span>Digitales</span>
-        </div>
-        <div class="panel-subtitle">Centro Histórico de Quito · 2026</div>
-        <div class="map-badge">
-           <strong id="sb-active-panel">420</strong> en mapa de <strong>420</strong> registros · <strong id="sb-pct-panel" style="color: var(--gold); margin-left: 3px;"> 100.00%</strong> ·
-        </div>
+      <div class="panel-eyebrow">Análisis Territorial</div>
+      <div class="panel-title">
+        <span>Territorios</span>
+        <span>Alimentarios</span>
+        <span>Digitales</span>
       </div>
-      
-      <button class="panel-close-btn" onclick="closePanel()" aria-label="Cerrar menú">✕</button>
+      <div class="panel-subtitle">Centro Histórico de Quito · 2026</div>
+      <div class="map-badge">
+         <strong id="sb-active-panel">420</strong> en mapa de <strong>420</strong> registros · <strong id="sb-pct-panel" style="color: var(--gold); margin-left: 3px;"> 100.00%</strong> ·
+      </div>
     </div>
 
     
