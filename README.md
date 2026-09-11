@@ -17,8 +17,8 @@ Este repositorio aloja un mapa interactivo que visualiza los establecimientos de
 El mapa es un recurso complementario a la investigación académica *"Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres"*, que analiza cómo las plataformas digitales no desplazan el centro de gravedad gastronómico del distrito patrimonial, sino que introducen una precondición de **"encontrabilidad"** que determina quién entra al campo del reconocimiento digital, dónde se concentra ese reconocimiento y qué formas de patrimonio alimentario se vuelven legibles — un fenómeno que el estudio denomina **amplificación selectiva**.
 
 **🔗 Ver el mapa:**
-- Versión en español: `https://github.com/Jijadan/quito-digital-foodscape/blob/main/mapa-territorios-digitales-quito.html`
-- English version: `https://github.com/Jijadan/quito-digital-foodscape/blob/main/digital-food-territories-quito.html`
+- Versión en español: `https://jijadan.github.io/quito-digital-foodscape/mapa-territorios-digitales-quito.html`
+- English version: `https://jijadan.github.io/quito-digital-foodscape/digital-food-territories-quito.html`
 
 ### Fuente de los datos
 
@@ -60,8 +60,8 @@ This repository hosts an interactive map visualizing food heritage establishment
 The map is a companion resource to the academic study *"Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres"*, which argues that digital platforms do not relocate the gastronomic center of gravity of the heritage district, but instead introduce a precondition of **"findability"** that determines who enters the field of digital recognition, where that recognition concentrates, and which forms of food heritage become legible — a phenomenon the study terms **selective amplification** (*amplificación selectiva*).
 
 **🔗 View the map:**
-- Spanish version: `https://github.com/Jijadan/quito-digital-foodscape/blob/main/mapa-territorios-digitales-quito.html`
-- English version: `https://github.com/Jijadan/quito-digital-foodscape/blob/main/digital-food-territories-quito.html`
+- Spanish version: `https://jijadan.github.io/quito-digital-foodscape/mapa-territorios-digitales-quito.html`
+- English version: `https://jijadan.github.io/quito-digital-foodscape/digital-food-territories-quito.html`
 
 ### Data source
 
