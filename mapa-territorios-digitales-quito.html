@@ -1096,15 +1096,12 @@ const map = L.map('map', {
 
 L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-L.tileLayer(
-  'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-  {
-    attribution : '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors' +
-                  ' © <a href="https://carto.com">CARTO</a>',
-    subdomains  : 'abcd',
-    maxZoom     : 21
-  }
-).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=b09f4e24-916c-4869-9b62-5888d374f886', {
+  attribution : '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors © <a href="https://carto.com">CARTO</a>',
+  subdomains  : 'abcd',
+  maxZoom     : 21
+}).addTo(map);
+
 
 const renderer    = L.canvas({ padding: 0.5 });
 let   circleLayer = L.layerGroup().addTo(map);
