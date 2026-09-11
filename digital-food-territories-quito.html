@@ -361,6 +361,134 @@ html, body { height: 100%; overflow: hidden; font-family: 'Inter', system-ui, sa
 #map { width: 100%; height: 100%; }
 
  
+.hamburger-btn {
+  display: none;
+  position: fixed;
+  top: 12px; left: 12px;
+  z-index: 1100;
+  width: 44px; height: 44px;
+  background: rgba(26,23,20,0.94);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  color: var(--gold);
+  font-size: 20px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+  transition: background var(--transition);
+  flex-shrink: 0;
+}
+.hamburger-btn:active { background: rgba(40,35,30,0.98); }
+
+ 
+.panel-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.52);
+  z-index: 950;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.panel-overlay.active { display: block; }
+
+ 
+@media (max-width: 960px) {
+  .hamburger-btn { display: flex; }
+
+   
+  #panel {
+    position: fixed;
+    top: 0;
+    left: -110%;
+    height: 100%;
+    transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    box-shadow: 4px 0 28px rgba(0,0,0,0.45);
+    width: 300px;
+    min-width: 300px;
+  }
+  body.panel-open #panel { left: 0; }
+
+   
+  .map-stats-bar {
+    top: 68px;
+    right: 12px;
+    left: auto;
+    max-width: calc(100vw - 90px);
+  }
+}
+
+ 
+@media (max-width: 480px) {
+  #panel { width: 88vw; min-width: unset; max-width: 320px; }
+
+   
+  .map-stats-bar {
+    top: 68px;
+    right: 8px;
+    left: auto;
+    max-width: calc(100vw - 90px);
+    min-width: unset;
+  }
+  .sb-count { font-size: 16px; }
+  .sb-label { font-size: 10px; }
+  .sb-chip  { font-size: 9.5px; }
+
+   
+  .heat-legend {
+    max-height: 130px;
+    overflow-y: auto;
+  }
+
+   
+  .leaflet-bar a {
+    width: 36px !important;
+    height: 36px !important;
+    line-height: 36px !important;
+    font-size: 18px !important;
+  }
+}
+
+ 
+.leaflet-tile-pane {
+  -webkit-filter : grayscale(1) brightness(1.12) contrast(0.82);
+  filter         : grayscale(1) brightness(1.12) contrast(0.82);
+}
+
+ 
+.map-stats-bar { position: relative; }
+.map-stats-bar .float-body { overflow: hidden; }
+.sb-mini { display: none; font-size: 11px; font-weight: 600; color: var(--gold); padding-right: 22px; white-space: nowrap; }
+
+.map-legend { position: relative; }
+.map-legend .float-body { overflow: hidden; }
+.leg-mini { display: none; font-size: 10px; color: var(--text-secondary); padding-right: 22px; white-space: nowrap; }
+
+.float-toggle {
+  position: absolute;
+  top: 7px; right: 7px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid var(--panel-border);
+  color: var(--text-dim);
+  font-size: 8px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s, color 0.18s;
+  z-index: 2;
+  user-select: none;
+}
+.float-toggle:hover { background: rgba(255,255,255,0.14); color: var(--text-secondary); }
+
+ 
 .leaflet-popup-content-wrapper {
   border-radius: 8px !important;
   box-shadow: 0 4px 20px rgba(0,0,0,0.22) !important;
@@ -658,6 +786,11 @@ html, body { height: 100%; overflow: hidden; font-family: 'Inter', system-ui, sa
 <div id="app">
 
   
+  <button class="hamburger-btn" id="hamburger-btn" onclick="togglePanel()" aria-label="Open filter menu">☰</button>
+
+  
+  <div class="panel-overlay" id="panel-overlay" onclick="closePanel()"></div>
+
   <aside id="panel">
 
     
@@ -952,51 +1085,18 @@ html, body { height: 100%; overflow: hidden; font-family: 'Inter', system-ui, sa
 
   
   <div id="map-wrap">
-    <div id="map" class="leaflet-container leaflet-touch leaflet-retina leaflet-safari leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0" style="position: relative;"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 21; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" src="https://c.basemaps.cartocdn.com/light_all/16/18475/32807@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(476px, 89px, 0px); opacity: 1;"><img alt="" src="https://d.basemaps.cartocdn.com/light_all/16/18475/32808@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(476px, 345px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/light_all/16/18474/32807@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(220px, 89px, 0px); opacity: 1;"><img alt="" src="https://d.basemaps.cartocdn.com/light_all/16/18476/32807@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(732px, 89px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/light_all/16/18474/32808@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(220px, 345px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/light_all/16/18476/32808@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(732px, 345px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/light_all/16/18475/32806@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(476px, -167px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/light_all/16/18475/32809@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(476px, 601px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/light_all/16/18474/32806@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(220px, -167px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/light_all/16/18476/32806@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(732px, -167px, 0px); opacity: 1;"><img alt="" src="https://d.basemaps.cartocdn.com/light_all/16/18474/32809@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(220px, 601px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/light_all/16/18476/32809@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(732px, 601px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/light_all/16/18473/32807@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-36px, 89px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/light_all/16/18477/32807@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(988px, 89px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/light_all/16/18473/32808@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-36px, 345px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/light_all/16/18477/32808@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(988px, 345px, 0px); opacity: 1;"><img alt="" src="https://d.basemaps.cartocdn.com/light_all/16/18473/32806@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-36px, -167px, 0px); opacity: 1;"><img alt="" src="https://d.basemaps.cartocdn.com/light_all/16/18477/32806@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(988px, -167px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/light_all/16/18473/32809@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-36px, 601px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/light_all/16/18477/32809@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(988px, 601px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"><canvas class="leaflet-zoom-animated" width="4368" height="2896" style="transform: translate3d(-546px, -362px, 0px); width: 2184px; height: 1448px;"></canvas></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-marker-pane"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a></div></div><div class="leaflet-bottom leaflet-right"><div class="map-legend leaflet-control">
-        <div class="legend-title">Instagram · Seguidores</div>
-        <div class="legend-ig-row">
-          <div class="legend-ig-swatch"></div>
-          <span style="font-size:10px;color:#8A7E72">Presence layer</span>
-        </div>
-        <div class="legend-size-row">
-          <div class="legend-circle" style="width:6px;height:6px"></div>
-          <div class="legend-circle" style="width:14px;height:14px"></div>
-          <div class="legend-circle" style="width:22px;height:22px"></div>
-          <div class="legend-size-label">
-            0 → <strong>348.0k</strong>
-          </div>
-        </div></div><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors © <a href="https://carto.com">CARTO</a></div></div></div></div>
+    <div id="map" class="leaflet-container leaflet-touch leaflet-retina leaflet-safari leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0" style="position: relative;"></div>
     
     <div class="map-stats-bar" id="stats-bar">
-      <div class="sb-line1">
-        <span class="sb-count" id="sb-active">420</span>
-        <span class="sb-label">on map of <span class="sb-total">420</span> records</span>
+      <button class="float-toggle" id="stats-toggle" onclick="toggleStatsBar()" title="Collapse">▾</button>
+      <div class="sb-mini" id="sb-mini-count">420</div>
+      <div class="float-body" id="stats-body">
+        <div class="sb-line1">
+          <span class="sb-count" id="sb-active">420</span>
+          <span class="sb-label">on map of <span class="sb-total">420</span> records</span>
+        </div>
+        <div class="sb-line2" id="sb-detail"></div>
       </div>
-      <div class="sb-line2" id="sb-detail"><span class="sb-chip">
-      <span class="stat-dot" style="background:var(--ig)"></span>
-      <span class="sb-chip-name">99 Instagram</span>
-      
-      <span class="sb-sep">·</span>
-      <span class="sb-pct-gl" style="color: #e7ddd2; font-size: 0.95em;">
-  <span style="opacity: 0.55; margin-right: 4px;">%<sub>Global</sub></span><strong style="color: #e7ddd2; font-weight: 700;">23.57%</strong>
-</span>
-    </span><span class="sb-chip">
-      <span class="stat-dot" style="background:var(--tt)"></span>
-      <span class="sb-chip-name">63 TikTok</span>
-      
-      <span class="sb-sep">·</span>
-      <span class="sb-pct-gl" style="color: #e7ddd2; font-size: 0.95em;">
-  <span style="opacity: 0.55; margin-right: 4px;">%<sub>Global</sub></span><strong style="color: #e7ddd2; font-weight: 700;">15.00%</strong>
-</span>
-    </span><span class="sb-chip">
-      <span class="stat-dot" style="background:var(--both)"></span>
-      <span class="sb-chip-name">63 both platforms</span>
-      
-      <span class="sb-sep">·</span>
-      <span class="sb-pct-gl" style="color: #e7ddd2; font-size: 0.95em;">
-  <span style="opacity: 0.55; margin-right: 4px;">%<sub>Global</sub></span><strong style="color: #e7ddd2; font-weight: 700;">15.00%</strong>
-</span>
-    </span></div>
 
     
     <div class="heat-legend" id="heat-legend">
@@ -1096,13 +1196,17 @@ const map = L.map('map', {
 
 L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
+
+
+
+
 L.tileLayer(
-  'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
-    attribution : '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors' +
-                  ' © <a href="https://carto.com">CARTO</a>',
-    subdomains  : 'abcd',
-    maxZoom     : 21
+    attribution : '© <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a> contributors',
+    subdomains  : 'abc',
+    maxZoom     : 19,
+    maxNativeZoom: 19
   }
 ).addTo(map);
 
@@ -1371,10 +1475,14 @@ const LegendControl = L.Control.extend({
 
   update() {
     const lyr = ST.layer;
+    
+    const prevBody = this._div.querySelector('.float-body');
+    const wasCollapsed = prevBody && prevBody.style.display === 'none';
 
+    let inner = '';
     if (lyr === 'instagram') {
-      this._div.innerHTML = `
-        <div class="legend-title">Instagram · Seguidores</div>
+      inner = `
+        <div class="legend-title">Instagram · Followers</div>
         <div class="legend-ig-row">
           <div class="legend-ig-swatch"></div>
           <span style="font-size:10px;color:#8A7E72">Presence layer</span>
@@ -1383,13 +1491,10 @@ const LegendControl = L.Control.extend({
           <div class="legend-circle" style="width:6px;height:6px"></div>
           <div class="legend-circle" style="width:14px;height:14px"></div>
           <div class="legend-circle" style="width:22px;height:22px"></div>
-          <div class="legend-size-label">
-            0 → <strong>${fmtK(maxFollIG)}</strong>
-          </div>
+          <div class="legend-size-label">0 → <strong>${fmtK(maxFollIG)}</strong></div>
         </div>`;
-
     } else if (lyr === 'tiktok') {
-      this._div.innerHTML = `
+      inner = `
         <div class="legend-title">TikTok · Color = Likes</div>
         <div class="legend-gradient-bar"></div>
         <div class="legend-scale">
@@ -1400,11 +1505,10 @@ const LegendControl = L.Control.extend({
           <div class="legend-circle" style="width:6px;height:6px"></div>
           <div class="legend-circle" style="width:14px;height:14px"></div>
           <div class="legend-circle" style="width:22px;height:22px"></div>
-          <div class="legend-size-label">Seg: 0 → <strong>${fmtK(maxFollTT)}</strong></div>
+          <div class="legend-size-label">Fol: 0 → <strong>${fmtK(maxFollTT)}</strong></div>
         </div>`;
-
-    } else { // stars
-      this._div.innerHTML = `
+    } else {
+      inner = `
         <div class="legend-title">Stars · Color = Rating</div>
         <div class="legend-gradient-bar"></div>
         <div class="legend-scale">
@@ -1418,6 +1522,23 @@ const LegendControl = L.Control.extend({
           <div class="legend-size-label">Reviews: 0 → <strong>${fmtK(maxRev)}</strong></div>
         </div>`;
     }
+
+    const layerLabel = lyr === 'instagram' ? 'IG' : lyr === 'tiktok' ? 'TT' : '⭐';
+    this._div.innerHTML = `
+      <button class="float-toggle" id="leg-toggle" onclick="toggleLegend()" title="Collapse">▾</button>
+      <div class="leg-mini">${layerLabel} legend</div>
+      <div class="float-body">${inner}</div>`;
+
+    // Restore collapsed state via JS style (not CSS class)
+    if (wasCollapsed) {
+      const body = this._div.querySelector('.float-body');
+      const mini = this._div.querySelector('.leg-mini');
+      const btn  = this._div.querySelector('.float-toggle');
+      if (body) body.style.display = 'none';
+      if (mini) mini.style.display = 'block';
+      this._div.style.padding = '7px 10px';
+      if (btn) { btn.textContent = '▴'; btn.title = 'Expand'; }
+    }
   }
 });
 
@@ -1425,9 +1546,8 @@ const legendCtrl = new LegendControl();
 legendCtrl.addTo(map);
 function updateLegend() { legendCtrl.update(); }
 
-/* ──────────────────────────────────────────────────
-   CONTADORES DEL PANEL
-────────────────────────────────────────────────── */
+
+
 function pct(n, total) {
   total = total || TOTAL;
   return ((n / total) * 100).toFixed(2) + '%';
@@ -1497,6 +1617,9 @@ function updateStatsBar() {
 
   
   document.getElementById('sb-active').textContent = totalLit;
+  
+  const miniEl = document.getElementById('sb-mini-count');
+  if (miniEl) miniEl.textContent = totalLit;
   
   const panelBadge = document.getElementById('sb-active-panel');
   if (panelBadge) panelBadge.textContent = totalLit;
@@ -1684,8 +1807,57 @@ function buildTypeList() {
 
 
 
+
+
+function toggleStatsBar() {
+  const body = document.getElementById('stats-body');
+  const mini = document.getElementById('sb-mini-count');
+  const bar  = document.getElementById('stats-bar');
+  const btn  = document.getElementById('stats-toggle');
+  if (!body) return;
+
+  const closing = body.style.display !== 'none';
+  body.style.display = closing ? 'none' : '';
+  if (mini) mini.style.display = closing ? 'block' : 'none';
+  bar.style.minWidth = closing ? 'unset' : '';
+  bar.style.padding  = closing ? '7px 10px' : '';
+  btn.textContent = closing ? '▴' : '▾';
+  btn.title       = closing ? 'Expand' : 'Collapse';
+}
+
+function toggleLegend() {
+  const leg  = legendCtrl.getContainer();
+  if (!leg) return;
+  const body = leg.querySelector('.float-body');
+  const mini = leg.querySelector('.leg-mini');
+  const btn  = document.getElementById('leg-toggle');
+  if (!body) return;
+
+  const closing = body.style.display !== 'none';
+  body.style.display = closing ? 'none' : '';
+  if (mini) mini.style.display = closing ? 'block' : 'none';
+  leg.style.padding = closing ? '7px 10px' : '';
+  if (btn) {
+    btn.textContent = closing ? '▴' : '▾';
+    btn.title       = closing ? 'Expand' : 'Collapse';
+  }
+}
+
+
+
 function downloadMap() {
-  const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  
+  const docClone = document.documentElement.cloneNode(true);
+
+  
+  
+  const mapInClone = docClone.querySelector('#map');
+  if (mapInClone) mapInClone.innerHTML = '';
+
+  const detailInClone = docClone.querySelector('#sb-detail');
+  if (detailInClone) detailInClone.innerHTML = '';
+
+  const html = '<!DOCTYPE html>\n' + docClone.outerHTML;
   const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
@@ -1698,6 +1870,36 @@ function downloadMap() {
 }
 
 
+
+
+
+function openPanel() {
+  document.body.classList.add('panel-open');
+  document.getElementById('panel-overlay').classList.add('active');
+  document.getElementById('hamburger-btn').innerHTML = '✕';
+}
+function closePanel() {
+  document.body.classList.remove('panel-open');
+  document.getElementById('panel-overlay').classList.remove('active');
+  document.getElementById('hamburger-btn').innerHTML = '☰';
+}
+function togglePanel() {
+  document.body.classList.contains('panel-open') ? closePanel() : openPanel();
+}
+
+
+(function initSwipe() {
+  let startX = 0;
+  const panel = document.getElementById('panel');
+  panel.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  panel.addEventListener('touchend', e => {
+    if (e.changedTouches[0].clientX - startX < -60) closePanel();
+  }, { passive: true });
+})();
+
+function closePanelOnMobile() {
+  if (window.innerWidth <= 960 && document.body.classList.contains('panel-open')) closePanel();
+}
 
 (function init() {
   buildTypeList();
