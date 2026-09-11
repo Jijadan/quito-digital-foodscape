@@ -1096,10 +1096,25 @@ const map = L.map('map', {
 
 L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-L.tileLayer('https://arcgisonline.com{z}/{y}/{x}', {
-  attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-  maxZoom: 16
-}).addTo(map);
+L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Canvas/MapServer/tile/{z}/{y}/{x}',
+  {
+    attribution   : '© <a href="https://www.esri.com">Esri</a>, ' +
+                    '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+    maxNativeZoom : 16,
+    maxZoom       : 19
+  }
+).addTo(map);
+
+L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+  {
+    attribution   : '',
+    maxNativeZoom : 16,
+    maxZoom       : 19,
+    pane          : 'shadowPane'
+  }
+).addTo(map);
 
 
 const renderer    = L.canvas({ padding: 0.5 });
