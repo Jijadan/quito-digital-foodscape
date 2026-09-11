@@ -16,9 +16,18 @@ Este repositorio aloja un mapa interactivo que visualiza los establecimientos de
 
 El mapa es un recurso complementario a la investigación académica *"Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres"*, que analiza cómo las plataformas digitales no desplazan el centro de gravedad gastronómico del distrito patrimonial, sino que introducen una precondición de **"encontrabilidad"** que determina quién entra al campo del reconocimiento digital, dónde se concentra ese reconocimiento y qué formas de patrimonio alimentario se vuelven legibles — un fenómeno que el estudio denomina **amplificación selectiva**.
 
-**🔗 Ver el mapa:**
-- Versión en español: `https://jijadan.github.io/quito-digital-foodscape/mapa-territorios-digitales-quito.html`
-- English version: `https://jijadan.github.io/quito-digital-foodscape/digital-food-territories-quito.html`
+## 🔗 Ver los Mapas Interactivos
+
+Selecciona tu idioma para abrir el mapa interactivo directamente en tu navegador:
+
+* 🇪🇨 **Versión en Español:** [Haga clic aquí para ver el mapa en Español](https://jijadan.github.io/quito-digital-foodscape/mapa-territorios-digitales-quito.html)
+* 🇬🇧 **Versión en Inglés:** [Click here to view the map in English](https://jijadan.github.io/quito-digital-foodscape/digital-food-territories-quito.html)
+
+---
+
+## 📊 Características del Proyecto
+* **Visualización Dinámica:** Capas de burbujas interactivas según el tamaño de seguidores en Instagram, TikTok y calificaciones en Google Stars.
+* **Mapas de Calor:** Densidad de reseñas y niveles de concentración de la atención digital en el territorio.
 
 ### Fuente de los datos
 
@@ -59,9 +68,20 @@ This repository hosts an interactive map visualizing food heritage establishment
 
 The map is a companion resource to the academic study *"Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres"*, which argues that digital platforms do not relocate the gastronomic center of gravity of the heritage district, but instead introduce a precondition of **"findability"** that determines who enters the field of digital recognition, where that recognition concentrates, and which forms of food heritage become legible — a phenomenon the study terms **selective amplification** (*amplificación selectiva*).
 
-**🔗 View the map:**
-- Spanish version: `https://jijadan.github.io/quito-digital-foodscape/mapa-territorios-digitales-quito.html`
-- English version: `https://jijadan.github.io/quito-digital-foodscape/digital-food-territories-quito.html`
+## 🔗 View the Interactive Maps
+
+Select your language to open the interactive map directly in your browser:
+
+* 🇪🇸 **Spanish version:** [Haga clic aquí para ver el mapa en Español](https://jijadan.github.io/quito-digital-foodscape/mapa-territorios-digitales-quito.html)
+* 🇬🇧 **English Version:** [Click here to view the map in English](https://jijadan.github.io/quito-digital-foodscape/digital-food-territories-quito.html)
+
+---
+
+## 📊 Project Features
+
+### 🇬🇧 English
+* **Dynamic Visualization:** Interactive bubble layers representing follower counts on Instagram, TikTok, and Google Stars ratings.
+* **Heat Maps:** Review density and levels of digital attention concentration across the territory.
 
 ### Data source
 
