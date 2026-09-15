@@ -40,7 +40,7 @@ Selecciona tu idioma para abrir el mapa interactivo directamente en tu navegador
 
 Este mapa es un recurso complementario al siguiente artículo. La cita se actualizará con el DOI definitivo al momento de la publicación:
 
-> Jadan-Altamirano, J. (2026). Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres. *Frontiers in Social and Cultural Pathways to Sustainable Diets: Food Environments, Cooking Practices, Food Identities, and Digital Influences*. DOI pendiente.
+Español: Jadán-Altamirano, J. y Jadán-Guerrero, J. (2026). Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres. Frontiers in Nutrition, sección Nutrition and Sustainable Diets, Research Topic "Social and Cultural Pathways to Sustainable Diets: Food Environments, Cooking Practices, Food Identities, and Digital Influences". DOI pendiente.
 
 Si usas este mapa o los datos subyacentes en tu propio trabajo, por favor cita el artículo asociado (ver sección de Licencia).
 
@@ -94,8 +94,7 @@ Select your language to open the interactive map directly in your browser:
 
 This map is a companion resource to the following article. The citation will be updated with the final DOI upon publication:
 
-> Jadan-Altamirano, J. (2026). Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres. *Frontiers in Social and Cultural Pathways to Sustainable Diets: Food Environments, Cooking Practices, Food Identities, and Digital Influences*. DOI pending.
-
+English: Jadán-Altamirano, J., & Jadán-Guerrero, J. (2026). Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres. Frontiers in Nutrition, Nutrition and Sustainable Diets section, Research Topic "Social and Cultural Pathways to Sustainable Diets: Food Environments, Cooking Practices, Food Identities, and Digital Influences". DOI pending.
 If you use this map or the underlying data in your own work, please cite the associated article (see License section).
 
 ### Tech stack
