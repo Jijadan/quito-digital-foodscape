@@ -1,0 +1,117 @@
+id_censo,Nombre,tipo_original,oferta_validada,fuente_oferta,categoria_combinada,categoria,dist_km,estado
+1, ALISVA KIMBERLY ,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.6567086436457558,Sin evidencia
+4, LA ESQUINA ZARUMEÑA ,Comida Ecuatoriana,Cocina ecuatoriana regional,Solo nombre,Comida Ecuatoriana,SEGUNDA / 3 TENEDORES,0.4872995571154216,Sin evidencia
+5, LA LEYENDA CAFÉ CONCIERTO,Cafetería,Cafetería,Solo nombre,Cafetería,SEGUNDA / 3 TENEDORES,0.1578480204704166,Sin evidencia
+10,ABATURC SPORT,Sin clasificar,Bar,Descripción textual,Sin clasificar → Bar,SEGUNDA / 3 TENEDORES,0.4504545796634103,Sin evidencia
+11,ABU MUNIR,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.6387200162463044,Sin evidencia
+12,AL PASO,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.7669568904745075,Sin evidencia
+13,ALBAN ARELLANO ALEX JUAN,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,1.171589954494273,Sin evidencia
+14,ALCIVAR CEDEÑO CELIA CELINDA,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,1.0814992064377644,Sin evidencia
+17,ANITA DEL CENTRO,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,1.155459080755958,Sin evidencia
+22,ASADERO KING CHICKEN,Fast Food,Fast Food,Descripción textual,Fast Food,CUARTA / 1 TENEDOR,0.903589635708204,Sin evidencia
+24,ASADERO M & M,Parrilla,Fast Food,Solo nombre,Parrilla,SEGUNDA / 3 TENEDORES,1.0381222339206575,Sin evidencia
+31,BELENCITA,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.3117814263024249,Sin evidencia
+34,BISTRO,Sin clasificar,No determinable,Descripción textual,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.5673557720192695,Operativo
+37,BUKYS,Sin clasificar,No determinable,Descripción textual,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.2597631914412505,Operativo
+40,CACHUPUD TZACAN JOSE MATIAS,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.7087608835063534,Sin evidencia
+41,CACTUS LA RONDA,Bar,Bar,Descripción textual,Bar,SEGUNDA / 3 TENEDORES,0.5640953168758104,Sin evidencia
+47,CAISACHANA MEDINA NELLY CECILIA,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.8734587870877336,Sin evidencia
+48,CALICANTO,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.4504545796634103,Sin evidencia
+49,CALLEJON QUITEÑO,Tradicional,Bar,Descripción textual,Tradicional,SEGUNDA / 3 TENEDORES,0.5530296063553651,Sin evidencia
+58,CECIBEL ,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.676873581441721,Sin evidencia
+59,CEVICHERIA LA ERMITA,Comida Ecuatoriana,Cocina ecuatoriana regional,Solo nombre,Comida Ecuatoriana,CUARTA / 1 TENEDOR,1.0020593997527691,Sin evidencia
+62,CHIFA FOUR SEA,Internacional,Internacional,Solo nombre,Internacional,CUARTA / 1 TENEDOR,0.2863383784864105,Sin evidencia
+63,CHIFA JING BIN,Internacional,Internacional,Solo nombre,Internacional,SEGUNDA / 3 TENEDORES,0.6729697571895931,Sin evidencia
+75,COCOA PACHA FOOD COFFEE CHOCOLATE,Cafetería,Cafetería,Descripción textual,Cafetería,SEGUNDA / 3 TENEDORES,0.383056079723166,Sin evidencia
+76,COLONIAL,Tradicional,No determinable,Sin fuente,Tradicional,SEGUNDA / 3 TENEDORES,0.6729697571895931,Sin evidencia
+78,COMEDOR MIRYAN,Sin clasificar,No determinable,Solo nombre,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.4582802706029115,Sin evidencia
+90,DELICIAS DE LA GUAIRA,Sin clasificar,No determinable,Solo nombre,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.3739170362147583,Sin evidencia
+105,EL BUEN SAZÓN,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.2118456112568385,Sin evidencia
+108,EL CHAVO,Internacional,No determinable,Sin fuente,Internacional,CUARTA / 1 TENEDOR,0.5769678807139725,Cerrado/trasladado
+109,EL CHEF,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.1559828865008141,Cerrado/trasladado
+110,EL CHULLA QUITEÑO,Tradicional,No determinable,Solo nombre,Tradicional,SEGUNDA / 3 TENEDORES,0.1847459569131474,Cerrado/trasladado
+112,EL DESCANSO DE LA MONTÚFAR,Sin clasificar,No determinable,Descripción textual,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.3921551836956272,Sin evidencia
+115,"EL GRAN POLLO EL SEVILLANITO""""",Sin clasificar,Fast Food,Solo nombre,Sin clasificar → Fast Food,CUARTA / 1 TENEDOR,0.8873697959132996,Sin evidencia
+118,EL HUEVOTOTOTE,Fast Food,No determinable,Solo nombre,Fast Food,CUARTA / 1 TENEDOR,0.5753966884931357,Sin evidencia
+119,EL JAVI,Cafetería,No determinable,Sin fuente,Cafetería,SEGUNDA / 3 TENEDORES,0.5740773826203277,Sin evidencia
+126,EL MONO ABRIL,Comida Ecuatoriana,No determinable,Sin fuente,Comida Ecuatoriana,CUARTA / 1 TENEDOR,0.1472091567538412,Sin evidencia
+128,EL PARAÍSO QUITEÑO,Tradicional,No determinable,Sin fuente,Tradicional,SEGUNDA / 3 TENEDORES,0.3510256912406435,Sin evidencia
+131,EL POLLO PACHANGUERO,Fast Food,Fast Food,Solo nombre,Fast Food,SEGUNDA / 3 TENEDORES,0.4111094377289189,Sin evidencia
+137,EL RINCONCITO DE MARGARITA,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.589763163644173,Sin evidencia
+138,EL SABOR DE LILI,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.9199420588933016,Sin evidencia
+143,EL VIEJO FAROL DE LA RONDA,Tradicional,No determinable,Descripción textual,Tradicional,SEGUNDA / 3 TENEDORES,0.6818422905971611,Sin evidencia
+145,ENTRE VICHES Y CEVICHES,Comida Ecuatoriana,Cocina ecuatoriana regional,Solo nombre,Comida Ecuatoriana,SEGUNDA / 3 TENEDORES,0.2881603314009183,Sin evidencia
+150,FIRE MUSIC,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.6364289363003264,Sin evidencia
+157,HAPPY ROCK,Sin clasificar,Bar,Descripción textual,Sin clasificar → Bar,SEGUNDA / 3 TENEDORES,0.4553678712976811,Cerrado/trasladado
+162,J M N,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.8929139351385174,Sin evidencia
+163,JANETH ,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,LUJO / 5 TENEDORES,0.5518828380299796,Cerrado/trasladado
+164,JD LA NUEVA SAZON COSTEÑA,Comida Ecuatoriana,Cocina ecuatoriana regional,Solo nombre,Comida Ecuatoriana,CUARTA / 1 TENEDOR,1.1800891108655558,Sin evidencia
+165,JOHA,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.5492432621295654,Sin evidencia
+167,JUGUERIA DON JULIO,Sin clasificar,Otros,Solo nombre,Sin clasificar → Otros,SEGUNDA / 3 TENEDORES,0.439223370661597,Cerrado/trasladado
+172,KD RESTAURANTE,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.9808198301364016,Sin evidencia
+175,KOCINA MIA RESTAURANT & CAFETERIA,Sin clasificar,No determinable,Descripción textual,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.6522877812615354,Operativo
+181,LA CASA DEL CODORNIZ,Sin clasificar,No determinable,Solo nombre,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,1.0913384472828624,Sin evidencia
+184,LA COCINA DE MAGUS,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.3465219823252237,Sin evidencia
+198,LA MERCED ALEJITA,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.7864305623375626,Sin evidencia
+212,LAS AMORES RESTAURANTE,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,LUJO / 5 TENEDORES,0.4237051960626352,Sin evidencia
+220,LAS DELICIAS DE EMI ,Tradicional,No determinable,Sin fuente,Tradicional,SEGUNDA / 3 TENEDORES,0.7901471425539757,Sin evidencia
+223,LAS DELICIAS DE LA TWENY FOOR,Fast Food,No determinable,Solo nombre,Fast Food,SEGUNDA / 3 TENEDORES,0.3823193076110951,Sin evidencia
+225,LAS DELICIAS DEL DOGOR ,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.28553521193111,Cerrado/trasladado
+226,LAS EXQUISITAS EMPANADAS DE MOROCHO DEL ESTADIO OLIMPICO,Tradicional,Tradicional,Solo nombre,Tradicional,SEGUNDA / 3 TENEDORES,0.5810207498987072,Sin evidencia
+230,LAS PAPITAS DE LA LOMA,Tradicional,No determinable,Solo nombre,Tradicional,,0.5114700314060127,Cerrado/trasladado
+238,LOGRO AYALA,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,1.2619487776570235,Sin evidencia
+241,LOS CALDOS DE EDELMIRA MORALES ,Tradicional,Tradicional,Descripción textual,Tradicional,SEGUNDA / 3 TENEDORES,0.620599197155237,Cerrado/trasladado
+245,LOS CEVICHES DE LA BUSTAMANTE,Comida Ecuatoriana,Cocina ecuatoriana regional,Solo nombre,Comida Ecuatoriana,SEGUNDA / 3 TENEDORES,0.1937738483390131,Sin evidencia
+248,LOS MANABAS RICA SAZÓN,Comida Ecuatoriana,Cocina ecuatoriana regional,Solo nombre,Comida Ecuatoriana,SEGUNDA / 3 TENEDORES,0.5790820730892013,Sin evidencia
+249,LOS MANABAS RICA SAZÓN 2,Comida Ecuatoriana,Cocina ecuatoriana regional,Solo nombre,Comida Ecuatoriana,SEGUNDA / 3 TENEDORES,0.3858059991686579,Sin evidencia
+250,LOS MOTES DE LA CUENCA HJ,Tradicional,Tradicional,Solo nombre,Tradicional,SEGUNDA / 3 TENEDORES,0.4808856482603723,Sin evidencia
+256,LOS TRES CHANCHITOS,Sin clasificar,No determinable,Solo nombre,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.3765890887880602,Cerrado/trasladado
+257,LUCAS BONE CAROLINA ELIZABETH,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.5367489166563497,Sin evidencia
+259,MAMA KUNA,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.3925666781384054,Sin evidencia
+261,MANIZALES,Sin clasificar,Fast Food,Descripción textual,Sin clasificar → Fast Food,SEGUNDA / 3 TENEDORES,0.4190144660231509,Operativo
+269,MISHKI DELICIOSO,Tradicional,No determinable,Solo nombre,Tradicional,SEGUNDA / 3 TENEDORES,0.1176294776577455,Sin evidencia
+272,MISS TENAZAS ,Sin clasificar,No determinable,Solo nombre,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.11735124940632,Sin evidencia
+273,MONSERRATTE,Sin clasificar,Cafetería,Descripción textual,Sin clasificar → Cafetería,CUARTA / 1 TENEDOR,0.1083865257531382,Operativo
+277,NARVAEZ NARVAEZ PABLO ALEXANDER,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.4565828241231438,Sin evidencia
+292,PAZ CRUZ MARCUS ALEXANDER,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.6158761769438114,Sin evidencia
+293,PERNALETTE PINTO ELIETTE ELICEX,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.4839721869901266,Sin evidencia
+295,PICANTERIA LOLITA,Tradicional,No determinable,Solo nombre,Tradicional,SEGUNDA / 3 TENEDORES,0.0918479423188875,Sin evidencia
+296,PICANTES DEL MAR DOÑA MAIRITA,Comida Ecuatoriana,Cocina ecuatoriana regional,Solo nombre,Comida Ecuatoriana,CUARTA / 1 TENEDOR,0.6689675290168929,Sin evidencia
+303,PLATOS TIPICOS DEL VALLE,Tradicional,No determinable,Solo nombre,Tradicional,SEGUNDA / 3 TENEDORES,0.3534193960104741,Sin evidencia
+308,POLLOS PARA TI,Fast Food,Fast Food,Descripción textual,Fast Food,SEGUNDA / 3 TENEDORES,0.552659684954868,Sin evidencia
+320,RESTAURANTE  VALENTINA,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.5243275263685169,Sin evidencia
+322,RESTAURANTE 26 DE NOVIEMBRE,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.5130543670799816,Sin evidencia
+323,RESTAURANTE BARCELONA,Fast Food,No determinable,Sin fuente,Fast Food,CUARTA / 1 TENEDOR,0.6280143461367512,Sin evidencia
+324,RESTAURANTE CHILIS WILLIS,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.4748675649679724,Sin evidencia
+325,RESTAURANTE CHINO,Internacional,Internacional,Solo nombre,Internacional,SEGUNDA / 3 TENEDORES,0.1916237146979414,Sin evidencia
+329,RESTAURANTE DE UNA,Sin clasificar,Cafetería,Descripción textual,Sin clasificar → Cafetería,SEGUNDA / 3 TENEDORES,0.3337971956291767,Sin evidencia
+334,RESTAURANTE EL DESCANZO DE LA OLMEDO,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.4821276767888083,Sin evidencia
+337,RESTAURANTE INFINITY (BISTRO),Sin clasificar,No determinable,Descripción textual,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.676140081250197,Cerrado/trasladado
+340,RESTAURANTE JORGE,Tradicional,No determinable,Sin fuente,Tradicional,CUARTA / 1 TENEDOR,0.8758258220020723,Cerrado/trasladado
+353,RESTAURANTE RAZIEL,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.152751787944834,Sin evidencia
+355,RESTAURANTE SABOR LOJANO EL CISNE,Comida Ecuatoriana,Cocina ecuatoriana regional,Solo nombre,Comida Ecuatoriana,SEGUNDA / 3 TENEDORES,0.5303274888652852,Sin evidencia
+356,RESTAURANTE SILVITA,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,1.1800891108655558,Sin evidencia
+357,RESTAURANTE SOFY,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.3097421944086257,Sin evidencia
+359,RESTAURANTE Y MARISQUERÍA SORYS,Comida Ecuatoriana,Cocina ecuatoriana regional,Solo nombre,Comida Ecuatoriana,SEGUNDA / 3 TENEDORES,0.7288327456899341,Sin evidencia
+364,RINCON DEL GUSTO,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.5012792846855658,Sin evidencia
+373,SABOR EXPRESS,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.255246887691285,Sin evidencia
+374,SABOR Y SAZON,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.4843676380883355,Sin evidencia
+375,SABOR Y SAZÓN,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.2735085557679787,Sin evidencia
+383,SALCHIPAPAS MARÍA OTTO,Fast Food,Fast Food,Solo nombre,Fast Food,SEGUNDA / 3 TENEDORES,0.5354369832950349,Sin evidencia
+385,SAMDO,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.1796397517849118,Sin evidencia
+388,"SAZÓN MANABITA NORY""""",Comida Ecuatoriana,Cocina ecuatoriana regional,Solo nombre,Comida Ecuatoriana,SEGUNDA / 3 TENEDORES,0.5702849911896264,Sin evidencia
+389,SENDERO QUITEÑO,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.3754736089610332,Sin evidencia
+392,SHOCKING FOOD,Fast Food,No determinable,Sin fuente,Fast Food,CUARTA / 1 TENEDOR,0.1477495531059538,Cerrado/trasladado
+396,SOCKS &BREWS ,Bar,Cafetería,Descripción textual,Bar,CUARTA / 1 TENEDOR,0.7257290405825202,Operativo
+399,SWEET MY DAY,Cafetería,Cafetería,Solo nombre,Cafetería,SEGUNDA / 3 TENEDORES,0.1680800922571892,Sin evidencia
+402,THE CUCINA & MEGA SUSHI,Internacional,Internacional,Solo nombre,Internacional,SEGUNDA / 3 TENEDORES,0.7993745228106628,Sin evidencia
+403,THE GALES,Sin clasificar,No determinable,Descripción textual,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.4046047512544186,Sin evidencia
+406,TRIBURGUER,Fast Food,Fast Food,Solo nombre,Fast Food,SEGUNDA / 3 TENEDORES,0.1872845385785365,Sin evidencia
+407,TUKOBOLON,Comida Ecuatoriana,Cocina ecuatoriana regional,Solo nombre,Comida Ecuatoriana,SEGUNDA / 3 TENEDORES,0.720099312794084,Sin evidencia
+408,TUS PAPITAS,Fast Food,No determinable,Solo nombre,Fast Food,SEGUNDA / 3 TENEDORES,0.703877103468227,Sin evidencia
+409,UNION DE LA ROCAFUERTE,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.1330065756067565,Sin evidencia
+410,UNONPA RESTAURANTE ,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.8698725354025736,Sin evidencia
+412,VALENCAM,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.9284960998997251,Sin evidencia
+413,VALENTINA DE LA MANABÍ,Comida Ecuatoriana,Cocina ecuatoriana regional,Solo nombre,Comida Ecuatoriana,SEGUNDA / 3 TENEDORES,0.4624684003929335,Sin evidencia
+414,VALLE GUALPA JESSICA ALEXANDRA ,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,CUARTA / 1 TENEDOR,0.1565913167176289,Sin evidencia
+415,VENÍ ACÁ,Sin clasificar,No determinable,Sin fuente,Sin clasificar → No determinable,SEGUNDA / 3 TENEDORES,0.0533230966042054,Sin evidencia

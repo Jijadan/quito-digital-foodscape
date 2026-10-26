@@ -1,0 +1,1310 @@
+{
+  "A_linea_base": {
+    "kde": {
+      "sep_m": 28.284271247461902,
+      "rho_AB": 0.9598003455187728,
+      "conc_ratio": 1.5485716139004972,
+      "P90_P10_C": 6.3113338645370005
+    },
+    "celdas_150": 89,
+    "islas": 5,
+    "moran_resenas": 0.30355856270067083,
+    "moran_CP1": 0.26896211524219205,
+    "FDR_hot_CP1": 11,
+    "FDR_resenas": 0,
+    "z_max_CP1": 5.357040869214557,
+    "r_CP1_nplat": 0.8979390373512735,
+    "esperado_manuscrito": {
+      "sep_m": 28,
+      "rho_AB": 0.96,
+      "conc_ratio": 1.55,
+      "P90_P10_C": 6.3,
+      "celdas": 89,
+      "moran_resenas": 0.304,
+      "moran_CP1": 0.269,
+      "FDR_hot_CP1": 11,
+      "FDR_resenas": 0,
+      "z_max": 5.36,
+      "r": 0.898
+    },
+    "reproduce_manuscrito": true
+  },
+  "B_kde": [
+    {
+      "h_m": 75.0,
+      "sep_m": 10.0,
+      "rho_AB": 0.9558,
+      "conc_ratio": 2.4628,
+      "P90_P10_C": 15.1814,
+      "rho_B_vs_B125": 0.981,
+      "rho_C_vs_C125": 0.9329,
+      "jaccard_top10_B_vs_B125": 0.7934,
+      "jaccard_top10_A_vs_B_mismo_h": 0.7767
+    },
+    {
+      "h_m": 100.0,
+      "sep_m": 14.1421,
+      "rho_AB": 0.9582,
+      "conc_ratio": 1.7973,
+      "P90_P10_C": 9.2623,
+      "rho_B_vs_B125": 0.9949,
+      "rho_C_vs_C125": 0.9835,
+      "jaccard_top10_B_vs_B125": 0.8988,
+      "jaccard_top10_A_vs_B_mismo_h": 0.8158
+    },
+    {
+      "h_m": 125.0,
+      "sep_m": 28.2843,
+      "rho_AB": 0.9598,
+      "conc_ratio": 1.5486,
+      "P90_P10_C": 6.3113,
+      "rho_B_vs_B125": 1.0,
+      "rho_C_vs_C125": 1.0,
+      "jaccard_top10_B_vs_B125": 1.0,
+      "jaccard_top10_A_vs_B_mismo_h": 0.8644
+    },
+    {
+      "h_m": 150.0,
+      "sep_m": 41.2311,
+      "rho_AB": 0.9625,
+      "conc_ratio": 1.5524,
+      "P90_P10_C": 4.8544,
+      "rho_B_vs_B125": 0.995,
+      "rho_C_vs_C125": 0.9895,
+      "jaccard_top10_B_vs_B125": 0.9066,
+      "jaccard_top10_A_vs_B_mismo_h": 0.8868
+    },
+    {
+      "h_m": 200.0,
+      "sep_m": 30.0,
+      "rho_AB": 0.9709,
+      "conc_ratio": 1.5081,
+      "P90_P10_C": 3.3874,
+      "rho_B_vs_B125": 0.965,
+      "rho_C_vs_C125": 0.9434,
+      "jaccard_top10_B_vs_B125": 0.8283,
+      "jaccard_top10_A_vs_B_mismo_h": 0.8907
+    },
+    {
+      "h_m": 250.0,
+      "sep_m": 31.6228,
+      "rho_AB": 0.98,
+      "conc_ratio": 1.367,
+      "P90_P10_C": 2.6478,
+      "rho_B_vs_B125": 0.928,
+      "rho_C_vs_C125": 0.8836,
+      "jaccard_top10_B_vs_B125": 0.7775,
+      "jaccard_top10_A_vs_B_mismo_h": 0.8963
+    }
+  ],
+  "C_malla": [
+    {
+      "lado_m": 100.0,
+      "origen_desplazado": "0.0,0.0",
+      "celdas": 134,
+      "islas": 7,
+      "moran_I_resenas": 0.2913,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.1978,
+      "moran_p_CP1": 0.0055,
+      "resenas_hot_nom": 13,
+      "resenas_hot_FDR": 0,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 20,
+      "CP1_hot_FDR": 4,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 18,
+      "jaccard_estab_vs_base": 0.1371,
+      "pct_base_conservado": 13.8211
+    },
+    {
+      "lado_m": 100.0,
+      "origen_desplazado": "0.5,0.0",
+      "celdas": 142,
+      "islas": 7,
+      "moran_I_resenas": 0.2525,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.2173,
+      "moran_p_CP1": 0.0012,
+      "resenas_hot_nom": 15,
+      "resenas_hot_FDR": 0,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 19,
+      "CP1_hot_FDR": 4,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 26,
+      "jaccard_estab_vs_base": 0.2016,
+      "pct_base_conservado": 20.3252
+    },
+    {
+      "lado_m": 100.0,
+      "origen_desplazado": "0.0,0.5",
+      "celdas": 142,
+      "islas": 5,
+      "moran_I_resenas": 0.3285,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.2237,
+      "moran_p_CP1": 0.0012,
+      "resenas_hot_nom": 20,
+      "resenas_hot_FDR": 0,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 20,
+      "CP1_hot_FDR": 9,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 52,
+      "jaccard_estab_vs_base": 0.4113,
+      "pct_base_conservado": 41.4634
+    },
+    {
+      "lado_m": 100.0,
+      "origen_desplazado": "0.5,0.5",
+      "celdas": 147,
+      "islas": 6,
+      "moran_I_resenas": 0.3121,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.2791,
+      "moran_p_CP1": 0.0001,
+      "resenas_hot_nom": 21,
+      "resenas_hot_FDR": 0,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 22,
+      "CP1_hot_FDR": 13,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 76,
+      "jaccard_estab_vs_base": 0.5547,
+      "pct_base_conservado": 57.7236
+    },
+    {
+      "lado_m": 125.0,
+      "origen_desplazado": "0.0,0.0",
+      "celdas": 114,
+      "islas": 3,
+      "moran_I_resenas": 0.3979,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.2508,
+      "moran_p_CP1": 0.0007,
+      "resenas_hot_nom": 27,
+      "resenas_hot_FDR": 0,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 21,
+      "CP1_hot_FDR": 8,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 45,
+      "jaccard_estab_vs_base": 0.3548,
+      "pct_base_conservado": 35.7724
+    },
+    {
+      "lado_m": 125.0,
+      "origen_desplazado": "0.5,0.0",
+      "celdas": 113,
+      "islas": 5,
+      "moran_I_resenas": 0.3214,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.2806,
+      "moran_p_CP1": 0.0001,
+      "resenas_hot_nom": 21,
+      "resenas_hot_FDR": 0,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 22,
+      "CP1_hot_FDR": 6,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 56,
+      "jaccard_estab_vs_base": 0.4553,
+      "pct_base_conservado": 45.5285
+    },
+    {
+      "lado_m": 125.0,
+      "origen_desplazado": "0.0,0.5",
+      "celdas": 111,
+      "islas": 4,
+      "moran_I_resenas": 0.3565,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.2787,
+      "moran_p_CP1": 0.0006,
+      "resenas_hot_nom": 18,
+      "resenas_hot_FDR": 0,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 20,
+      "CP1_hot_FDR": 7,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 63,
+      "jaccard_estab_vs_base": 0.3478,
+      "pct_base_conservado": 39.0244
+    },
+    {
+      "lado_m": 125.0,
+      "origen_desplazado": "0.5,0.5",
+      "celdas": 110,
+      "islas": 5,
+      "moran_I_resenas": 0.2077,
+      "moran_p_resenas": 0.0012,
+      "moran_I_CP1": 0.2278,
+      "moran_p_CP1": 0.0028,
+      "resenas_hot_nom": 12,
+      "resenas_hot_FDR": 0,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 17,
+      "CP1_hot_FDR": 6,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 58,
+      "jaccard_estab_vs_base": 0.448,
+      "pct_base_conservado": 45.5285
+    },
+    {
+      "lado_m": 150.0,
+      "origen_desplazado": "0.0,0.0",
+      "celdas": 89,
+      "islas": 5,
+      "moran_I_resenas": 0.3036,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.269,
+      "moran_p_CP1": 0.0008,
+      "resenas_hot_nom": 18,
+      "resenas_hot_FDR": 0,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 14,
+      "CP1_hot_FDR": 11,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 123,
+      "jaccard_estab_vs_base": 1.0,
+      "pct_base_conservado": 100.0
+    },
+    {
+      "lado_m": 150.0,
+      "origen_desplazado": "0.5,0.0",
+      "celdas": 91,
+      "islas": 4,
+      "moran_I_resenas": 0.3551,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.2558,
+      "moran_p_CP1": 0.0027,
+      "resenas_hot_nom": 20,
+      "resenas_hot_FDR": 1,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 18,
+      "CP1_hot_FDR": 7,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 60,
+      "jaccard_estab_vs_base": 0.4077,
+      "pct_base_conservado": 43.0894
+    },
+    {
+      "lado_m": 150.0,
+      "origen_desplazado": "0.0,0.5",
+      "celdas": 89,
+      "islas": 4,
+      "moran_I_resenas": 0.4449,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.3666,
+      "moran_p_CP1": 0.0001,
+      "resenas_hot_nom": 14,
+      "resenas_hot_FDR": 2,
+      "resenas_cold_FDR": 1,
+      "CP1_hot_nom": 16,
+      "CP1_hot_FDR": 9,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 94,
+      "jaccard_estab_vs_base": 0.7222,
+      "pct_base_conservado": 73.9837
+    },
+    {
+      "lado_m": 150.0,
+      "origen_desplazado": "0.5,0.5",
+      "celdas": 85,
+      "islas": 3,
+      "moran_I_resenas": 0.3394,
+      "moran_p_resenas": 0.0002,
+      "moran_I_CP1": 0.2895,
+      "moran_p_CP1": 0.0019,
+      "resenas_hot_nom": 14,
+      "resenas_hot_FDR": 0,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 16,
+      "CP1_hot_FDR": 5,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 55,
+      "jaccard_estab_vs_base": 0.3798,
+      "pct_base_conservado": 39.8374
+    },
+    {
+      "lado_m": 200.0,
+      "origen_desplazado": "0.0,0.0",
+      "celdas": 59,
+      "islas": 4,
+      "moran_I_resenas": 0.4169,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.3052,
+      "moran_p_CP1": 0.0016,
+      "resenas_hot_nom": 12,
+      "resenas_hot_FDR": 0,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 10,
+      "CP1_hot_FDR": 7,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 114,
+      "jaccard_estab_vs_base": 0.7556,
+      "pct_base_conservado": 82.9268
+    },
+    {
+      "lado_m": 200.0,
+      "origen_desplazado": "0.5,0.0",
+      "celdas": 62,
+      "islas": 4,
+      "moran_I_resenas": 0.4084,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.3819,
+      "moran_p_CP1": 0.0005,
+      "resenas_hot_nom": 12,
+      "resenas_hot_FDR": 9,
+      "resenas_cold_FDR": 5,
+      "CP1_hot_nom": 13,
+      "CP1_hot_FDR": 9,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 132,
+      "jaccard_estab_vs_base": 0.5179,
+      "pct_base_conservado": 70.7317
+    },
+    {
+      "lado_m": 200.0,
+      "origen_desplazado": "0.0,0.5",
+      "celdas": 59,
+      "islas": 4,
+      "moran_I_resenas": 0.4778,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.3753,
+      "moran_p_CP1": 0.0008,
+      "resenas_hot_nom": 12,
+      "resenas_hot_FDR": 7,
+      "resenas_cold_FDR": 7,
+      "CP1_hot_nom": 10,
+      "CP1_hot_FDR": 7,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 127,
+      "jaccard_estab_vs_base": 0.7241,
+      "pct_base_conservado": 85.3659
+    },
+    {
+      "lado_m": 200.0,
+      "origen_desplazado": "0.5,0.5",
+      "celdas": 62,
+      "islas": 4,
+      "moran_I_resenas": 0.3828,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.4208,
+      "moran_p_CP1": 0.0001,
+      "resenas_hot_nom": 14,
+      "resenas_hot_FDR": 11,
+      "resenas_cold_FDR": 5,
+      "CP1_hot_nom": 12,
+      "CP1_hot_FDR": 8,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 131,
+      "jaccard_estab_vs_base": 0.6178,
+      "pct_base_conservado": 78.8618
+    },
+    {
+      "lado_m": 250.0,
+      "origen_desplazado": "0.0,0.0",
+      "celdas": 45,
+      "islas": 1,
+      "moran_I_resenas": 0.1807,
+      "moran_p_resenas": 0.0311,
+      "moran_I_CP1": 0.4168,
+      "moran_p_CP1": 0.0006,
+      "resenas_hot_nom": 8,
+      "resenas_hot_FDR": 3,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 8,
+      "CP1_hot_FDR": 7,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 176,
+      "jaccard_estab_vs_base": 0.625,
+      "pct_base_conservado": 93.4959
+    },
+    {
+      "lado_m": 250.0,
+      "origen_desplazado": "0.5,0.0",
+      "celdas": 44,
+      "islas": 3,
+      "moran_I_resenas": 0.3446,
+      "moran_p_resenas": 0.0004,
+      "moran_I_CP1": 0.3724,
+      "moran_p_CP1": 0.0003,
+      "resenas_hot_nom": 10,
+      "resenas_hot_FDR": 3,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 9,
+      "CP1_hot_FDR": 6,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 149,
+      "jaccard_estab_vs_base": 0.6894,
+      "pct_base_conservado": 90.2439
+    },
+    {
+      "lado_m": 250.0,
+      "origen_desplazado": "0.0,0.5",
+      "celdas": 49,
+      "islas": 1,
+      "moran_I_resenas": 0.414,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.4891,
+      "moran_p_CP1": 0.0001,
+      "resenas_hot_nom": 11,
+      "resenas_hot_FDR": 6,
+      "resenas_cold_FDR": 0,
+      "CP1_hot_nom": 11,
+      "CP1_hot_FDR": 8,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 170,
+      "jaccard_estab_vs_base": 0.7235,
+      "pct_base_conservado": 100.0
+    },
+    {
+      "lado_m": 250.0,
+      "origen_desplazado": "0.5,0.5",
+      "celdas": 46,
+      "islas": 3,
+      "moran_I_resenas": 0.5983,
+      "moran_p_resenas": 0.0001,
+      "moran_I_CP1": 0.5062,
+      "moran_p_CP1": 0.0001,
+      "resenas_hot_nom": 12,
+      "resenas_hot_FDR": 8,
+      "resenas_cold_FDR": 6,
+      "CP1_hot_nom": 10,
+      "CP1_hot_FDR": 6,
+      "CP1_cold_FDR": 0,
+      "estab_en_hot_FDR": 139,
+      "jaccard_estab_vs_base": 0.6173,
+      "pct_base_conservado": 81.3008
+    }
+  ],
+  "D_puntos": {
+    "moran_puntos": [
+      {
+        "pesos": "banda_150m",
+        "variable": "CP1",
+        "I": 0.0751,
+        "p_sim": 0.0007
+      },
+      {
+        "pesos": "banda_150m",
+        "variable": "log1p_resenas",
+        "I": 0.057,
+        "p_sim": 0.0052
+      },
+      {
+        "pesos": "banda_150m",
+        "variable": "n_plataformas",
+        "I": 0.0455,
+        "p_sim": 0.0148
+      },
+      {
+        "pesos": "banda_150m",
+        "variable": "ausente_0plat",
+        "I": 0.012,
+        "p_sim": 0.2374
+      },
+      {
+        "pesos": "banda_250m",
+        "variable": "CP1",
+        "I": 0.0587,
+        "p_sim": 0.001
+      },
+      {
+        "pesos": "banda_250m",
+        "variable": "log1p_resenas",
+        "I": 0.0392,
+        "p_sim": 0.0043
+      },
+      {
+        "pesos": "banda_250m",
+        "variable": "n_plataformas",
+        "I": 0.0459,
+        "p_sim": 0.0019
+      },
+      {
+        "pesos": "banda_250m",
+        "variable": "ausente_0plat",
+        "I": 0.0009,
+        "p_sim": 0.3802
+      },
+      {
+        "pesos": "KNN_8",
+        "variable": "CP1",
+        "I": 0.0837,
+        "p_sim": 0.0008
+      },
+      {
+        "pesos": "KNN_8",
+        "variable": "log1p_resenas",
+        "I": 0.0581,
+        "p_sim": 0.0066
+      },
+      {
+        "pesos": "KNN_8",
+        "variable": "n_plataformas",
+        "I": 0.0291,
+        "p_sim": 0.0841
+      },
+      {
+        "pesos": "KNN_8",
+        "variable": "ausente_0plat",
+        "I": -0.0138,
+        "p_sim": 0.3235
+      }
+    ],
+    "gi_puntos_CP1": [
+      {
+        "pesos": "banda_150m",
+        "vecinos_medios": 20.881,
+        "islas": 5,
+        "z_max": 2.814,
+        "z_min": -2.893,
+        "hot_nominal": 30,
+        "cold_nominal": 24,
+        "hot_FDR": 0,
+        "cold_FDR": 0,
+        "pct_hot_dentro_celdas_hot_base": 0.0,
+        "pct_base_cubierto_por_hot": 0.0
+      },
+      {
+        "pesos": "banda_250m",
+        "vecinos_medios": 49.076,
+        "islas": 2,
+        "z_max": 2.704,
+        "z_min": -3.041,
+        "hot_nominal": 47,
+        "cold_nominal": 31,
+        "hot_FDR": 0,
+        "cold_FDR": 0,
+        "pct_hot_dentro_celdas_hot_base": 0.0,
+        "pct_base_cubierto_por_hot": 0.0
+      },
+      {
+        "pesos": "KNN_8",
+        "vecinos_medios": 8.0,
+        "islas": 0,
+        "z_max": 2.572,
+        "z_min": -2.484,
+        "hot_nominal": 21,
+        "cold_nominal": 23,
+        "hot_FDR": 0,
+        "cold_FDR": 0,
+        "pct_hot_dentro_celdas_hot_base": 0.0,
+        "pct_base_cubierto_por_hot": 0.0
+      }
+    ],
+    "local_join_counts": [
+      {
+        "pesos": "KNN_8",
+        "variable": "ausente_0plat",
+        "n_focal": 116,
+        "global_BB": 126.0,
+        "global_BB_p_sim": 0.5618,
+        "local_sig_nominal": 3,
+        "local_sig_FDR": 0
+      },
+      {
+        "pesos": "KNN_8",
+        "variable": "presente_1plus",
+        "n_focal": 304,
+        "global_BB": 869.0,
+        "global_BB_p_sim": 0.7933,
+        "local_sig_nominal": 33,
+        "local_sig_FDR": 0
+      },
+      {
+        "pesos": "banda_150m",
+        "variable": "ausente_0plat",
+        "n_focal": 116,
+        "global_BB": 295.0,
+        "global_BB_p_sim": 0.868,
+        "local_sig_nominal": 11,
+        "local_sig_FDR": 0
+      },
+      {
+        "pesos": "banda_150m",
+        "variable": "presente_1plus",
+        "n_focal": 304,
+        "global_BB": 2383.0,
+        "global_BB_p_sim": 0.1477,
+        "local_sig_nominal": 32,
+        "local_sig_FDR": 0
+      }
+    ],
+    "superficie_proporcion": [
+      {
+        "h_m": 75.0,
+        "P_min": 0.0,
+        "P_mediana": 0.7618,
+        "P_max": 1.0,
+        "pct_area_P_menor_0.6": 29.0655,
+        "rho_vs_h125": 0.9411
+      },
+      {
+        "h_m": 100.0,
+        "P_min": 0.0,
+        "P_mediana": 0.746,
+        "P_max": 1.0,
+        "pct_area_P_menor_0.6": 28.1406,
+        "rho_vs_h125": 0.9855
+      },
+      {
+        "h_m": 125.0,
+        "P_min": 0.0003,
+        "P_mediana": 0.7355,
+        "P_max": 1.0,
+        "pct_area_P_menor_0.6": 25.8016,
+        "rho_vs_h125": 1.0
+      },
+      {
+        "h_m": 150.0,
+        "P_min": 0.0041,
+        "P_mediana": 0.7292,
+        "P_max": 1.0,
+        "pct_area_P_menor_0.6": 23.3805,
+        "rho_vs_h125": 0.9881
+      },
+      {
+        "h_m": 200.0,
+        "P_min": 0.0574,
+        "P_mediana": 0.7255,
+        "P_max": 1.0,
+        "pct_area_P_menor_0.6": 20.6593,
+        "rho_vs_h125": 0.9218
+      },
+      {
+        "h_m": 250.0,
+        "P_min": 0.1784,
+        "P_mediana": 0.724,
+        "P_max": 1.0,
+        "pct_area_P_menor_0.6": 18.2973,
+        "rho_vs_h125": 0.8346
+      }
+    ],
+    "proporcion_global_encontrable": 0.7238095238095238
+  },
+  "E_borde": {
+    "limite": "polígono limite_CHQ_IMP2019_digitalizado.gpkg",
+    "mediana_dist_8vecino_m": 89.01982208806653,
+    "escenarios": [
+      {
+        "variante": "indice_fijo",
+        "buffer_m": 0.0,
+        "n": 420,
+        "excluidos": 0,
+        "excluidos_ausentes": 0,
+        "celdas": 89,
+        "moran_I_CP1": 0.26896211524219205,
+        "moran_p_CP1": 0.0014,
+        "moran_I_resenas": 0.30355856270067083,
+        "moran_p_resenas": 0.0001,
+        "CP1_hot_FDR": 11,
+        "CP1_cold_FDR": 0,
+        "resenas_FDR": 0,
+        "celdas_hot_base_que_persisten": 11,
+        "celdas_hot_base_total": 11,
+        "kde_sep_m": 28.284271247461902,
+        "kde_rho_AB": 0.9598003455187728,
+        "r_CP1_nplat": 0.8979390373512735
+      },
+      {
+        "variante": "indice_fijo",
+        "buffer_m": 125.0,
+        "n": 386,
+        "excluidos": 34,
+        "excluidos_ausentes": 10,
+        "celdas": 74,
+        "moran_I_CP1": 0.24086222593285714,
+        "moran_p_CP1": 0.0018,
+        "moran_I_resenas": 0.38722876791949784,
+        "moran_p_resenas": 0.0001,
+        "CP1_hot_FDR": 3,
+        "CP1_cold_FDR": 0,
+        "resenas_FDR": 0,
+        "celdas_hot_base_que_persisten": 3,
+        "celdas_hot_base_total": 11,
+        "kde_sep_m": 28.284271247461902,
+        "kde_rho_AB": 0.9894683209956582,
+        "r_CP1_nplat": 0.9013004390392386
+      },
+      {
+        "variante": "indice_fijo",
+        "buffer_m": 250.0,
+        "n": 350,
+        "excluidos": 70,
+        "excluidos_ausentes": 21,
+        "celdas": 65,
+        "moran_I_CP1": 0.19490473055354215,
+        "moran_p_CP1": 0.0068,
+        "moran_I_resenas": 0.27308057864545493,
+        "moran_p_resenas": 0.0005,
+        "CP1_hot_FDR": 2,
+        "CP1_cold_FDR": 0,
+        "resenas_FDR": 0,
+        "celdas_hot_base_que_persisten": 2,
+        "celdas_hot_base_total": 11,
+        "kde_sep_m": 28.284271247461902,
+        "kde_rho_AB": 0.9974460719331335,
+        "r_CP1_nplat": 0.9000329945764362
+      },
+      {
+        "variante": "indice_reestimado",
+        "buffer_m": 0.0,
+        "n": 420,
+        "excluidos": 0,
+        "excluidos_ausentes": 0,
+        "celdas": 89,
+        "moran_I_CP1": 0.26896211524219205,
+        "moran_p_CP1": 0.0017,
+        "moran_I_resenas": 0.30355856270067083,
+        "moran_p_resenas": 0.0001,
+        "CP1_hot_FDR": 11,
+        "CP1_cold_FDR": 0,
+        "resenas_FDR": 0,
+        "celdas_hot_base_que_persisten": 11,
+        "celdas_hot_base_total": 11,
+        "kde_sep_m": 28.284271247461902,
+        "kde_rho_AB": 0.9598003455187728,
+        "r_CP1_nplat": 0.8979390373512735
+      },
+      {
+        "variante": "indice_reestimado",
+        "buffer_m": 125.0,
+        "n": 386,
+        "excluidos": 34,
+        "excluidos_ausentes": 10,
+        "celdas": 74,
+        "moran_I_CP1": 0.24069071651180138,
+        "moran_p_CP1": 0.0018,
+        "moran_I_resenas": 0.38722876791949784,
+        "moran_p_resenas": 0.0001,
+        "CP1_hot_FDR": 3,
+        "CP1_cold_FDR": 0,
+        "resenas_FDR": 0,
+        "celdas_hot_base_que_persisten": 3,
+        "celdas_hot_base_total": 11,
+        "kde_sep_m": 28.284271247461902,
+        "kde_rho_AB": 0.9894683209956582,
+        "r_CP1_nplat": 0.9013281364236936
+      },
+      {
+        "variante": "indice_reestimado",
+        "buffer_m": 250.0,
+        "n": 350,
+        "excluidos": 70,
+        "excluidos_ausentes": 21,
+        "celdas": 65,
+        "moran_I_CP1": 0.19530550019091514,
+        "moran_p_CP1": 0.0068,
+        "moran_I_resenas": 0.27308057864545493,
+        "moran_p_resenas": 0.0004,
+        "CP1_hot_FDR": 2,
+        "CP1_cold_FDR": 0,
+        "resenas_FDR": 0,
+        "celdas_hot_base_que_persisten": 2,
+        "celdas_hot_base_total": 11,
+        "kde_sep_m": 28.284271247461902,
+        "kde_rho_AB": 0.9974460719331335,
+        "r_CP1_nplat": 0.9000988123227577
+      }
+    ],
+    "locales_dentro_del_limite": 408,
+    "locales_fuera": [
+      {
+        "id_censo": 17,
+        "Nombre": "ANITA DEL CENTRO",
+        "n_plataformas": 0,
+        "dist_borde_m": -191.0
+      },
+      {
+        "id_censo": 97,
+        "Nombre": "DON PEDRO",
+        "n_plataformas": 1,
+        "dist_borde_m": -839.0
+      },
+      {
+        "id_censo": 122,
+        "Nombre": "EL MESON DE LA RECOLETA ",
+        "n_plataformas": 1,
+        "dist_borde_m": -1.0
+      },
+      {
+        "id_censo": 164,
+        "Nombre": "JD LA NUEVA SAZON COSTEÑA",
+        "n_plataformas": 0,
+        "dist_borde_m": -2.0
+      },
+      {
+        "id_censo": 172,
+        "Nombre": "KD RESTAURANTE",
+        "n_plataformas": 0,
+        "dist_borde_m": -0.0
+      },
+      {
+        "id_censo": 238,
+        "Nombre": "LOGRO AYALA",
+        "n_plataformas": 0,
+        "dist_borde_m": -24.0
+      },
+      {
+        "id_censo": 260,
+        "Nombre": "MAMI LUZ COLONIAL",
+        "n_plataformas": 1,
+        "dist_borde_m": -191.0
+      },
+      {
+        "id_censo": 262,
+        "Nombre": "MARISQUERIA EL TRITON",
+        "n_plataformas": 1,
+        "dist_borde_m": -264.0
+      },
+      {
+        "id_censo": 263,
+        "Nombre": "MARISQUERIA LOS PROPIOS DE LA VECI",
+        "n_plataformas": 1,
+        "dist_borde_m": -90.0
+      },
+      {
+        "id_censo": 298,
+        "Nombre": "PIM S PANECILLO",
+        "n_plataformas": 3,
+        "dist_borde_m": -261.0
+      },
+      {
+        "id_censo": 356,
+        "Nombre": "RESTAURANTE SILVITA",
+        "n_plataformas": 0,
+        "dist_borde_m": -2.0
+      },
+      {
+        "id_censo": 384,
+        "Nombre": "SALON LOLITA",
+        "n_plataformas": 1,
+        "dist_borde_m": -62.0
+      }
+    ],
+    "celdas_hot_base_a_250m_del_borde": 0
+  },
+  "F_indice": [
+    {
+      "escenario": "completo",
+      "n": 420,
+      "KMO": 0.6246,
+      "var_CP1": 72.9086,
+      "carga_res": 0.7611,
+      "carga_ig": 0.9238,
+      "carga_tt": 0.8687,
+      "r_CP1_nplat": 0.8979,
+      "rho_CP1_nplat": 0.8976,
+      "moran_I_CP1": 0.269,
+      "CP1_hot_FDR": 11.0
+    },
+    {
+      "escenario": "sin_franquicias",
+      "n": 397,
+      "KMO": 0.6154,
+      "var_CP1": 69.232,
+      "carga_res": 0.7343,
+      "carga_ig": 0.9073,
+      "carga_tt": 0.8453,
+      "r_CP1_nplat": 0.8905,
+      "rho_CP1_nplat": 0.883,
+      "moran_I_CP1": 0.247,
+      "CP1_hot_FDR": 5.0
+    },
+    {
+      "escenario": "sin_cuentas_compartidas",
+      "n": 417,
+      "KMO": 0.6247,
+      "var_CP1": 72.264,
+      "carga_res": 0.7585,
+      "carga_ig": 0.9203,
+      "carga_tt": 0.8635,
+      "r_CP1_nplat": 0.898,
+      "rho_CP1_nplat": 0.8957,
+      "moran_I_CP1": 0.2683,
+      "CP1_hot_FDR": 9.0
+    },
+    {
+      "escenario": "solo_con_1plus_plataforma",
+      "n": 304,
+      "KMO": 0.6038,
+      "var_CP1": 69.6414,
+      "carga_res": 0.7108,
+      "carga_ig": 0.9151,
+      "carga_tt": 0.864,
+      "r_CP1_nplat": 0.9042,
+      "rho_CP1_nplat": 0.8036,
+      "moran_I_CP1": NaN,
+      "CP1_hot_FDR": NaN
+    }
+  ],
+  "G_cierre": [
+    {
+      "escenario": "S0 · censo original",
+      "n": 420.0,
+      "n_cero": 116.0,
+      "pct_cero": 27.619,
+      "pct_tres": 14.5238,
+      "pct_resenas_tres": 43.4627,
+      "r_CP1_nplat": 0.8979,
+      "var_CP1": 72.9086,
+      "KMO": 0.6246,
+      "IG_T": 19.0,
+      "n_T": 100.0,
+      "IG_NT": 85.1852,
+      "n_NT": 27.0,
+      "IRR_ig": 5.4767,
+      "IC95": [
+        2.598137599248397,
+        11.544597946711649
+      ],
+      "p": 0.0,
+      "IRR_dist": 0.3189,
+      "p_dist": 0.0249,
+      "pct_cero_P2.5": NaN,
+      "r_CP1_nplat_P2.5": NaN,
+      "pct_cero_P97.5": NaN,
+      "r_CP1_nplat_P97.5": NaN
+    },
+    {
+      "escenario": "S1 · sin 13 cerrados/trasladados",
+      "n": 407.0,
+      "n_cero": 103.0,
+      "pct_cero": 25.3071,
+      "pct_tres": 14.9877,
+      "pct_resenas_tres": 43.4627,
+      "r_CP1_nplat": 0.8976,
+      "var_CP1": 72.6662,
+      "KMO": 0.6231,
+      "IG_T": 19.7917,
+      "n_T": 96.0,
+      "IG_NT": 85.1852,
+      "n_NT": 27.0,
+      "IRR_ig": 5.3303,
+      "IC95": [
+        2.569377196507391,
+        11.05808579594414
+      ],
+      "p": 0.0,
+      "IRR_dist": 0.3227,
+      "p_dist": 0.0245,
+      "pct_cero_P2.5": NaN,
+      "r_CP1_nplat_P2.5": NaN,
+      "pct_cero_P97.5": NaN,
+      "r_CP1_nplat_P97.5": NaN
+    },
+    {
+      "escenario": "S2 · S1 + 25 % de los 97 'sin evidencia' cerrados (200 sorteos)",
+      "n": 383.0,
+      "n_cero": 79.0,
+      "pct_cero": 20.6266,
+      "pct_tres": 15.9269,
+      "pct_resenas_tres": 43.4627,
+      "r_CP1_nplat": 0.8971,
+      "var_CP1": 72.1597,
+      "KMO": 0.62,
+      "IG_T": 20.33,
+      "n_T": 93.475,
+      "IG_NT": 85.1852,
+      "n_NT": 27.0,
+      "IRR_ig": NaN,
+      "IC95": NaN,
+      "p": NaN,
+      "IRR_dist": NaN,
+      "p_dist": NaN,
+      "pct_cero_P2.5": 20.6266,
+      "r_CP1_nplat_P2.5": 0.8971,
+      "pct_cero_P97.5": 20.6266,
+      "r_CP1_nplat_P97.5": 0.8971
+    },
+    {
+      "escenario": "S2 · S1 + 50 % de los 97 'sin evidencia' cerrados (200 sorteos)",
+      "n": 359.0,
+      "n_cero": 55.0,
+      "pct_cero": 15.3203,
+      "pct_tres": 16.9916,
+      "pct_resenas_tres": 43.4627,
+      "r_CP1_nplat": 0.8971,
+      "var_CP1": 71.5585,
+      "KMO": 0.6162,
+      "IG_T": 20.8972,
+      "n_T": 90.945,
+      "IG_NT": 85.1852,
+      "n_NT": 27.0,
+      "IRR_ig": NaN,
+      "IC95": NaN,
+      "p": NaN,
+      "IRR_dist": NaN,
+      "p_dist": NaN,
+      "pct_cero_P2.5": 15.3203,
+      "r_CP1_nplat_P2.5": 0.8971,
+      "pct_cero_P97.5": 15.3203,
+      "r_CP1_nplat_P97.5": 0.8971
+    },
+    {
+      "escenario": "S2 · S1 + 75 % de los 97 'sin evidencia' cerrados (200 sorteos)",
+      "n": 334.0,
+      "n_cero": 30.0,
+      "pct_cero": 8.982,
+      "pct_tres": 18.2635,
+      "pct_resenas_tres": 43.4627,
+      "r_CP1_nplat": 0.8982,
+      "var_CP1": 70.7998,
+      "KMO": 0.6114,
+      "IG_T": 21.4642,
+      "n_T": 88.54,
+      "IG_NT": 85.1852,
+      "n_NT": 27.0,
+      "IRR_ig": NaN,
+      "IC95": NaN,
+      "p": NaN,
+      "IRR_dist": NaN,
+      "p_dist": NaN,
+      "pct_cero_P2.5": 8.982,
+      "r_CP1_nplat_P2.5": 0.8982,
+      "pct_cero_P97.5": 8.982,
+      "r_CP1_nplat_P97.5": 0.8982
+    },
+    {
+      "escenario": "S3 · S1 + 100 % de 'sin evidencia' (solo quedan los 6 operativos)",
+      "n": 310.0,
+      "n_cero": 6.0,
+      "pct_cero": 1.9355,
+      "pct_tres": 19.6774,
+      "pct_resenas_tres": 43.4627,
+      "r_CP1_nplat": 0.9022,
+      "var_CP1": 69.8997,
+      "KMO": 0.6055,
+      "IG_T": 22.093,
+      "n_T": 86.0,
+      "IG_NT": 85.1852,
+      "n_NT": 27.0,
+      "IRR_ig": 4.0171,
+      "IC95": [
+        2.2181626583417495,
+        7.275154022669314
+      ],
+      "p": 0.0,
+      "IRR_dist": 0.505,
+      "p_dist": 0.1409,
+      "pct_cero_P2.5": NaN,
+      "r_CP1_nplat_P2.5": NaN,
+      "pct_cero_P97.5": NaN,
+      "r_CP1_nplat_P97.5": NaN
+    },
+    {
+      "escenario": "S4 · sin los 116",
+      "n": 304.0,
+      "n_cero": 0.0,
+      "pct_cero": 0.0,
+      "pct_tres": 20.0658,
+      "pct_resenas_tres": 43.4627,
+      "r_CP1_nplat": 0.9042,
+      "var_CP1": 69.6414,
+      "KMO": 0.6038,
+      "IG_T": 22.093,
+      "n_T": 86.0,
+      "IG_NT": 85.1852,
+      "n_NT": 27.0,
+      "IRR_ig": NaN,
+      "IC95": NaN,
+      "p": NaN,
+      "IRR_dist": NaN,
+      "p_dist": NaN,
+      "pct_cero_P2.5": NaN,
+      "r_CP1_nplat_P2.5": NaN,
+      "pct_cero_P97.5": NaN,
+      "r_CP1_nplat_P97.5": NaN
+    }
+  ],
+  "H_resenas_vs_anio_registro": {
+    "n_con_ficha": 299,
+    "rho": -0.03167932025674244,
+    "p": 0.5853208945857922,
+    "n_con_resenas": 275,
+    "rho_con_resenas": -0.034011969685024415,
+    "p_con_resenas": 0.5743762415172551,
+    "anio_min": 2007.0,
+    "anio_max": 2025.0,
+    "n_sin_anio": 2
+  },
+  "I_verificacion": {
+    "estado": {
+      "Sin evidencia": 97,
+      "Cerrado/trasladado": 13,
+      "Operativo": 6
+    },
+    "SV_con_fecha": 115,
+    "SV_min": "2015-01",
+    "SV_mediana": "2024-11",
+    "SV_max": "2025-01",
+    "SV_por_anio": {
+      "2015.0": 11,
+      "2024.0": 102,
+      "2025.0": 2
+    },
+    "TA_116_si": 0,
+    "TA_4_si": 1,
+    "GM_ficha_oct2026": 6,
+    "FB_presente": 17,
+    "WA": 0,
+    "IGTT_hallazgo": {
+      "Ninguno": 113,
+      "Instagram": 3
+    },
+    "presencia_alternativa": {
+      "Ninguna": 95,
+      "Facebook": 15,
+      "Google Maps (nueva)": 4,
+      "Varias": 2
+    },
+    "cruce_estado_presencia": {
+      "Facebook": {
+        "Cerrado/trasladado": 1,
+        "Operativo": 3,
+        "Sin evidencia": 11
+      },
+      "Google Maps (nueva)": {
+        "Cerrado/trasladado": 1,
+        "Operativo": 2,
+        "Sin evidencia": 1
+      },
+      "Ninguna": {
+        "Cerrado/trasladado": 10,
+        "Operativo": 0,
+        "Sin evidencia": 85
+      },
+      "Varias": {
+        "Cerrado/trasladado": 1,
+        "Operativo": 1,
+        "Sin evidencia": 0
+      }
+    }
+  },
+  "J_caracterizacion": {
+    "por_tipo_censo": {
+      "Bar": {
+        "n": 18,
+        "sin_plataforma": 2,
+        "pct_sin_plataforma": 11.1
+      },
+      "Cafetería": {
+        "n": 13,
+        "sin_plataforma": 4,
+        "pct_sin_plataforma": 30.8
+      },
+      "Casa Cultural": {
+        "n": 1,
+        "sin_plataforma": 0,
+        "pct_sin_plataforma": 0.0
+      },
+      "Catering": {
+        "n": 1,
+        "sin_plataforma": 0,
+        "pct_sin_plataforma": 0.0
+      },
+      "Comida Ecuatoriana": {
+        "n": 43,
+        "sin_plataforma": 14,
+        "pct_sin_plataforma": 32.6
+      },
+      "Desconocido": {
+        "n": 116,
+        "sin_plataforma": 66,
+        "pct_sin_plataforma": 56.9
+      },
+      "Fast Food": {
+        "n": 56,
+        "sin_plataforma": 10,
+        "pct_sin_plataforma": 17.9
+      },
+      "Hostal": {
+        "n": 1,
+        "sin_plataforma": 0,
+        "pct_sin_plataforma": 0.0
+      },
+      "Internacional": {
+        "n": 35,
+        "sin_plataforma": 5,
+        "pct_sin_plataforma": 14.3
+      },
+      "Nuevo Tradicional": {
+        "n": 27,
+        "sin_plataforma": 0,
+        "pct_sin_plataforma": 0.0
+      },
+      "Parrilla": {
+        "n": 6,
+        "sin_plataforma": 1,
+        "pct_sin_plataforma": 16.7
+      },
+      "Saludable": {
+        "n": 3,
+        "sin_plataforma": 0,
+        "pct_sin_plataforma": 0.0
+      },
+      "Tradicional": {
+        "n": 100,
+        "sin_plataforma": 14,
+        "pct_sin_plataforma": 14.0
+      }
+    },
+    "por_categoria": {
+      "(vacío)": {
+        "n": 2,
+        "sin_plataforma": 1,
+        "pct": 50.0
+      },
+      "CUARTA / 1 TENEDOR": {
+        "n": 82,
+        "sin_plataforma": 33,
+        "pct": 40.2
+      },
+      "LUJO / 5 TENEDORES": {
+        "n": 3,
+        "sin_plataforma": 2,
+        "pct": 66.7
+      },
+      "PRIMERA / 4 TENEDORES": {
+        "n": 24,
+        "sin_plataforma": 0,
+        "pct": 0.0
+      },
+      "SEGUNDA / 3 TENEDORES": {
+        "n": 295,
+        "sin_plataforma": 80,
+        "pct": 27.1
+      },
+      "TERCERA / 2 TENEDORES": {
+        "n": 14,
+        "sin_plataforma": 0,
+        "pct": 0.0
+      }
+    },
+    "116_categoria_combinada": {
+      "Sin clasificar → No determinable": 59,
+      "Comida Ecuatoriana": 14,
+      "Tradicional": 14,
+      "Fast Food": 10,
+      "Internacional": 5,
+      "Cafetería": 4,
+      "Sin clasificar → Bar": 2,
+      "Bar": 2,
+      "Sin clasificar → Fast Food": 2,
+      "Sin clasificar → Cafetería": 2,
+      "Parrilla": 1,
+      "Sin clasificar → Otros": 1
+    },
+    "116_fuente_oferta": {
+      "Sin fuente": 57,
+      "Solo nombre": 40,
+      "Descripción textual": 19
+    },
+    "dist_mediana_km_ausentes": 0.5122621992429972,
+    "dist_mediana_km_presentes": 0.44819183248619887,
+    "mannwhitney_p": 0.06324786499275493
+  }
+}

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Findability before visibility | Quito</title>
+<meta name="description" content="Data, code and interactive maps for the study of digital findability among the 420 registered food establishments of the Historic Centre of Quito. Datos, código y mapas interactivos.">
+<meta property="og:title" content="Findability before visibility">
+<meta property="og:description" content="420 registered food establishments in the Historic Centre of Quito and their presence on Google Maps, Instagram and TikTok.">
+<meta property="og:image" content="https://jijadan.github.io/quito-digital-foodscape/assets/img/banner_en.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wall:#F4F5F1;      /* lime-washed wall */
+  --paper:#FFFFFF;
+  --ink:#1B2430;       /* slate ink */
+  --stone:#5F656B;     /* andesite grey */
+  --rule:#D8D9D2;
+  --blue:#24477A;      /* balcony blue */
+  --gilt:#A87A1F;      /* gilded altarpiece */
+  --p0:#8F8C83; --p1:#7FA2C4; --p2:#8E6FB8; --p3:#C9952B;
+  --serif:"Spectral",Georgia,"Times New Roman",serif;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --max:1120px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--wall);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.6}
+html[data-lang="en"] [lang="es"], html[data-lang="es"] [lang="en"]{display:none !important}
+a{color:var(--blue);text-underline-offset:.18em;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:2px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+.sans{font-family:var(--sans)}
+
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;font-family:var(--sans);font-size:14px;color:var(--stone)}
+.top .site{color:var(--ink);font-weight:500;text-decoration:none}
+.top nav{display:flex;align-items:center;gap:20px}
+.top nav a{color:var(--stone);text-decoration:none}
+.top nav a:hover{color:var(--ink)}
+.lang{display:inline-flex;border:1px solid var(--rule);border-radius:999px;padding:2px;background:var(--paper)}
+.lang button{font:inherit;font-size:13px;border:0;background:transparent;color:var(--stone);padding:4px 11px;border-radius:999px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:#fff}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;align-items:center;padding:40px 0 56px}
+.hero h1{font-weight:500;font-size:clamp(40px,5.4vw,66px);line-height:1.02;letter-spacing:-.015em;margin:0 0 22px}
+.hero p.lead{font-size:20px;line-height:1.55;margin:0 0 28px;max-width:34em;color:#2C3540}
+.actions{display:flex;flex-wrap:wrap;gap:12px;font-family:var(--sans)}
+.btn{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:500;text-decoration:none;padding:12px 18px;border-radius:6px;border:1px solid var(--blue)}
+.btn.primary{background:var(--blue);color:#fff}
+.btn.primary:hover{background:#1A3760}
+.btn.ghost{color:var(--blue);background:transparent}
+.btn.ghost:hover{background:#E7ECF3}
+.btn small{font-weight:400;opacity:.8;font-size:13px}
+.note{font-family:var(--sans);font-size:13px;color:var(--stone);margin-top:16px}
+
+figure.map{margin:0;background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:18px 18px 14px;position:relative}
+figure.map svg{width:100%;height:auto;display:block}
+.limit{fill:#F1F2ED;stroke:#8A8D87;stroke-width:5;stroke-dasharray:18 12}
+.dot{stroke:#fff;stroke-width:5;transition:opacity .25s ease}
+.dot.n0{fill:none;stroke:var(--p0);stroke-width:7}
+.dot.n1{fill:var(--p1)} .dot.n2{fill:var(--p2)} .dot.n3{fill:var(--p3)}
+svg.focus .dot{opacity:.12}
+svg.focus[data-f="0"] .n0, svg.focus[data-f="1"] .n1, svg.focus[data-f="2"] .n2, svg.focus[data-f="3"] .n3{opacity:1}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px;font-family:var(--sans);font-size:13px}
+.legend button{font:inherit;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);padding:5px 10px 5px 8px;border-radius:999px;cursor:pointer}
+.legend button[aria-pressed="true"]{border-color:var(--ink);background:#F2F2EE}
+.legend .sw{width:11px;height:11px;border-radius:50%;display:inline-block}
+.legend .k{color:var(--stone);font-variant-numeric:tabular-nums}
+.sw.n0{border:2px solid var(--p0)} .sw.n1{background:var(--p1)} .sw.n2{background:var(--p2)} .sw.n3{background:var(--p3)}
+figure.map figcaption{font-family:var(--sans);font-size:12.5px;color:var(--stone);line-height:1.45;margin-top:8px}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;font-family:var(--sans);font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:5px;max-width:240px;opacity:0;transform:translate(-50%,-120%);transition:opacity .12s}
+.tip.on{opacity:1}
+
+/* sections */
+section{padding:56px 0;border-top:1px solid var(--rule)}
+h2{font-weight:500;font-size:30px;line-height:1.2;margin:0 0 8px;letter-spacing:-.005em}
+.sub{color:var(--stone);margin:0 0 32px;max-width:40em}
+
+.findings{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;column-gap:56px}
+.findings li{display:grid;grid-template-columns:190px 1fr;gap:20px;padding:20px 0;border-bottom:1px solid var(--rule)}
+.findings .v{font-family:var(--sans);font-weight:600;font-size:28px;white-space:nowrap;line-height:1.1;letter-spacing:-.02em;color:var(--blue);font-variant-numeric:tabular-nums}
+.findings .v.g{color:var(--gilt)}
+.findings p{margin:0;font-size:17px;line-height:1.55}
+.caveat{font-family:var(--sans);font-size:14px;color:var(--stone);margin:24px 0 0;max-width:62em}
+
+.figs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.figs figure{margin:0}
+.figs a.img{display:block;background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:10px;aspect-ratio:4/3;overflow:hidden}
+.figs img{width:100%;height:100%;object-fit:contain;display:block}
+.figs figcaption{font-size:15.5px;line-height:1.5;margin-top:12px}
+.figs figcaption b{font-family:var(--sans);font-weight:600;font-size:13px}
+
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px}
+.three h3{font-family:var(--sans);font-size:15px;font-weight:600;margin:0 0 10px}
+.three p,.three li{font-size:16.5px;line-height:1.55}
+.three ul{margin:0;padding-left:1.1em}
+.three li{margin:0 0 6px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em;background:#E9EAE4;padding:.08em .35em;border-radius:3px}
+.cite{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:14px 16px;font-size:15.5px;line-height:1.55}
+.copy{margin-top:10px;font-family:var(--sans);font-size:13px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);padding:6px 12px;border-radius:6px;cursor:pointer}
+.copy:hover{border-color:var(--ink)}
+
+footer{border-top:1px solid var(--rule);padding:32px 0 48px;font-family:var(--sans);font-size:13.5px;color:var(--stone);line-height:1.6}
+footer .cols{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px}
+footer p{margin:0 0 6px}
+footer a{color:var(--stone)}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;gap:32px;padding-top:20px}
+  .findings{grid-template-columns:1fr}
+  .figs,.three{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  body{font-size:17px}
+  .wrap{padding:0 16px}
+  .top nav .hide-s{display:none}
+  .findings li{grid-template-columns:1fr;gap:6px}
+  .btn{width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <a class="site" href="./"><span lang="en">Food heritage in Quito</span><span lang="es">Patrimonio alimentario en Quito</span></a>
+    <nav aria-label="Site">
+      <a class="hide-s" href="#data"><span lang="en">Data and code</span><span lang="es">Datos y código</span></a>
+      <a class="hide-s" href="#cite"><span lang="en">Cite</span><span lang="es">Citar</span></a>
+      <a href="https://github.com/Jijadan/quito-digital-foodscape">GitHub</a>
+      <span class="lang" role="group" aria-label="Language / Idioma">
+        <button type="button" data-set="en" aria-pressed="true">EN</button>
+        <button type="button" data-set="es" aria-pressed="false">ES</button>
+      </span>
+    </nav>
+  </header>
+
+  <main>
+  <div class="hero">
+    <div>
+      <h1><span lang="en">Findability before visibility</span><span lang="es">Encontrabilidad antes que visibilidad</span></h1>
+      <p class="lead" lang="en">Before a restaurant can be seen online, it has to be findable. We took the 420 food establishments in Quito's municipal tourism registry for the Historic Centre and checked which of them appear on Google Maps, Instagram and TikTok, and how much recognition each has gathered there.</p>
+      <p class="lead" lang="es">Antes de poder verse en línea, un restaurante tiene que poder encontrarse. Tomamos los 420 establecimientos de comida del catastro turístico municipal del Centro Histórico de Quito y comprobamos cuáles aparecen en Google Maps, Instagram y TikTok, y cuánto reconocimiento ha reunido cada uno allí.</p>
+      <div class="actions">
+        <a class="btn primary" href="digital-food-territories-quito.html">Open the interactive map <small>English</small></a>
+        <a class="btn ghost" href="mapa-territorios-digitales-quito.html">Abrir el mapa interactivo <small>Español</small></a>
+      </div>
+      <p class="note"><span lang="en">Companion to an article in <i>Frontiers in Nutrition</i>, under review.</span><span lang="es">Material complementario de un artículo en <i>Frontiers in Nutrition</i>, en revisión.</span></p>
+    </div>
+
+    <figure class="map" id="mapfig">
+      <div class="legend" role="group" aria-label="Filter by number of platforms">
+        <button type="button" data-f="0" aria-pressed="false"><span class="sw n0"></span><span lang="en">None</span><span lang="es">Ninguna</span> <span class="k">__N0__</span></button>
+        <button type="button" data-f="1" aria-pressed="false"><span class="sw n1"></span><span lang="en">One</span><span lang="es">Una</span> <span class="k">__N1__</span></button>
+        <button type="button" data-f="2" aria-pressed="false"><span class="sw n2"></span><span lang="en">Two</span><span lang="es">Dos</span> <span class="k">__N2__</span></button>
+        <button type="button" data-f="3" aria-pressed="false"><span class="sw n3"></span><span lang="en">All three</span><span lang="es">Las tres</span> <span class="k">__N3__</span></button>
+      </div>
+      <svg id="dots" viewBox="__VIEWBOX__" role="img" aria-labelledby="maptitle">
+        <title id="maptitle">Map of the 420 establishments in the Historic Centre of Quito by number of platforms on which each is present</title>
+        <path class="limit" d="__LIMIT__"/>
+        <g id="pts"></g>
+      </svg>
+      <div class="tip" id="tip" aria-hidden="true"></div>
+      <figcaption>
+        <span lang="en">Each dot is one registered establishment, coloured by the number of platforms (Google Maps, Instagram, TikTok) on which it was present in June 2026. Hollow rings: present on none. Select a group to isolate it. Dashed line: Historic Centre limit (Instituto Metropolitano de Patrimonio, 2019).</span>
+        <span lang="es">Cada punto es un establecimiento registrado, coloreado según el número de plataformas (Google Maps, Instagram, TikTok) en que estaba presente en junio de 2026. Anillos vacíos: en ninguna. Seleccione un grupo para aislarlo. Línea discontinua: límite del Centro Histórico (Instituto Metropolitano de Patrimonio, 2019).</span>
+      </figcaption>
+    </figure>
+  </div>
+
+  <section aria-labelledby="h-find">
+    <h2 id="h-find"><span lang="en">What the census shows</span><span lang="es">Lo que muestra el censo</span></h2>
+    <p class="sub"><span lang="en">The design is cross-sectional, so these are associations, not causal effects.</span><span lang="es">El diseño es transversal: son asociaciones, no efectos causales.</span></p>
+    <ul class="findings">
+      <li><span class="v">28 m</span>
+        <p lang="en">between the peak of physical density and the peak of digital visibility. The two surfaces correlate at ρ = 0.96, so online visibility is not displaced from where the food offer is.</p>
+        <p lang="es">separan el máximo de densidad física del máximo de visibilidad digital. Las dos superficies correlacionan en ρ = 0,96: la visibilidad en línea no está desplazada respecto de la oferta.</p></li>
+      <li><span class="v g"><span lang="en">27.6%</span><span lang="es">27,6 %</span></span>
+        <p lang="en">of the census is on none of the three platforms and has no reviews. This is an upper bound; online verification narrows it to between a fifth and a quarter.</p>
+        <p lang="es">del censo no está en ninguna de las tres plataformas y no tiene reseñas. Es una cota superior; la verificación en línea la acota a entre un quinto y un cuarto.</p></li>
+      <li><span class="v"><span lang="en">43.5%</span><span lang="es">43,5 %</span></span>
+        <p lang="en">of all Google Maps reviews go to the 14.5% of establishments that are present on all three platforms.</p>
+        <p lang="es">de todas las reseñas de Google Maps corresponde al 14,5 % de establecimientos presentes en las tres plataformas.</p></li>
+      <li><span class="v"><span lang="en">r = 0.898</span><span lang="es">r = 0,898</span></span>
+        <p lang="en">between the composite digital index and the plain count of platforms. The main break is at entry, not in how much is gathered once inside.</p>
+        <p lang="es">entre el índice digital compuesto y el simple recuento de plataformas. La principal discontinuidad está en la entrada, no en lo acumulado una vez dentro.</p></li>
+      <li><span class="v g"><span lang="en">85.2% / 19.0%</span><span lang="es">85,2 / 19,0 %</span></span>
+        <p lang="en">have Instagram among restaurants serving new (reinterpreted) traditional cuisine and untranslated traditional cuisine, respectively.</p>
+        <p lang="es">tienen Instagram entre los restaurantes de nueva cocina tradicional (reinterpretada) y de cocina tradicional no traducida, respectivamente.</p></li>
+      <li><span class="v">116</span>
+        <p lang="en">establishments without platforms were checked online in October 2026: 13 appear closed or relocated, 6 show signs of operating, and for 97 no evidence was found.</p>
+        <p lang="es">establecimientos sin plataformas se verificaron en línea en octubre de 2026: 13 aparecen cerrados o trasladados, 6 muestran señales de funcionamiento y de 97 no se encontró evidencia.</p></li>
+    </ul>
+    <p class="caveat"><span lang="en">Absence from the platforms is not closure: a place may be open but offline, or present elsewhere (for example on Facebook).</span><span lang="es">La ausencia en las plataformas no es cierre: un local puede estar abierto pero fuera de línea, o presente en otra parte (por ejemplo, en Facebook).</span></p>
+  </section>
+
+  <section aria-labelledby="h-figs">
+    <h2 id="h-figs"><span lang="en">Figures from the article</span><span lang="es">Figuras del artículo</span></h2>
+    <p class="sub"><span lang="en">All figures are produced by the code in the repository.</span><span lang="es">Todas las figuras salen del código del repositorio.</span></p>
+    <div class="figs">
+      <figure>
+        <a class="img" href="assets/figures/fig2_stratification_gradient.png"><img src="assets/figures/fig2_stratification_gradient.png" alt="Figure 2: share of establishments and of reviews by number of platforms" loading="lazy"></a>
+        <figcaption><b><span lang="en">Figure 2.</span><span lang="es">Figura 2.</span></b> <span lang="en">Establishments and accumulated reviews by number of active platforms.</span><span lang="es">Establecimientos y reseñas acumuladas según el número de plataformas activas.</span></figcaption>
+      </figure>
+      <figure>
+        <a class="img" href="assets/figures/fig5_kde_physical_vs_digital.png"><img src="assets/figures/fig5_kde_physical_vs_digital.png" alt="Figure 5: physical density, cartographic visibility and digital intensity surfaces" loading="lazy"></a>
+        <figcaption><b><span lang="en">Figure 5.</span><span lang="es">Figura 5.</span></b> <span lang="en">Physical density, review-weighted visibility and their ratio, with a 125 m kernel.</span><span lang="es">Densidad física, visibilidad ponderada por reseñas y su cociente, con un núcleo de 125 m.</span></figcaption>
+      </figure>
+      <figure>
+        <a class="img" href="assets/figures/fig6_getis_ord_reviews_vs_index.png"><img src="assets/figures/fig6_getis_ord_reviews_vs_index.png" alt="Figure 6: Getis-Ord Gi* clusters of reviews and of the composite index" loading="lazy"></a>
+        <figcaption><b><span lang="en">Figure 6.</span><span lang="es">Figura 6.</span></b> <span lang="en">Local concentration of reviews and of the composite index (Getis-Ord Gi*, 150 m cells).</span><span lang="es">Concentración local de reseñas y del índice compuesto (Getis-Ord Gi*, celdas de 150 m).</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="data" aria-labelledby="h-data">
+    <h2 id="h-data"><span lang="en">Data, code and citation</span><span lang="es">Datos, código y citación</span></h2>
+    <p class="sub"><span lang="en">Everything is released under CC BY 4.0.</span><span lang="es">Todo se publica bajo CC BY 4.0.</span></p>
+    <div class="three">
+      <div>
+        <h3><span lang="en">Data</span><span lang="es">Datos</span></h3>
+        <ul>
+          <li><a href="https://github.com/Jijadan/quito-digital-foodscape/blob/main/data/restaurantes_quito_CH_clean.csv"><span lang="en">Census of 420 establishments</span><span lang="es">Censo de 420 establecimientos</span></a> (CSV)</li>
+          <li><a href="https://github.com/Jijadan/quito-digital-foodscape/tree/main/data/revision-R1"><span lang="en">Verification, typology coding and sensitivity</span><span lang="es">Verificación, codificación de la tipología y sensibilidad</span></a></li>
+          <li><a href="https://github.com/Jijadan/quito-digital-foodscape/tree/main/data/geo"><span lang="en">Historic Centre limit</span><span lang="es">Límite del Centro Histórico</span></a> (GeoPackage, GeoJSON)</li>
+          <li><a href="https://github.com/Jijadan/quito-digital-foodscape/blob/main/data/README.md"><span lang="en">Data dictionary</span><span lang="es">Diccionario de datos</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h3><span lang="en">Code</span><span lang="es">Código</span></h3>
+        <ul>
+          <li><a href="https://github.com/Jijadan/quito-digital-foodscape/tree/main/code/analysis"><span lang="en">Analysis pipeline</span><span lang="es">Flujo de análisis</span></a> (Python)</li>
+          <li><a href="https://github.com/Jijadan/quito-digital-foodscape/tree/main/code/revision-R1"><span lang="en">Revision analyses</span><span lang="es">Análisis de la revisión</span></a> (Python)</li>
+          <li><a href="https://github.com/Jijadan/quito-digital-foodscape/tree/main/code"><span lang="en">Map generator, data collection and coding app</span><span lang="es">Generador del mapa, recolección y aplicación de codificación</span></a> (Apps Script)</li>
+        </ul>
+        <p class="sans" style="font-size:14px;color:var(--stone);margin:12px 0 0"><code>pip install -r requirements.txt</code></p>
+      </div>
+      <div id="cite">
+        <h3><span lang="en">How to cite</span><span lang="es">Cómo citar</span></h3>
+        <div class="cite" id="citetext">Jadán-Altamirano, J. (2026). <i>Jijadan/quito-digital-foodscape: v1.0.1 — Public release</i> [Data set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.22178448">https://doi.org/10.5281/zenodo.22178448</a></div>
+        <button type="button" class="copy" id="copybtn"><span lang="en">Copy citation</span><span lang="es">Copiar cita</span></button>
+        <p style="font-size:15px;color:var(--stone);margin-top:12px"><span lang="en">Please also cite the article (Jadán-Altamirano and Jadán-Guerrero, <i>Frontiers in Nutrition</i>, under review).</span><span lang="es">Cite también el artículo (Jadán-Altamirano y Jadán-Guerrero, <i>Frontiers in Nutrition</i>, en revisión).</span></p>
+      </div>
+    </div>
+  </section>
+  </main>
+</div>
+
+<footer>
+  <div class="wrap cols">
+    <div>
+      <p>Johann Jadán-Altamirano, Laboratorio Génesis, Ambato</p>
+      <p>Janio Jadán-Guerrero, Universidad Tecnológica Indoamérica, Quito</p>
+    </div>
+    <div>
+      <p><span lang="en">Data and code</span><span lang="es">Datos y código</span>: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p>
+      <p><span lang="en">Map data</span><span lang="es">Datos del mapa</span>: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></p>
+      <p><span lang="en">Questions</span><span lang="es">Preguntas</span>: <a href="https://github.com/Jijadan/quito-digital-foodscape/issues">GitHub issues</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var P = __POINTS__;
+  var NAMES = ["none","one","two","three"], NOMBRES = ["ninguna","una","dos","tres"];
+  var html = document.documentElement;
+
+  function setLang(l){
+    html.setAttribute("data-lang", l); html.lang = l;
+    document.querySelectorAll(".lang button").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.set === l)); });
+    document.title = l === "es" ? "Encontrabilidad antes que visibilidad | Quito" : "Findability before visibility | Quito";
+    try { localStorage.setItem("lang", l); } catch(e) {}
+  }
+  var saved = null; try { saved = localStorage.getItem("lang"); } catch(e) {}
+  var hashLang = location.hash === "#es" ? "es" : (location.hash === "#en" ? "en" : null);
+  setLang(hashLang || saved || ((navigator.language || "en").toLowerCase().indexOf("es") === 0 ? "es" : "en"));
+  document.querySelectorAll(".lang button").forEach(function(b){ b.addEventListener("click", function(){ setLang(b.dataset.set); }); });
+
+  // dots: draw the larger, fewer groups last so they stay visible
+  var g = document.getElementById("pts"), ns = "http://www.w3.org/2000/svg", R = [19, 21, 26, 32];
+  [0,1,2,3].forEach(function(k){
+    P.forEach(function(p){
+      if (p[2] !== k) return;
+      var c = document.createElementNS(ns, "circle");
+      c.setAttribute("cx", p[0]); c.setAttribute("cy", p[1]); c.setAttribute("r", R[k]);
+      c.setAttribute("class", "dot n" + k); c.dataset.name = p[3]; c.dataset.n = k;
+      g.appendChild(c);
+    });
+  });
+
+  var svg = document.getElementById("dots");
+  document.querySelectorAll(".legend button").forEach(function(b){
+    b.addEventListener("click", function(){
+      var on = b.getAttribute("aria-pressed") !== "true";
+      document.querySelectorAll(".legend button").forEach(function(x){ x.setAttribute("aria-pressed", "false"); });
+      if (on) { b.setAttribute("aria-pressed", "true"); svg.classList.add("focus"); svg.dataset.f = b.dataset.f; }
+      else { svg.classList.remove("focus"); delete svg.dataset.f; }
+    });
+  });
+
+  var tip = document.getElementById("tip"), fig = document.getElementById("mapfig");
+  svg.addEventListener("pointermove", function(e){
+    var t = e.target;
+    if (!t.classList || !t.classList.contains("dot")) { tip.classList.remove("on"); return; }
+    var n = +t.dataset.n, es = html.getAttribute("data-lang") === "es";
+    var lab = es ? (n === 1 ? "1 plataforma" : n + " plataformas") : (n === 1 ? "1 platform" : n + " platforms");
+    tip.textContent = t.dataset.name + ": " + lab;
+    var r = fig.getBoundingClientRect();
+    tip.style.left = (e.clientX - r.left) + "px"; tip.style.top = (e.clientY - r.top) + "px";
+    tip.classList.add("on");
+  });
+  svg.addEventListener("pointerleave", function(){ tip.classList.remove("on"); });
+
+  var btn = document.getElementById("copybtn");
+  btn.addEventListener("click", function(){
+    var txt = document.getElementById("citetext").innerText;
+    var done = function(){ btn.querySelector('[lang="en"]').textContent = "Citation copied"; btn.querySelector('[lang="es"]').textContent = "Cita copiada";
+      setTimeout(function(){ btn.querySelector('[lang="en"]').textContent = "Copy citation"; btn.querySelector('[lang="es"]').textContent = "Copiar cita"; }, 2200); };
+    if (navigator.clipboard) navigator.clipboard.writeText(txt).then(done, function(){});
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+message: "If you use these data or this code, please cite the article and the archived dataset."
+title: "quito-digital-foodscape: data, code and interactive maps for 'Findability before visibility'"
+type: dataset
+version: 1.1.0
+date-released: 2026-10-26
+license: CC-BY-4.0
+repository-code: "https://github.com/Jijadan/quito-digital-foodscape"
+url: "https://jijadan.github.io/quito-digital-foodscape/"
+abstract: >-
+  Register-based census of 420 food establishments in the Historic Centre of
+  Quito (Ecuador), with their presence and accumulated recognition on Google
+  Maps, Instagram and TikTok (June 2026); the Python analysis pipeline; the
+  bilingual interactive maps; and the data and code added in the first round
+  of peer review (online verification of the establishments without platform
+  presence, anonymized independent coding of the culinary typology and
+  sensitivity analyses).
+keywords:
+  - findability
+  - digital stratification
+  - food heritage
+  - digital food environments
+  - spatial analysis
+  - Quito
+authors:
+  - family-names: "Jadán-Altamirano"
+    given-names: "Johann"
+    affiliation: "Laboratorio Génesis (Labgenesis Cía. Ltda.), Ambato, Ecuador"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.22178448
+    description: "Archived dataset, version v1.0.1 (Zenodo)"
+preferred-citation:
+  type: article
+  title: "Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres"
+  authors:
+    - family-names: "Jadán-Altamirano"
+      given-names: "Johann"
+    - family-names: "Jadán-Guerrero"
+      given-names: "Janio"
+  journal: "Frontiers in Nutrition"
+  year: 2026
+  status: submitted
+  notes: "Under review. The reference will be updated with the article DOI on publication."

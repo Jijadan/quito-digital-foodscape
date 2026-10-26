@@ -1,0 +1,8 @@
+tipo_restaurante_original,Bar,Cafetería,Comida Ecuatoriana,Fast Food,Internacional,Nuevo Tradicional,Parrilla,Sin consenso,Tradicional,All
+Bar,1,0,0,0,0,0,0,0,0,1
+Comida Ecuatoriana,0,0,3,0,0,0,0,6,1,10
+Fast Food,0,0,0,1,0,0,0,0,0,1
+Internacional,0,0,0,1,3,0,0,0,0,4
+Nuevo Tradicional,0,0,0,0,2,6,0,12,4,24
+Tradicional,0,1,0,0,0,1,1,8,16,27
+All,1,1,3,2,5,7,1,26,21,67

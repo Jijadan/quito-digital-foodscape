@@ -1,0 +1,5 @@
+pesos,variable,n_focal,global_BB,global_BB_p_sim,local_sig_nominal,local_sig_FDR
+KNN_8,ausente_0plat,116,126.0,0.5618,3,0
+KNN_8,presente_1plus,304,869.0,0.7933,33,0
+banda_150m,ausente_0plat,116,295.0,0.868,11,0
+banda_150m,presente_1plus,304,2383.0,0.1477,32,0

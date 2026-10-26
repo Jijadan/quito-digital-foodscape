@@ -1,0 +1,27 @@
+par,masa,pct_desacuerdo
+Nuevo Tradicional ↔ Tradicional,32.67,26.6
+Comida Ecuatoriana ↔ Tradicional,20.0,16.3
+Internacional ↔ Nuevo Tradicional,14.0,11.4
+Cafetería ↔ Tradicional,12.0,9.8
+Comida Ecuatoriana ↔ Nuevo Tradicional,10.0,8.2
+Fast Food ↔ Tradicional,3.33,2.7
+Comida Ecuatoriana ↔ Fast Food,3.33,2.7
+Bar ↔ Comida Ecuatoriana,2.67,2.2
+Internacional ↔ Parrilla,2.67,2.2
+Hostal ↔ Tradicional,2.0,1.6
+Cafetería ↔ Comida Ecuatoriana,2.0,1.6
+Cafetería ↔ Nuevo Tradicional,2.0,1.6
+Parrilla ↔ Tradicional,2.0,1.6
+Fast Food ↔ Internacional,2.0,1.6
+Casa Cultural ↔ Nuevo Tradicional,1.33,1.1
+Cafetería ↔ Parrilla,1.33,1.1
+Cafetería ↔ Fast Food,1.33,1.1
+Catering ↔ Tradicional,1.33,1.1
+Catering ↔ Hostal,1.33,1.1
+Hostal ↔ Internacional,1.33,1.1
+Casa Cultural ↔ Comida Ecuatoriana,0.67,0.5
+Cafetería ↔ Internacional,0.67,0.5
+Cafetería ↔ Catering,0.67,0.5
+Nuevo Tradicional ↔ Parrilla,0.67,0.5
+Catering ↔ Internacional,0.67,0.5
+Fast Food ↔ Nuevo Tradicional,0.67,0.5

@@ -1,129 +1,219 @@
-# Mapa Digital del Patrimonio Alimentario — Centro Histórico de Quito
-### Digital Map of Food Heritage — Quito's Historic Center
+<p align="center">
+  <img src="assets/img/banner_en.png" alt="Findability before visibility — 420 registered food establishments in the Historic Centre of Quito, coloured by the number of platforms on which each one is present" width="100%">
+</p>
 
-# quito-digital-foodscape
-Mapa interactivo del patrimonio alimentario en el Centro Histórico de Quito y su visibilidad digital (n=420). Recurso complementario a investigación académica. 
-Interactive map of food heritage & digital visibility in Quito's Historic Center (n=420). Companion resource to academic research.
+<p align="center">
+  <b>English</b> · <a href="README.es.md">Español</a>
+</p>
 
+<p align="center">
+  <a href="https://doi.org/10.5281/zenodo.22178448"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.22178448.svg" alt="DOI 10.5281/zenodo.22178448"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC%20BY%204.0-lightgrey.svg" alt="License: CC BY 4.0"></a>
+  <a href="https://jijadan.github.io/quito-digital-foodscape/"><img src="https://img.shields.io/badge/interactive%20map-live-2ea44f.svg" alt="Interactive map: live"></a>
+  <img src="https://img.shields.io/badge/python-3.10%2B-3776AB.svg" alt="Python 3.10+">
+  <img src="https://img.shields.io/badge/n-420%20establishments-c9a14a.svg" alt="n = 420 establishments">
+  <img src="https://img.shields.io/badge/article-under%20review%20(R1)-orange.svg" alt="Article status: under review, first revision">
+</p>
 
----
+# Findability before visibility
 
-## 🇪🇨 Español
+**Data, code and interactive maps for the article** *Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres* (Jadán-Altamirano and Jadán-Guerrero, *Frontiers in Nutrition*, under review).
 
-### Sobre este proyecto
+Research on digital foodscapes usually builds its samples from the platforms themselves. It therefore sees mainly what those platforms already show. This study starts from the other end. It takes a census of the 420 food establishments listed in the municipal tourism registry of Quito's Historic Centre, built without reference to any digital presence, and then records whether each one appears on Google Maps, Instagram and TikTok and how much recognition it has accumulated there.
 
-Este repositorio aloja un mapa interactivo que visualiza los establecimientos de patrimonio alimentario censados en el Centro Histórico de Quito (n = 420), junto con indicadores de su visibilidad digital en Google Maps, Instagram y TikTok.
-
-El mapa es un recurso complementario a la investigación académica *"Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres"*, que analiza cómo las plataformas digitales no desplazan el centro de gravedad gastronómico del distrito patrimonial, sino que introducen una precondición de **"encontrabilidad"** que determina quién entra al campo del reconocimiento digital, dónde se concentra ese reconocimiento y qué formas de patrimonio alimentario se vuelven legibles — un fenómeno que el estudio denomina **amplificación selectiva**.
-
-## 🔗 Ver los Mapas Interactivos
-
-Selecciona tu idioma para abrir el mapa interactivo directamente en tu navegador:
-
-* 🇪🇨 **Versión en Español:** [Haga clic aquí para ver el mapa en Español](https://jijadan.github.io/quito-digital-foodscape/mapa-territorios-digitales-quito.html)
-* 🇬🇧 **Versión en Inglés:** [Click here to view the map in English](https://jijadan.github.io/quito-digital-foodscape/digital-food-territories-quito.html)
-
----
-
-## 📊 Características del Proyecto
-* **Visualización Dinámica:** Capas de burbujas interactivas según el tamaño de seguidores en Instagram, TikTok y calificaciones en Google Stars.
-* **Mapas de Calor:** Densidad de reseñas y niveles de concentración de la atención digital en el territorio.
-
-### Fuente de los datos
-
-- Censo municipal de turismo del Distrito Metropolitano de Quito (catastro MDMQ), usado como marco de referencia.
-- Relevamiento manual de presencia digital (Google Maps, Instagram, TikTok) realizado en junio de 2026.
-- n = 420 establecimientos, dataset limpio y validado.
-- Los datos se presentan con fines de investigación y divulgación; no constituyen un directorio comercial ni una recomendación editorial de los establecimientos.
-
-### Cómo citar
-
-Este mapa es un recurso complementario al siguiente artículo. La cita se actualizará con el DOI definitivo al momento de la publicación:
-
-Jadán-Altamirano, J. y Jadán-Guerrero, J. (2026). Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres. Frontiers in Nutrition, sección Nutrition and Sustainable Diets, Research Topic "Social and Cultural Pathways to Sustainable Diets: Food Environments, Cooking Practices, Food Identities, and Digital Influences". DOI pendiente.
-
-Si usas este mapa o los datos subyacentes en tu propio trabajo, por favor cita el artículo asociado (ver sección de Licencia).
-
-### Tecnología
-
-- **Frontend:** Leaflet.js
-- **Backend:** Google Apps Script (`Code.gs`) — funciones `generarMapaHtml()` (ES) y `generarMapaHtmlEn()` (EN)
-- **Despliegue:** GitHub Pages
-
-### Licencia
-
-Ver sección [Licencia / License](#licencia--license) al final de este documento.
-
-### Contacto
-
-Johann Jadan-Altamirano — `jijadan@gmail.com`
+<p align="center">
+  <a href="https://jijadan.github.io/quito-digital-foodscape/digital-food-territories-quito.html"><img src="https://img.shields.io/badge/Open%20the%20map-English-1f2937?style=for-the-badge" alt="Open the map in English"></a>
+  &nbsp;
+  <a href="https://jijadan.github.io/quito-digital-foodscape/mapa-territorios-digitales-quito.html"><img src="https://img.shields.io/badge/Abrir%20el%20mapa-Espa%C3%B1ol-1f2937?style=for-the-badge" alt="Abrir el mapa en español"></a>
+</p>
 
 ---
 
-## 🇬🇧 English
+## Contents
 
-### About this project
+- [Key findings](#key-findings)
+- [Figures](#figures)
+- [Repository structure](#repository-structure)
+- [Data](#data)
+- [Reproducing the analysis](#reproducing-the-analysis)
+- [First revision (R1)](#first-revision-r1)
+- [Interactive map](#interactive-map)
+- [Notes on the data](#notes-on-the-data)
+- [How to cite](#how-to-cite)
+- [Authors and acknowledgements](#authors-and-acknowledgements)
+- [License](#license)
 
-This repository hosts an interactive map visualizing food heritage establishments censused in Quito's Historic Center (n = 420), along with indicators of their digital visibility on Google Maps, Instagram, and TikTok.
+## Key findings
 
-The map is a companion resource to the academic study *"Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres"*, which argues that digital platforms do not relocate the gastronomic center of gravity of the heritage district, but instead introduce a precondition of **"findability"** that determines who enters the field of digital recognition, where that recognition concentrates, and which forms of food heritage become legible — a phenomenon the study terms **selective amplification** (*amplificación selectiva*).
+The design is cross-sectional. All relationships below are associations, not causal effects.
 
-## 🔗 View the Interactive Maps
+| | Finding |
+|---|---|
+| **28 m** | The maxima of the physical density surface and the digital visibility surface lie 28 m apart, and the two surfaces correlate at ρ = 0.96. Digital visibility does not appear spatially displaced from the physical structure of the food offer. |
+| **27.6 %** | Share of the census with no presence on any of the three platforms and no reviews. This is an upper bound. Online verification in October 2026 narrows it to between a fifth and a quarter of the census. |
+| **14.5 % → 43.5 %** | The establishments present on all three platforms hold 43.5 % of all Google Maps reviews. |
+| **r = 0.898** | Correlation between the composite digital index and the simple count of active platforms. The main break lies at entry into the platform ecosystem, not in the amount accumulated once inside. |
+| **85.2 % vs 19.0 %** | Instagram presence among restaurants serving new (reinterpreted) traditional cuisine, compared with untranslated traditional cuisine. |
 
-Select your language to open the interactive map directly in your browser:
+The article proposes **findability**, the condition of being present on the platforms through which people look for places to eat, as an analytical property of the digital food territory. Digitalization does not replace the heritage food geography. It adds a threshold that is associated with who enters the field of visibility and, once inside, how much recognition can be accumulated.
 
-* 🇪🇸 **Spanish version:** [Haga clic aquí para ver el mapa en Español](https://jijadan.github.io/quito-digital-foodscape/mapa-territorios-digitales-quito.html)
-* 🇬🇧 **English Version:** [Click here to view the map in English](https://jijadan.github.io/quito-digital-foodscape/digital-food-territories-quito.html)
+## Figures
 
----
+All figures are generated by the code in this repository. Full-resolution versions accompany the article.
 
-## 📊 Project Features
+<p align="center">
+  <img src="assets/figures/fig2_stratification_gradient.png" alt="Figure 2. Digital stratification gradient" width="88%"><br>
+  <sub><b>Figure 2.</b> Distribution of establishments and of accumulated Google Maps reviews by number of active platforms. n = 420.</sub>
+</p>
 
-### 🇬🇧 English
-* **Dynamic Visualization:** Interactive bubble layers representing follower counts on Instagram, TikTok, and Google Stars ratings.
-* **Heat Maps:** Review density and levels of digital attention concentration across the territory.
+<p align="center">
+  <img src="assets/figures/fig5_kde_physical_vs_digital.png" alt="Figure 5. Physical density, cartographic visibility and digital intensity" width="100%"><br>
+  <sub><b>Figure 5.</b> (A) Establishment density, (B) cartographic visibility weighted by log(1 + reviews), (C) expected digital index per establishment (B/A). Gaussian kernel, h = 125 m.</sub>
+</p>
 
-### Data source
+<p align="center">
+  <img src="assets/figures/fig6_getis_ord_reviews_vs_index.png" alt="Figure 6. Local concentration of digital visibility (Getis-Ord Gi*)" width="92%"><br>
+  <sub><b>Figure 6.</b> Local concentration of (A) review volume and (B) the composite index, Getis-Ord Gi* on 150 m cells. Outlined cells survive the Benjamini-Hochberg correction.</sub>
+</p>
 
-- Municipal tourism registry, Metropolitan District of Quito (MDMQ catastro), used as a reference frame.
-- Manual digital-presence census (Google Maps, Instagram, TikTok) conducted in June 2026.
-- n = 420 establishments, cleaned and validated dataset.
-- Data are presented for research and dissemination purposes; this is not a commercial directory or an editorial endorsement of the listed establishments.
+<details>
+<summary><b>More figures</b> (study area, platform nesting, regression, franchises, robust core)</summary>
+<br>
 
-### How to cite
+<p align="center">
+  <img src="assets/figures/fig1_study_area.jpg" alt="Figure 1. Study area and census" width="62%"><br>
+  <sub><b>Figure 1.</b> Study area and census (n = 420). The dashed line marks the Historic Centre limit, digitized from the Instituto Metropolitano de Patrimonio (2019); 408 of the 420 establishments lie within it. Basemap © OpenStreetMap contributors (ODbL).</sub>
+</p>
 
-This map is a companion resource to the following article. The citation will be updated with the final DOI upon publication:
+<p align="center">
+  <img src="assets/figures/fig3_platform_nesting.png" alt="Figure 3. Social media combinations" width="85%"><br>
+  <sub><b>Figure 3.</b> Social media combinations. All 63 establishments with a TikTok account also hold an Instagram account (Fisher's exact test, p &lt; 0.001).</sub>
+</p>
 
-Jadán-Altamirano, J., & Jadán-Guerrero, J. (2026). Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres. Frontiers in Nutrition, Nutrition and Sustainable Diets section, Research Topic "Social and Cultural Pathways to Sustainable Diets: Food Environments, Cooking Practices, Food Identities, and Digital Influences". DOI pending.
-If you use this map or the underlying data in your own work, please cite the associated article (see License section).
+<p align="center">
+  <img src="assets/figures/fig4_negative_binomial_irr.png" alt="Figure 4. Negative binomial regression" width="85%"><br>
+  <sub><b>Figure 4.</b> Negative binomial regression of review volume: incidence rate ratios with 95 % confidence intervals. Reference category: Traditional.</sub>
+</p>
 
-### Tech stack
+<p align="center">
+  <img src="assets/figures/fig7_franchises_volume_vs_rating.png" alt="Figure 7. Review volume and rating by commercial structure" width="85%"><br>
+  <sub><b>Figure 7.</b> Franchises accumulate more reviews (rank-biserial r = 0.65) and receive lower ratings (r = −0.46) than independent establishments.</sub>
+</p>
 
-- **Frontend:** Leaflet.js
-- **Backend:** Google Apps Script (`Code.gs`) — `generarMapaHtml()` (ES) and `generarMapaHtmlEn()` (EN) functions
-- **Deployment:** GitHub Pages
+<p align="center">
+  <img src="assets/figures/figS8_1_robust_core.jpg" alt="Supplementary Figure S8.1. Robust core" width="62%"><br>
+  <sub><b>Supplementary Figure S8.1.</b> Robust core. Colour: share of 20 grids (five cell sizes × four origins) in which each establishment lies in a hot cell of the index that survives the Benjamini-Hochberg correction. Black rings: share ≥ 0.75 (n = 38).</sub>
+</p>
 
-### License
+</details>
 
-See the [Licencia / License](#licencia--license) section below.
+## Repository structure
 
-### Contact
+```
+quito-digital-foodscape/
+├── index.html                              Landing page (GitHub Pages)
+├── digital-food-territories-quito.html     Interactive map, English
+├── mapa-territorios-digitales-quito.html   Interactive map, Spanish
+├── data/
+│   ├── restaurantes_quito_CH_clean.csv     Census used in the article (n = 420)
+│   ├── README.md                           Data dictionary (English / Spanish)
+│   ├── geo/                                Historic Centre limit (IMP 2019), GeoPackage and GeoJSON
+│   └── revision-R1/                        Data added in the first revision
+│       ├── verification/                   Online verification of the 116 establishments without platforms
+│       ├── typology-coding/                Anonymized answers of the four independent chefs
+│       ├── typology-results/               Reliability of the typology (Supplementary S6)
+│       └── sensitivity/                    Sensitivity analyses (Supplementary S7–S8)
+├── code/
+│   ├── analysis/                           Original analysis pipeline and article figures (Python)
+│   ├── revision-R1/                        Scripts added in the first revision (Python)
+│   ├── data-collection/                    Geocoding and validation (Google Apps Script)
+│   ├── interactive-map/                    Map generator (Google Apps Script)
+│   └── coding-app/                         Web app used by the chefs to code the typology (Google Apps Script)
+├── assets/                                 Banner and figures used in this README
+├── tools/                                  Scripts that draw the banner and the landing page from the data
+├── CITATION.cff · CHANGELOG.md · requirements.txt · LICENSE
+```
 
-Johann Jadan-Altamirano — `jijadan@gmail.com`
+## Data
 
----
+The main file is [`data/restaurantes_quito_CH_clean.csv`](data/restaurantes_quito_CH_clean.csv): 420 rows, one per establishment, 29 columns. It is the same file the analysis reads. The [data dictionary](data/README.md) describes every column, every category and the files added in the revision.
 
-## Licencia / License
+| Source | Content | Date |
+|---|---|---|
+| Municipal tourism registry of the Metropolitan District of Quito (*catastro turístico*) | Sampling frame: name, address, registry year, category (forks) | Registry as published |
+| Google Maps | Listing, mean rating, number of reviews | June 2026 |
+| Instagram, TikTok | Account, followers, cumulative likes (TikTok) | June 2026 |
+| Online verification | Status of the 116 establishments without platforms | October 2026 |
 
-Este proyecto se distribuye bajo licencia **Creative Commons Attribution 4.0 International (CC BY 4.0)**.
+## Reproducing the analysis
 
-Esto significa que puedes compartir, copiar, redistribuir y adaptar el mapa y los datos (incluso con fines comerciales), siempre que se otorgue el crédito apropiado citando el artículo académico asociado y enlazando a esta licencia.
+```bash
+git clone https://github.com/Jijadan/quito-digital-foodscape.git
+cd quito-digital-foodscape
+python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
 
-This project is distributed under a **Creative Commons Attribution 4.0 International (CC BY 4.0)** license.
+# Main analysis: index, KDE surfaces, Getis-Ord Gi*, regression, tables and figures
+python code/analysis/analisis_espacial_quito_v2_capital_digital.py \
+       --csv data/restaurantes_quito_CH_clean.csv --outdir outputs/
+```
 
-This means you may share, copy, redistribute, and adapt the map and data (including for commercial purposes), as long as appropriate credit is given by citing the associated academic article and linking to this license.
+The script writes the figures (vector PDF and 600 dpi PNG) and the tables (CSV) to `outputs/`. The scripts of the revision are documented in [`code/revision-R1/README.md`](code/revision-R1/README.md).
 
+## First revision (R1)
 
+The reviewers asked for further checks. Everything added in response is in this repository.
 
+- **Online verification of the 116 establishments without platforms** (October 2026, Supplementary S7). 13 appear closed or relocated, 6 show evidence of operation, and for 97 no evidence was found online. The share without platforms is therefore reported as a range with closure scenarios.
+- **Reliability of the typology** (Supplementary S6). Four independent chefs coded a blind sample from Google Maps photographs. Agreement among them was low (Krippendorff's α = 0.39). Where at least three agreed, their label matched the original in 73 % of cases. The Instagram gap between new traditional and traditional cuisine remains under every alternative coding (odds ratios 7.8–24.5, all p < 0.001).
+- **Spatial sensitivity** (Supplementary S8). Bandwidths of 75–250 m, grids of 100–250 m with shifted origins, point-level statistics and edge effects.
+- **Study limit.** The Historic Centre limit was digitized from the Instituto Metropolitano de Patrimonio (2019) and is drawn on every map.
+- **Map labels.** The interactive maps now use the article's category names (*Unclassified*, *Regional Ecuadorian cuisine*, *Grill*).
 
-Texto completo de la licencia / full license text: https://creativecommons.org/licenses/by/4.0/
+See [`CHANGELOG.md`](CHANGELOG.md) for the full list of changes.
+
+## Interactive map
+
+The two maps show the 420 establishments with filters by type and platform, bubble layers for followers and ratings, and a heat map of reviews. They are static HTML pages built on [Leaflet](https://leafletjs.com/) and served by GitHub Pages. They were generated from the research spreadsheet with [`code/interactive-map/Code.gs`](code/interactive-map/Code.gs) (functions `generarMapaHtml()` for Spanish and `generarMapaHtmlEn()` for English). Basemap © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors.
+
+## Notes on the data
+
+- **Absence is not closure.** An establishment without platforms may be open but not online, closed, relocated, or present on platforms not examined (for example Facebook).
+- **Reviews and followers are different measures.** A review is written by someone who visited the place. A follower may belong to a national brand account and comes from an audience of unspecified geographic origin.
+- **Platform fields are research measurements.** Presence, follower counts and likes were recorded manually as dated, aggregate, publicly visible values. They are not an export or scrape of any platform and contain no platform content or personal user data. Values reflect June 2026.
+- **Not a directory.** The data are for research and dissemination. They are not a commercial directory or a recommendation of any establishment.
+- **Withheld on purpose.** The key that links the chefs' blind codes to the establishments, and the photographs shown to them, are not published.
+
+## How to cite
+
+Please cite the article and, if you use the data or code, the archived dataset.
+
+> Jadán-Altamirano, J., & Jadán-Guerrero, J. (2026). Findability before visibility: digital thresholds and the stratification of food heritage in historic urban centres. *Frontiers in Nutrition* (under review).
+
+> Jadán-Altamirano, J. (2026). *Jijadan/quito-digital-foodscape: v1.0.1 — Public release* (Version v1.0.1) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.22178448
+
+```bibtex
+@misc{jadanaltamirano2026dataset,
+  author    = {Jad{\'a}n-Altamirano, Johann},
+  title     = {Jijadan/quito-digital-foodscape: v1.0.1 --- Public release},
+  year      = {2026},
+  publisher = {Zenodo},
+  version   = {v1.0.1},
+  doi       = {10.5281/zenodo.22178448}
+}
+```
+
+GitHub's **Cite this repository** button uses [`CITATION.cff`](CITATION.cff). The article reference will be updated with its DOI on publication.
+
+## Authors and acknowledgements
+
+- **Johann Jadán-Altamirano** — Laboratorio Génesis (Labgenesis Cía. Ltda.), Ambato, Ecuador
+- **Janio Jadán-Guerrero** (corresponding author) — Universidad Tecnológica Indoamérica, Quito, Ecuador
+
+The work was funded by Universidad Tecnológica Indoamérica. We thank Laboratorio Génesis for its support, and Chef Israel Yánez (Universidad UTE), Chef Jorge Jaramillo (USFQ), Chef Elías Bohórquez and Chef Ismael Villacrés (UIDE) for coding the typology.
+
+For questions about the data, please open an [issue](https://github.com/Jijadan/quito-digital-foodscape/issues) or write to the corresponding author through the contact details given in the article.
+
+## License
+
+Data, maps, figures and code are released under the [Creative Commons Attribution 4.0 International license (CC BY 4.0)](LICENSE). You may share and adapt them for any purpose, provided you give appropriate credit by citing the article and the dataset.

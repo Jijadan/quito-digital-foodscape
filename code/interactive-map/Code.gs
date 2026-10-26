@@ -69,22 +69,36 @@ const CONFIG = {
  * Traducción de tipos de restaurante ES → EN.
  * Usada en generarMapaHtmlEn() para que el JSON ya tenga los
  * nombres en inglés y coincidan con TYPE_NAMES de Index_en.html.
+ *
+ * Revisión R1 (octubre 2026): la categoría "Comida Ecuatoriana" se muestra como
+ * "Cocina ecuatoriana regional" / "Regional Ecuadorian cuisine", y los registros sin
+ * tipología ("Desconocido") como "Sin clasificar" / "Unclassified". El valor guardado en
+ * la hoja y en data/restaurantes_quito_CH_clean.csv NO cambia: solo cambia la etiqueta.
  */
 const TIPO_EN = {
-  'Desconocido'      : 'Other',
-  'Otro'             : 'Other',
+  'Desconocido'      : 'Unclassified',
+  'Otro'             : 'Unclassified',
   'Fast Food'        : 'Fast Food',
   'Bar'              : 'Bar',
-  'Comida Ecuatoriana': 'Ecuadorian Food',
+  'Comida Ecuatoriana': 'Regional Ecuadorian cuisine',
   'Cafetería'        : 'Café',
   'Tradicional'      : 'Traditional',
   'Nuevo Tradicional': 'New Traditional',
+  'Parrilla'         : 'Grill',
   'Parilla'          : 'Grill',
   'Catering'         : 'Catering',
   'Internacional'    : 'International',
   'Casa Cultural'    : 'Cultural House',
   'Hostal'           : 'Hostel',
   'Saludable'        : 'Healthy'
+};
+
+/** Etiquetas de visualización en español (R1). Los demás tipos se muestran tal cual. */
+const TIPO_ES = {
+  'Desconocido'      : 'Sin clasificar',
+  'Otro'             : 'Sin clasificar',
+  'Comida Ecuatoriana': 'Cocina ecuatoriana regional',
+  'Parilla'          : 'Parrilla'
 };
 
 /* ──────────────────────────────────────────────────────────────
@@ -158,7 +172,7 @@ function _parseRow(row, translateTipo) {
 
   // ── Tipo y franquicia ────────────────────────────────────
   const tipoRaw    = (String(row[15] || '').trim() || 'Desconocido');
-  const tipo       = translateTipo ? (TIPO_EN[tipoRaw] || 'Other') : tipoRaw;
+  const tipo       = translateTipo ? (TIPO_EN[tipoRaw] || 'Unclassified') : (TIPO_ES[tipoRaw] || tipoRaw);
   const franquicia = (String(row[16] || '').trim() === 'Franquicia') ? 1 : 0;
 
   return {

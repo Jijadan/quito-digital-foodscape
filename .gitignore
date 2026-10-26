@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.ipynb_checkpoints/
+
+# Outputs of the scripts · Salidas de los scripts
+outputs/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Never publish · No publicar nunca
+*PRIVADO*
+*NO_COMPARTIR*
+privado/

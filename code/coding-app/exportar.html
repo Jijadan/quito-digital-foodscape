@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>body{font:14px sans-serif;margin:12px}button{display:block;width:100%;margin:8px 0;padding:10px;font:inherit;cursor:pointer}</style>
+</head>
+<body>
+  <p><?= n ?> respuestas (sin las de prueba). Descarga los dos archivos:</p>
+  <div id="botones"></div>
+  <script>
+    const ARCHIVOS = <?!= archivosJson ?>;
+    ARCHIVOS.forEach(function (a) {
+      const b = document.createElement('button');
+      b.textContent = 'Descargar ' + a.nombre;
+      b.onclick = function () {
+        // BOM para que Excel lea bien las tildes.
+        const blob = new Blob(['﻿' + a.csv], { type: 'text/csv;charset=utf-8' });
+        const enlace = document.createElement('a');
+        enlace.href = URL.createObjectURL(blob);
+        enlace.download = a.nombre;
+        document.body.appendChild(enlace);
+        enlace.click();
+        enlace.remove();
+      };
+      document.getElementById('botones').appendChild(b);
+    });
+  </script>
+</body>
+</html>
