@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <title>Reto Tipología CHQ</title>
+  <?!= include('styles'); ?>
+</head>
+<body>
+  <a class="salto" href="#contenido">Ir al contenido</a>
+
+  <!-- Barra superior: progreso, racha y ayuda (solo durante las rondas) -->
+  <header id="barra" class="barra" hidden>
+    <div class="barra-fila">
+      <span id="progreso-texto" class="progreso-texto" aria-live="polite">0 de 0</span>
+      <span id="racha" class="racha" title="Rondas seguidas sin pausa larga" hidden></span>
+      <button id="btn-anterior" class="btn-chico" type="button" hidden>↩︎ Cambiar anterior</button>
+      <button id="btn-ayuda" class="btn-ayuda" type="button" aria-label="Abrir el libro de códigos">?</button>
+    </div>
+    <div class="progreso" role="progressbar" aria-label="Progreso" aria-valuemin="0" aria-valuemax="100">
+      <div id="progreso-relleno" class="progreso-relleno"></div>
+      <span class="hito-marca" style="left:25%"></span><span class="hito-marca" style="left:50%"></span><span class="hito-marca" style="left:75%"></span>
+    </div>
+  </header>
+
+  <main id="contenido" tabindex="-1">
+    <!-- Cargando -->
+    <section id="p-cargando" class="pantalla centrada">
+      <div class="olla" aria-hidden="true">🍲</div>
+      <p>Preparando la cocina…</p>
+    </section>
+
+    <!-- Enlace no válido -->
+    <section id="p-invalido" class="pantalla centrada" hidden>
+      <div class="emoji-grande" aria-hidden="true">🔒</div>
+      <h1>Enlace no válido</h1>
+      <p>Revisa que hayas abierto el enlace completo que te enviamos. Si el problema sigue, escribe a Johann.</p>
+    </section>
+
+    <!-- Bienvenida -->
+    <section id="p-bienvenida" class="pantalla" hidden>
+      <p class="sobretitulo">Reto Tipología CHQ</p>
+      <h1 id="bienvenida-titulo">Bienvenida</h1>
+      <p class="intro">Vas a clasificar <b class="js-total">67</b> restaurantes del Centro Histórico de Quito mirando solo su ficha y sus fotos de Google Maps.<br>
+        En cada ronda eliges la categoría y tu confianza; la respuesta se guarda sola.<br>
+        Son unos 30–40 minutos y puedes pausar cuando quieras: al volver, sigues donde lo dejaste.</p>
+      <div class="tarjeta-texto"><?!= include('instrucciones'); ?></div>
+      <button class="enlace" type="button" data-abrir-libro>Ver el libro de códigos completo</button>
+      <label class="casilla"><input id="chk-leido" type="checkbox"> He leído las instrucciones</label>
+      <button id="btn-empezar" class="btn-principal" type="button" disabled>Empezar el calentamiento</button>
+    </section>
+
+    <!-- Reanudar -->
+    <section id="p-reanudar" class="pantalla centrada" hidden>
+      <div class="emoji-grande" aria-hidden="true">👋</div>
+      <h1 id="reanudar-titulo">¡Hola de nuevo!</h1>
+      <p id="reanudar-texto"></p>
+      <button id="btn-continuar" class="btn-principal" type="button">Continuar</button>
+    </section>
+
+    <!-- Ronda (práctica y codificación comparten pantalla) -->
+    <section id="p-ronda" class="pantalla ronda" hidden>
+      <div id="aviso-practica" class="aviso-practica" hidden>Calentamiento <span id="practica-num"></span> de 2 · no cuenta como respuesta</div>
+      <div id="aviso-cambio" class="aviso-cambio" hidden>Estás cambiando tu respuesta anterior <button class="enlace" type="button" id="btn-cancelar-cambio">Cancelar</button></div>
+
+      <div id="carrusel-caja" class="carrusel-caja">
+        <div id="carrusel" class="carrusel" tabindex="0" aria-roledescription="carrusel" aria-label="Fotos del local"></div>
+        <span id="foto-tipo" class="foto-tipo"></span>
+        <button class="carrusel-flecha izq" type="button" data-mover="-1" aria-label="Foto anterior">‹</button>
+        <button class="carrusel-flecha der" type="button" data-mover="1" aria-label="Foto siguiente">›</button>
+        <div id="puntos" class="puntos" aria-hidden="true"></div>
+      </div>
+      <div id="practica-texto" class="practica-texto" hidden></div>
+
+      <div class="meta">
+        <h2 id="caso-nombre" class="caso-nombre"></h2>
+        <p id="caso-detalle" class="caso-detalle"></p>
+        <label id="conoce-caja" class="casilla chica"><input id="chk-conoce" type="checkbox"> Conozco este local</label>
+      </div>
+
+      <!-- Paso 1: categoría -->
+      <div id="paso-categoria" class="paso">
+        <h3 class="pregunta">¿Qué tipo de establecimiento es?</h3>
+        <div class="opciones">
+          <button class="op op-rojo" type="button" data-n1="tradicional"><span class="forma" aria-hidden="true">▲</span>Tradicional</button>
+          <button class="op op-azul" type="button" data-n1="nuevo_tradicional"><span class="forma" aria-hidden="true">◆</span>Nuevo Tradicional</button>
+          <button class="op op-amarillo" type="button" data-n1="regional"><span class="forma" aria-hidden="true">●</span><span>Cocina ecuatoriana regional <small>costeña, lojana, amazónica…</small></span></button>
+          <button class="op op-verde" type="button" data-n1="otra"><span class="forma" aria-hidden="true">■</span><span>Otra categoría <small>internacional, bar, cafetería, comida rápida…</small></span></button>
+          <button class="op op-blanco" type="button" data-n1="no_determinable"><span class="forma" aria-hidden="true">?</span>No puedo determinarlo</button>
+        </div>
+      </div>
+
+      <!-- Paso 2a: subcategoría de «Otra» -->
+      <div id="paso-otra" class="paso" hidden>
+        <h3 class="pregunta">¿Cuál de las otras categorías?</h3>
+        <div id="opciones-otra" class="opciones rejilla"></div>
+        <button class="enlace volver" type="button" data-volver>← Cambiar categoría</button>
+      </div>
+
+      <!-- Paso 2b: motivo de No determinable -->
+      <div id="paso-motivo" class="paso" hidden>
+        <h3 class="pregunta">¿Por qué no puedes determinarlo?</h3>
+        <div id="opciones-motivo" class="opciones"></div>
+        <button class="enlace volver" type="button" data-volver>← Cambiar categoría</button>
+      </div>
+
+      <!-- Paso 3: confianza -->
+      <div id="paso-confianza" class="paso" hidden>
+        <p class="elegida">Elegiste: <b id="elegida-texto"></b></p>
+        <h3 class="pregunta">¿Qué tan seguro estás?</h3>
+        <div class="opciones fila3">
+          <button class="op op-confianza" type="button" data-confianza="baja">Baja</button>
+          <button class="op op-confianza" type="button" data-confianza="media">Media</button>
+          <button class="op op-confianza" type="button" data-confianza="alta">Alta</button>
+        </div>
+        <button class="enlace volver" type="button" data-volver>← Cambiar categoría</button>
+      </div>
+
+      <details id="comentario-caja" class="comentario">
+        <summary>Añadir un comentario (opcional)</summary>
+        <label for="txt-comentario" class="oculto">Comentario</label>
+        <input id="txt-comentario" type="text" maxlength="300" autocomplete="off" placeholder="Una línea, si quieres aclarar algo">
+      </details>
+
+      <!-- Resultado de la práctica -->
+      <div id="practica-resultado" class="practica-resultado" hidden>
+        <p id="practica-veredicto" class="veredicto"></p>
+        <p><b>Respuesta de referencia:</b> <span id="practica-ref"></span></p>
+        <p id="practica-explicacion"></p>
+        <button id="btn-practica-siguiente" class="btn-principal" type="button">Siguiente</button>
+      </div>
+    </section>
+
+    <!-- Final -->
+    <section id="p-final" class="pantalla centrada" hidden>
+      <div class="emoji-grande" aria-hidden="true">🧑‍🍳</div>
+      <h1 id="final-titulo">¡Gracias!</h1>
+      <p id="final-texto" class="final-texto"></p>
+      <div id="final-insignias" class="insignias"></div>
+      <p id="final-tiempo" class="final-tiempo"></p>
+      <p class="final-nota">Tu participación figurará en los <b>Agradecimientos del artículo</b>. Puedes cerrar esta página.</p>
+    </section>
+  </main>
+
+  <!-- Hoja deslizable con el libro de códigos -->
+  <div id="libro" class="hoja" role="dialog" aria-modal="true" aria-labelledby="libro-titulo" hidden>
+    <div class="hoja-fondo" data-cerrar-libro></div>
+    <div class="hoja-panel">
+      <div class="hoja-cabecera">
+        <h2 id="libro-titulo">Libro de códigos</h2>
+        <button class="btn-cerrar" type="button" data-cerrar-libro aria-label="Cerrar">✕</button>
+      </div>
+      <div class="hoja-cuerpo">
+        <section class="tarjeta-texto"><?!= include('instrucciones'); ?></section>
+        <?!= include('libro'); ?>
+      </div>
+    </div>
+  </div>
+
+  <!-- Foto ampliada -->
+  <div id="zoom" class="zoom" role="dialog" aria-modal="true" aria-label="Foto ampliada" hidden>
+    <img id="zoom-img" alt="">
+    <button class="btn-cerrar zoom-cerrar" type="button" data-cerrar-zoom aria-label="Cerrar foto">✕</button>
+  </div>
+
+  <!-- Celebraciones (hitos e insignias) -->
+  <div id="celebra" class="celebra" role="status" aria-live="polite" hidden>
+    <div class="celebra-caja">
+      <div id="celebra-icono" class="celebra-icono" aria-hidden="true"></div>
+      <p id="celebra-texto" class="celebra-texto"></p>
+      <p id="celebra-sub" class="celebra-sub"></p>
+    </div>
+  </div>
+
+  <div id="registrado" class="registrado" aria-hidden="true">✓ Registrado</div>
+  <div id="aviso-red" class="aviso-red" role="status" aria-live="polite" hidden></div>
+
+  <script>
+    window.APP_TOKEN = '<?= token ?>';
+    window.APP_ESTADO = <?!= estadoJson ?>;
+  </script>
+  <?!= include('app'); ?>
+</body>
+</html>

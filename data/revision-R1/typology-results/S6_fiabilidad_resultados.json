@@ -1,0 +1,153 @@
+{
+  "a_categorias_articulo": {
+    "alfa": 0.385,
+    "IC95": [
+      0.289,
+      0.468
+    ],
+    "unidades_usadas": 67,
+    "respuestas_pareables": 261,
+    "acuerdo_porcentual_pares": 0.539,
+    "n_pares": 384
+  },
+  "b_13_categorias": {
+    "alfa": 0.379,
+    "IC95": [
+      0.284,
+      0.462
+    ],
+    "unidades_usadas": 67,
+    "respuestas_pareables": 261,
+    "acuerdo_porcentual_pares": 0.534,
+    "n_pares": 384
+  },
+  "c_T_vs_NT_51_con_Otra": {
+    "alfa": 0.329,
+    "IC95": [
+      0.206,
+      0.441
+    ],
+    "unidades_usadas": 51,
+    "respuestas_pareables": 201,
+    "acuerdo_porcentual_pares": 0.574,
+    "n_pares": 298
+  },
+  "c2_T_vs_NT_51_solo_TyNT": {
+    "alfa": 0.485,
+    "IC95": [
+      0.269,
+      0.675
+    ],
+    "unidades_usadas": 41,
+    "respuestas_pareables": 140,
+    "acuerdo_porcentual_pares": 0.747,
+    "n_pares": 178
+  },
+  "consenso": {
+    "locales_con_consenso": 41,
+    "locales_total": 67,
+    "acuerdo_con_original": 0.732,
+    "n_acuerdo": 30,
+    "kappa_cohen_vs_original": 0.612,
+    "IC95_acuerdo": [
+      0.585,
+      0.854
+    ],
+    "IC95_kappa": [
+      0.41,
+      0.793
+    ],
+    "estratos_T_NT": {
+      "con_consenso": 31,
+      "coinciden": 22
+    }
+  },
+  "sensibilidad_instagram": {
+    "original_Tradicional": {
+      "con_IG": 19,
+      "n": 100,
+      "pct": 19.0
+    },
+    "original_Nuevo Tradicional": {
+      "con_IG": 23,
+      "n": 27,
+      "pct": 85.2
+    },
+    "con_consenso_Tradicional": {
+      "con_IG": 21,
+      "n": 102,
+      "pct": 20.6
+    },
+    "con_consenso_Nuevo Tradicional": {
+      "con_IG": 19,
+      "n": 22,
+      "pct": 86.4
+    },
+    "fisher_original": {
+      "OR": 24.51,
+      "p": 3.17e-10
+    },
+    "fisher_con_consenso": {
+      "OR": 24.43,
+      "p": 9.33e-09
+    }
+  },
+  "J_vs_original": {
+    "n_validas": 61,
+    "acuerdo": 0.738,
+    "kappa": 0.62,
+    "no_determinable": 6
+  },
+  "J_vs_consenso": {
+    "n_validas": 40,
+    "acuerdo": 0.9,
+    "kappa": 0.857
+  },
+  "motivos_no_determinable_chefs": {
+    "fotos_insuficientes": 3,
+    "oferta_mixta": 2,
+    "evidencia_contradictoria": 2
+  },
+  "descomposicion_desacuerdo": {
+    "pct_desacuerdo_T_NT": 26.6,
+    "alfa_si_T_y_NT_fueran_una_categoria": 0.404,
+    "no_determinable_chefs": 7,
+    "respuestas_chefs": 268
+  },
+  "informacion_tarjeta": {
+    "tiene_menu": {
+      "n_si": 21,
+      "alfa_si": 0.432,
+      "n_no": 46,
+      "alfa_no": 0.354,
+      "IC95_diferencia": [
+        -0.147,
+        0.283
+      ]
+    },
+    "tiene_interior": {
+      "n_si": 55,
+      "alfa_si": 0.402,
+      "n_no": 12,
+      "alfa_no": 0.258,
+      "IC95_diferencia": [
+        -0.011,
+        0.399
+      ]
+    }
+  },
+  "integridad": {
+    "filas_respuestas": 335,
+    "respuestas_por_codificador": {
+      "C1": 67,
+      "C2": 67,
+      "C3": 67,
+      "J": 67,
+      "C4": 67
+    },
+    "duplicados_codificador_local": 0,
+    "codigos_sin_llave": [],
+    "llave_sin_respuesta": [],
+    "llave_coincide_con_censo": true
+  }
+}

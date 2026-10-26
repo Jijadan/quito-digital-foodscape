@@ -1,0 +1,5 @@
+census_id,name,address,tripadvisor_listing,tripadvisor_listing_status,tripadvisor_listing_address
+23,ASADERO LA ESQUINA DE ALES,"GARCIA MORENO N7-78 MANABI, Quito, Ecuador",No,,
+57,CASA TUA RISTORANTE,"GARCIA MORENO N6-67 OLMEDO, Quito, Ecuador",No,,
+387,SANTA PIZZA CAFE Y PASTA,"SC MONTÚFAR N8-31 N8 MANABÍ, Quito, Ecuador",Sí,Activa,"Rocafuerte Oe3-03 y Guayaquil, cerca de la Iglesia de Santo Domingo, Quito 170150 Ecuador"
+419,WHISKY PUB,"GarcÍa Moreno N7-78 MANABÍ, Quito, Ecuador",No,,

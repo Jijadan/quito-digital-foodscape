@@ -1,0 +1,657 @@
+<script>
+(function () {
+  'use strict';
+
+  const TOKEN = window.APP_TOKEN;
+  const N1 = {
+    tradicional: 'Tradicional', nuevo_tradicional: 'Nuevo Tradicional', regional: 'Cocina ecuatoriana regional',
+    otra: 'Otra categoría', no_determinable: 'No puedo determinarlo',
+  };
+  const OTRAS = {
+    internacional: 'Internacional', fast_food: 'Fast Food', bar: 'Bar', cafeteria: 'Cafetería', parrilla: 'Parrilla',
+    saludable: 'Saludable', casa_cultural: 'Casa Cultural', hostal: 'Hostal', catering: 'Catering',
+  };
+  const MOTIVOS = {
+    fotos_insuficientes: 'Fotos insuficientes', fotos_no_corresponden: 'Las fotos no corresponden al local',
+    oferta_mixta: 'Oferta mixta sin eje', repertorio_no_reconocible: 'Repertorio no reconocible',
+    evidencia_contradictoria: 'Evidencia insuficiente o contradictoria', otro: 'Otro (escríbelo en el comentario)',
+  };
+  const TIPOS_FOTO = { ficha: 'Ficha de Maps', plato: 'Plato', interior: 'Interior', menu: 'Carta / menú', fachada: 'Fachada' };
+  const HITOS = [
+    { f: 0.25, icono: '🥄', texto: '¡Primer cuarto servido!' },
+    { f: 0.5, icono: '🍲', texto: '¡Mitad del recorrido!' },
+    { f: 0.75, icono: '🍽️', texto: '¡Tres cuartos del menú!' },
+    { f: 1, icono: '🧑‍🍳', texto: '¡Reto completado!' },
+  ];
+  const INSIGNIAS = ['Hornado', 'Fanesca', 'Encebollado', 'Locro', 'Fritada', 'Colada morada'];
+  const PAUSA_RACHA_MS = 5 * 60 * 1000;
+  const CLAVE_COLA = 'reto_cola_' + TOKEN;
+  const CLAVE_RECHAZADAS = 'reto_rechazadas_' + TOKEN;
+  const MAX_FOTOS_EN_PARALELO = 3;
+
+  let estado = window.APP_ESTADO || { ok: false };
+  let modo = 'codificacion';
+  let practica = { casos: [], i: 0 };
+  let actual = null;
+  let eleccion = {};
+  let corrigiendo = false;
+  let tiempoSesionMs = 0;
+  const racha = { n: 0, ultimo: 0 };
+  const cache = new Map();
+  let cola = leerCola();
+  let procesando = false;
+  let generacion = 0; // se incrementa al resincronizar: cancela precargas que ya no sirven
+  let enTransicion = false;
+
+  const $ = function (id) { return document.getElementById(id); };
+  const todos = function (sel, raiz) { return Array.prototype.slice.call((raiz || document).querySelectorAll(sel)); };
+
+  // ---------- Comunicación con el servidor ----------
+
+  function llamar(fn) {
+    const args = Array.prototype.slice.call(arguments, 1);
+    return new Promise(function (resolver, rechazar) {
+      google.script.run
+        .withSuccessHandler(function (r) {
+          if (r && r.ok === false) {
+            const e = new Error(r.error || 'Error');
+            e.invalido = Boolean(r.invalido);
+            e.reintentar = Boolean(r.reintentar);
+            rechazar(e);
+          } else {
+            resolver(r);
+          }
+        })
+        .withFailureHandler(function (err) {
+          const e = new Error((err && err.message) || 'Sin conexión');
+          e.reintentar = true; // fallo de red o de ejecución: se puede reintentar
+          rechazar(e);
+        })[fn].apply(null, args);
+    });
+  }
+
+  const esperar = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+
+  /** Reintenta lecturas con espera creciente y avisa sin bloquear. */
+  async function conReintento(fn) {
+    const args = Array.prototype.slice.call(arguments);
+    const gen = generacion;
+    let espera = 1000;
+    for (;;) {
+      if (gen !== generacion) throw new Error('cancelado');
+      try {
+        const r = await llamar.apply(null, args);
+        avisoRed('');
+        return r;
+      } catch (e) {
+        if (e.invalido) { mostrar('p-invalido'); throw e; }
+        if (!e.reintentar) throw e;
+        avisoRed('Conexión lenta: reintentando…');
+        await esperar(espera);
+        espera = Math.min(espera * 2, 8000);
+      }
+    }
+  }
+
+  function avisoRed(texto) {
+    $('aviso-red').textContent = texto;
+    $('aviso-red').hidden = !texto;
+  }
+
+  // ---------- Cola de guardado (sobrevive a cierres y cortes) ----------
+
+  function leerCola() {
+    try { return JSON.parse(localStorage.getItem(CLAVE_COLA) || '[]'); } catch (e) { return []; }
+  }
+
+  function guardarCola() {
+    try { localStorage.setItem(CLAVE_COLA, JSON.stringify(cola)); } catch (e) { /* sin almacenamiento: queda en memoria */ }
+  }
+
+  function encolar(payload) {
+    cola.push(payload);
+    guardarCola();
+    procesarCola();
+  }
+
+  async function procesarCola() {
+    if (procesando) return;
+    procesando = true;
+    let espera = 1000;
+    let resincronizarAlFinal = false;
+    while (cola.length) {
+      try {
+        await llamar('guardarRespuesta', TOKEN, cola[0]);
+        cola.shift();
+        guardarCola();
+        espera = 1000;
+        avisoRed('');
+      } catch (e) {
+        if (e.invalido) { mostrar('p-invalido'); break; }
+        if (e.reintentar) {
+          avisoRed('No se pudo guardar: reintento en ' + Math.round(espera / 1000) + ' s. Puedes seguir.');
+          await esperar(espera);
+          espera = Math.min(espera * 2, 10000);
+        } else {
+          // Respuesta rechazada (p. ej. fuera de orden): se aparta, sin perderla, y se resincroniza al vaciar la cola.
+          apartarRechazada(cola.shift(), e.message);
+          guardarCola();
+          avisoRed(e.message);
+          resincronizarAlFinal = true;
+        }
+      }
+    }
+    procesando = false;
+    if (resincronizarAlFinal) resincronizar();
+  }
+
+  function apartarRechazada(payload, motivo) {
+    try {
+      const lista = JSON.parse(localStorage.getItem(CLAVE_RECHAZADAS) || '[]');
+      lista.push({ payload: payload, motivo: motivo, fecha: new Date().toISOString() });
+      localStorage.setItem(CLAVE_RECHAZADAS, JSON.stringify(lista));
+    } catch (e) { /* sin almacenamiento */ }
+  }
+
+  function nuevoId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+  }
+
+  async function colaVacia() {
+    procesarCola();
+    while (cola.length) await esperar(300);
+  }
+
+  /** Vuelve a pedir el estado al servidor, siempre después de que lleguen las respuestas pendientes. */
+  async function resincronizar() {
+    await colaVacia();
+    generacion++;
+    cache.clear();
+    estado = await conReintento('getEstado', TOKEN);
+    corrigiendo = false;
+    if (estado.respondidas >= estado.total) mostrarFinal(); else irA(estado.siguiente);
+  }
+
+  // ---------- Pantallas ----------
+
+  function mostrar(id) {
+    todos('main > .pantalla').forEach(function (s) { s.hidden = s.id !== id; });
+    $('barra').hidden = id !== 'p-ronda';
+    window.scrollTo(0, 0);
+  }
+
+  function actualizarBarra(posicion) {
+    const total = estado.total || 1;
+    if (modo === 'practica') {
+      $('progreso-texto').textContent = 'Calentamiento';
+      $('progreso-relleno').style.width = '0%';
+      $('btn-anterior').hidden = true;
+      $('racha').hidden = true;
+      return;
+    }
+    $('progreso-texto').textContent = posicion + ' de ' + total;
+    $('progreso-relleno').style.width = Math.round(100 * estado.respondidas / total) + '%';
+    $('btn-anterior').hidden = corrigiendo || !estado.ultima;
+    $('racha').hidden = racha.n < 3;
+    $('racha').textContent = '🌶️ Racha ' + racha.n;
+  }
+
+  async function iniciar() {
+    todos('.js-total').forEach(function (n) { n.textContent = estado.total || ''; });
+    if (!estado.ok) {
+      if (estado.invalido || !TOKEN) return mostrar('p-invalido');
+      avisoRed('Conexión lenta: reintentando…');
+      estado = await conReintento('getEstado', TOKEN);
+    }
+    if (cola.length) {
+      await procesarCola();
+      estado = await conReintento('getEstado', TOKEN);
+    }
+    const nombre = estado.codificador.nombre;
+    if (estado.respondidas >= estado.total) return mostrarFinal();
+    if (!estado.inicio) {
+      $('bienvenida-titulo').textContent = nombre ? '¡Hola, ' + nombre + '!' : '¡Hola!';
+      return mostrar('p-bienvenida');
+    }
+    if (!estado.practicaOk && estado.respondidas === 0) return empezarPractica();
+    if (estado.respondidas > 0) {
+      $('reanudar-titulo').textContent = nombre ? '¡Hola de nuevo, ' + nombre + '!' : '¡Hola de nuevo!';
+      $('reanudar-texto').textContent = 'Vas por la ronda ' + estado.siguiente + ' de ' + estado.total + '. Sigues justo donde lo dejaste.';
+      return mostrar('p-reanudar');
+    }
+    empezarCodificacion();
+  }
+
+  // ---------- Práctica ----------
+
+  async function empezarPractica() {
+    modo = 'practica';
+    const r = await conReintento('getPractica', TOKEN);
+    practica = { casos: r.casos, i: 0 };
+    mostrarPractica();
+  }
+
+  function mostrarPractica() {
+    const p = practica.casos[practica.i];
+    actual = { posicion: 0, practica: p, mostradoEn: performance.now() };
+    prepararTarjeta();
+    $('aviso-practica').hidden = false;
+    $('practica-num').textContent = String(practica.i + 1);
+    $('carrusel-caja').hidden = true;
+    $('practica-texto').hidden = false;
+    $('practica-texto').textContent = p.descripcion;
+    $('caso-nombre').textContent = '«' + p.titulo + '»';
+    $('caso-detalle').textContent = 'Caso hipotético descrito con palabras';
+    $('conoce-caja').hidden = true;
+    actualizarBarra(0);
+    mostrar('p-ronda');
+  }
+
+  function resolverPractica(payload) {
+    const p = actual.practica;
+    const coincide = payload.n1 === p.respuesta_n1 && (payload.n1 !== 'otra' || payload.sub === p.respuesta);
+    ocultarPasos();
+    $('comentario-caja').hidden = true;
+    $('practica-resultado').hidden = false;
+    $('practica-veredicto').textContent = coincide ? '✓ Coincide con la referencia' : 'La referencia es otra: revisa por qué';
+    $('practica-ref').textContent = N1[p.respuesta_n1] + (p.respuesta_n1 === 'otra' ? ' · ' + (OTRAS[p.respuesta] || '') : '');
+    $('practica-explicacion').textContent = p.explicacion;
+    $('btn-practica-siguiente').focus();
+  }
+
+  async function siguientePractica() {
+    practica.i++;
+    if (practica.i < practica.casos.length) return mostrarPractica();
+    llamar('registrarHito', TOKEN, 'practica').catch(function () { /* se marca al volver */ });
+    estado.practicaOk = true;
+    await celebrar('🔥', '¡Calentamiento listo!', 'Empieza el reto: ' + estado.total + ' rondas');
+    empezarCodificacion();
+  }
+
+  // ---------- Codificación ----------
+
+  function empezarCodificacion() {
+    modo = 'codificacion';
+    irA(estado.siguiente);
+  }
+
+  // Pocas peticiones simultáneas: la app se ejecuta con una sola cuenta y Apps Script limita las ejecuciones paralelas.
+  let fotosActivas = 0;
+  const fotosEnEspera = [];
+  function conTurno(tarea) {
+    return new Promise(function (resolver, rechazar) {
+      const lanzar = function () {
+        fotosActivas++;
+        tarea().then(resolver, rechazar).finally(function () {
+          fotosActivas--;
+          if (fotosEnEspera.length) fotosEnEspera.shift()();
+        });
+      };
+      if (fotosActivas < MAX_FOTOS_EN_PARALELO) lanzar(); else fotosEnEspera.push(lanzar);
+    });
+  }
+
+  function obtener(pos) {
+    if (cache.has(pos)) return cache.get(pos);
+    const prom = conReintento('getCaso', TOKEN, pos).then(function (caso) {
+      const fotos = caso.fotos.map(function (_, i) {
+        return conTurno(function () { return conReintento('getFoto', TOKEN, pos, i); })
+          .then(function (f) { return 'data:' + f.mime + ';base64,' + f.data; });
+      });
+      fotos.forEach(function (p) { p.catch(function () { /* se maneja al pintar */ }); });
+      return { caso: caso, fotos: fotos };
+    });
+    cache.set(pos, prom);
+    prom.catch(function () { cache.delete(pos); });
+    return prom;
+  }
+
+  async function irA(pos) {
+    if (pos > estado.total) return mostrarFinal();
+    cache.forEach(function (_, k) { if (k < pos - 1) cache.delete(k); });
+    mostrar('p-ronda');
+    $('carrusel').innerHTML = '<div class="diapo"><div class="esqueleto"></div></div>';
+    $('caso-nombre').textContent = 'Cargando…';
+    $('caso-detalle').textContent = '';
+    let datos;
+    try {
+      datos = await obtener(pos);
+    } catch (e) {
+      if (e.invalido || e.message === 'cancelado') return;
+      avisoRed(e.message);
+      await esperar(2000);
+      return resincronizar();
+    }
+    actual = { posicion: pos, caso: datos.caso, fotos: datos.fotos, mostradoEn: performance.now() };
+    pintarCaso();
+    if (pos + 1 <= estado.total) obtener(pos + 1).catch(function () { /* se reintenta al llegar */ });
+  }
+
+  function pintarCaso() {
+    const c = actual.caso;
+    prepararTarjeta();
+    $('aviso-practica').hidden = true;
+    $('aviso-cambio').hidden = !corrigiendo;
+    $('carrusel-caja').hidden = false;
+    $('practica-texto').hidden = true;
+    $('conoce-caja').hidden = false;
+    $('caso-nombre').textContent = c.nombre;
+    $('caso-detalle').textContent = [c.categoria || 'Sin categoría de Google', c.precio ? 'Precio: ' + c.precio : '']
+      .filter(Boolean).join(' · ');
+    pintarCarrusel();
+    if (corrigiendo && estado.ultima) {
+      const b = document.querySelector('[data-n1="' + estado.ultima.n1 + '"]');
+      if (b) b.classList.add('elegida-anterior');
+    }
+    actualizarBarra(actual.posicion);
+    window.scrollTo(0, 0);
+  }
+
+  function pintarCarrusel() {
+    const car = $('carrusel');
+    car.innerHTML = '';
+    $('puntos').innerHTML = '';
+    actual.caso.fotos.forEach(function (f, i) {
+      const d = document.createElement('button');
+      d.type = 'button';
+      d.className = 'diapo';
+      d.setAttribute('aria-label', 'Foto ' + (i + 1) + ' de ' + actual.caso.fotos.length + ': ' + (TIPOS_FOTO[f.tipo] || f.tipo) + '. Toca para ampliar.');
+      d.innerHTML = '<div class="esqueleto"></div>';
+      car.appendChild(d);
+      $('puntos').appendChild(document.createElement('span'));
+      const posicion = actual.posicion;
+      actual.fotos[i].then(function (src) {
+        if (!actual || actual.posicion !== posicion) return;
+        const img = document.createElement('img');
+        img.alt = TIPOS_FOTO[f.tipo] || 'Foto';
+        img.src = src;
+        d.innerHTML = '';
+        d.appendChild(img);
+        d.onclick = function () { abrirZoom(src, img.alt); };
+      }).catch(function () { d.innerHTML = '<p style="color:#fff">No se pudo cargar la foto</p>'; });
+    });
+    car.scrollLeft = 0;
+    marcarFoto(0);
+  }
+
+  function marcarFoto(i) {
+    todos('#puntos span').forEach(function (s, j) { s.classList.toggle('activo', j === i); });
+    const f = actual && actual.caso && actual.caso.fotos[i];
+    $('foto-tipo').textContent = f ? (TIPOS_FOTO[f.tipo] || f.tipo) : '';
+  }
+
+  function fotoActual() {
+    const car = $('carrusel');
+    return Math.round(car.scrollLeft / Math.max(1, car.clientWidth));
+  }
+
+  // ---------- Respuesta ----------
+
+  function prepararTarjeta() {
+    eleccion = {};
+    ocultarPasos();
+    $('paso-categoria').hidden = false;
+    $('comentario-caja').hidden = false;
+    $('comentario-caja').open = false;
+    $('txt-comentario').value = '';
+    $('chk-conoce').checked = false;
+    $('practica-resultado').hidden = true;
+    todos('.op').forEach(function (b) { b.classList.remove('elegida-anterior'); b.disabled = false; });
+  }
+
+  function ocultarPasos() {
+    ['paso-categoria', 'paso-otra', 'paso-motivo', 'paso-confianza'].forEach(function (id) { $(id).hidden = true; });
+  }
+
+  function verPaso(id) {
+    ocultarPasos();
+    $(id).hidden = false;
+    const primero = $(id).querySelector('button');
+    if (primero) primero.focus({ preventScroll: true });
+    $(id).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function elegirCategoria(n1) {
+    eleccion = { n1: n1, tElegido: Math.round(performance.now() - actual.mostradoEn) };
+    if (n1 === 'otra') return verPaso('paso-otra');
+    if (n1 === 'no_determinable') return verPaso('paso-motivo');
+    $('elegida-texto').textContent = N1[n1];
+    verPaso('paso-confianza');
+  }
+
+  function elegirOtra(sub) {
+    eleccion.sub = sub;
+    $('elegida-texto').textContent = 'Otra categoría · ' + OTRAS[sub];
+    verPaso('paso-confianza');
+  }
+
+  function elegirMotivo(motivo) {
+    if (motivo === 'otro' && !$('txt-comentario').value.trim()) {
+      $('comentario-caja').open = true;
+      $('txt-comentario').focus();
+      avisoRed('Escribe el motivo en el comentario y vuelve a tocar «Otro».');
+      setTimeout(function () { avisoRed(''); }, 4000);
+      return;
+    }
+    eleccion.motivo = motivo;
+    terminar();
+  }
+
+  function elegirConfianza(conf) {
+    eleccion.confianza = conf;
+    terminar();
+  }
+
+  function terminar() {
+    const payload = {
+      posicion: actual.posicion,
+      n1: eleccion.n1,
+      sub: eleccion.sub || '',
+      motivo: eleccion.motivo || '',
+      confianza: eleccion.confianza || '',
+      conoce: $('chk-conoce').checked,
+      tiempoMs: eleccion.tElegido,
+      comentario: $('txt-comentario').value.trim().slice(0, 300),
+      id: nuevoId(),
+    };
+    todos('#p-ronda .op').forEach(function (b) { b.disabled = true; });
+    if (modo === 'practica') return resolverPractica(payload);
+
+    enTransicion = true;
+    $('btn-anterior').hidden = true;
+    encolar(payload);
+    registrado();
+    tiempoSesionMs += payload.tiempoMs;
+    const antes = estado.respondidas;
+    const nueva = payload.posicion === estado.siguiente;
+    if (nueva) {
+      estado.respondidas += 1;
+      estado.siguiente += 1;
+      const ahora = Date.now();
+      racha.n = ahora - racha.ultimo < PAUSA_RACHA_MS ? racha.n + 1 : 1;
+      racha.ultimo = ahora;
+    }
+    estado.ultima = { posicion: payload.posicion, n1: payload.n1 };
+    corrigiendo = false;
+    celebrarAvance(antes, estado.respondidas).then(function () {
+      enTransicion = false;
+      if (estado.respondidas >= estado.total) mostrarFinal(); else irA(estado.siguiente);
+    });
+  }
+
+  function registrado() {
+    if (navigator.vibrate) { try { navigator.vibrate(20); } catch (e) { /* no disponible */ } }
+    const r = $('registrado');
+    r.classList.add('ver');
+    setTimeout(function () { r.classList.remove('ver'); }, 900);
+  }
+
+  // ---------- Gamificación (sin velocidad, sin comparar) ----------
+
+  function celebrar(icono, texto, sub) {
+    return new Promise(function (resolver) {
+      $('celebra-icono').textContent = icono;
+      $('celebra-texto').textContent = texto;
+      $('celebra-sub').textContent = sub || '';
+      $('celebra').hidden = false;
+      const cerrar = function () {
+        $('celebra').hidden = true;
+        $('celebra').onclick = null;
+        clearTimeout(t);
+        resolver();
+      };
+      const t = setTimeout(cerrar, 1800);
+      $('celebra').onclick = cerrar;
+    });
+  }
+
+  function insigniasPara(n) { return INSIGNIAS.slice(0, Math.min(INSIGNIAS.length, Math.floor(n / 10))); }
+
+  async function celebrarAvance(antes, despues) {
+    const total = estado.total;
+    const hito = HITOS.filter(function (h) { return antes < Math.ceil(h.f * total) && despues >= Math.ceil(h.f * total); }).pop();
+    const nuevas = insigniasPara(despues).slice(insigniasPara(antes).length);
+    if (hito && hito.f === 1) return;
+    if (hito) {
+      await celebrar(hito.icono, hito.texto, nuevas.length ? 'Insignia nueva: ' + nuevas[0] : despues + ' de ' + total);
+    } else if (nuevas.length) {
+      await celebrar('🏅', 'Insignia ' + nuevas[0], despues + ' rondas completadas');
+    } else {
+      await esperar(250);
+    }
+  }
+
+  async function mostrarFinal() {
+    modo = 'final';
+    if (cola.length) {
+      mostrar('p-cargando');
+      document.querySelector('#p-cargando p').textContent = 'Guardando tus últimas respuestas…';
+      await colaVacia();
+    }
+    const nombre = estado.codificador && estado.codificador.nombre;
+    $('final-titulo').textContent = nombre ? '¡Gracias, ' + nombre + '!' : '¡Gracias!';
+    $('final-texto').textContent = 'Has completado ' + estado.total + ' de ' + estado.total + ' rondas.';
+    $('final-insignias').innerHTML = '';
+    insigniasPara(estado.total).forEach(function (n) {
+      const s = document.createElement('span');
+      s.className = 'insignia';
+      s.textContent = '🏅 ' + n;
+      $('final-insignias').appendChild(s);
+    });
+    const min = Math.max(1, Math.round(((estado.tiempoTotalMs || 0) + tiempoSesionMs) / 60000));
+    $('final-tiempo').textContent = 'Tiempo dedicado a decidir: unos ' + min + ' minutos.';
+    mostrar('p-final');
+  }
+
+  // ---------- Libro de códigos y zoom ----------
+
+  let focoPrevio = null;
+
+  function abrirLibro() {
+    focoPrevio = document.activeElement;
+    $('libro').hidden = false;
+    $('libro').querySelector('.btn-cerrar').focus();
+  }
+
+  function cerrarLibro() {
+    $('libro').hidden = true;
+    if (focoPrevio) focoPrevio.focus();
+  }
+
+  function abrirZoom(src, alt) {
+    focoPrevio = document.activeElement;
+    $('zoom-img').src = src;
+    $('zoom-img').alt = alt;
+    $('zoom').hidden = false;
+    $('zoom').querySelector('.btn-cerrar').focus();
+  }
+
+  function cerrarZoom() {
+    $('zoom').hidden = true;
+    $('zoom-img').removeAttribute('src');
+    if (focoPrevio) focoPrevio.focus();
+  }
+
+  // ---------- Eventos ----------
+
+  function construirOpciones() {
+    Object.keys(OTRAS).forEach(function (k) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'op op-gris';
+      b.dataset.sub = k;
+      b.textContent = OTRAS[k];
+      $('opciones-otra').appendChild(b);
+    });
+    Object.keys(MOTIVOS).forEach(function (k) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'op op-gris';
+      b.dataset.motivo = k;
+      b.textContent = MOTIVOS[k];
+      $('opciones-motivo').appendChild(b);
+    });
+  }
+
+  function enlazar() {
+    $('chk-leido').addEventListener('change', function () { $('btn-empezar').disabled = !this.checked; });
+    $('btn-empezar').addEventListener('click', function () {
+      llamar('registrarHito', TOKEN, 'inicio').catch(function () { /* se marca al volver */ });
+      estado.inicio = true;
+      empezarPractica();
+    });
+    $('btn-continuar').addEventListener('click', empezarCodificacion);
+    $('btn-practica-siguiente').addEventListener('click', siguientePractica);
+    $('btn-anterior').addEventListener('click', function () {
+      if (!estado.ultima || enTransicion) return;
+      corrigiendo = true;
+      irA(estado.ultima.posicion);
+    });
+    $('btn-cancelar-cambio').addEventListener('click', function () {
+      corrigiendo = false;
+      irA(estado.siguiente);
+    });
+
+    document.addEventListener('click', function (ev) {
+      const b = ev.target.closest('button');
+      if (!b || b.disabled) return;
+      if (b.dataset.n1) elegirCategoria(b.dataset.n1);
+      else if (b.dataset.sub) elegirOtra(b.dataset.sub);
+      else if (b.dataset.motivo) elegirMotivo(b.dataset.motivo);
+      else if (b.dataset.confianza) elegirConfianza(b.dataset.confianza);
+      else if (b.hasAttribute('data-volver')) { eleccion = { tElegido: eleccion.tElegido }; verPaso('paso-categoria'); }
+      else if (b.hasAttribute('data-abrir-libro')) abrirLibro();
+      else if (b.hasAttribute('data-cerrar-libro')) cerrarLibro();
+      else if (b.hasAttribute('data-cerrar-zoom')) cerrarZoom();
+      else if (b.dataset.mover) {
+        const car = $('carrusel');
+        car.scrollTo({ left: (fotoActual() + Number(b.dataset.mover)) * car.clientWidth, behavior: 'smooth' });
+      }
+    });
+    $('btn-ayuda').addEventListener('click', abrirLibro);
+    document.querySelector('.hoja-fondo').addEventListener('click', cerrarLibro);
+
+    let marco = 0;
+    $('carrusel').addEventListener('scroll', function () {
+      cancelAnimationFrame(marco);
+      marco = requestAnimationFrame(function () { marcarFoto(fotoActual()); });
+    }, { passive: true });
+    $('carrusel').addEventListener('keydown', function (ev) {
+      if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
+      const car = $('carrusel');
+      car.scrollTo({ left: (fotoActual() + (ev.key === 'ArrowRight' ? 1 : -1)) * car.clientWidth, behavior: 'smooth' });
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key !== 'Escape') return;
+      if (!$('zoom').hidden) cerrarZoom();
+      else if (!$('libro').hidden) cerrarLibro();
+    });
+    window.addEventListener('online', procesarCola);
+  }
+
+  construirOpciones();
+  enlazar();
+  iniciar().catch(function (e) { if (!e.invalido) avisoRed(e.message); });
+})();
+</script>

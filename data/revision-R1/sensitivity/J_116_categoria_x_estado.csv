@@ -1,0 +1,14 @@
+categoria_combinada,Cerrado/trasladado,Operativo,Sin evidencia,All
+Bar,0,1,1,2
+Cafetería,0,0,4,4
+Comida Ecuatoriana,0,0,14,14
+Fast Food,1,0,9,10
+Internacional,1,0,4,5
+Parrilla,0,0,1,1
+Sin clasificar → Bar,1,0,1,2
+Sin clasificar → Cafetería,0,1,1,2
+Sin clasificar → Fast Food,0,1,1,2
+Sin clasificar → No determinable,5,3,51,59
+Sin clasificar → Otros,1,0,0,1
+Tradicional,4,0,10,14
+All,13,6,97,116

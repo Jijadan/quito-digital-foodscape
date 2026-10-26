@@ -1,0 +1,4 @@
+pesos,vecinos_medios,islas,z_max,z_min,hot_nominal,cold_nominal,hot_FDR,cold_FDR,pct_hot_dentro_celdas_hot_base,pct_base_cubierto_por_hot
+banda_150m,20.88095238095238,5,2.8137083061665673,-2.892993055693892,30,24,0,0,0.0,0.0
+banda_250m,49.076190476190476,2,2.703631903948777,-3.0413481369313793,47,31,0,0,0.0,0.0
+KNN_8,8.0,0,2.5716107028300117,-2.483910007794006,21,23,0,0,0.0,0.0

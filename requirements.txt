@@ -1,0 +1,20 @@
+# Python dependencies for code/analysis and code/revision-R1
+# Dependencias de Python para code/analysis y code/revision-R1
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+statsmodels>=0.14
+scikit-learn>=1.3
+matplotlib>=3.7
+geopandas>=0.14
+shapely>=2.0
+pyproj>=3.6
+libpysal>=4.9
+esda>=2.5
+# Only for R1_figuras.py (basemap) and R1_digitalizar_limite_IMP.py (reads the IMP PDF)
+# Solo para R1_figuras.py (mapa base) y R1_digitalizar_limite_IMP.py (lee el PDF del IMP)
+contextily>=1.4
+pymupdf>=1.23
+openpyxl>=3.1         # R1_sensibilidad.py reads the working verification workbook / lee el libro de trabajo de la verificación
+# Only for tools/make_banner.py · Solo para tools/make_banner.py
+pillow>=10.0
